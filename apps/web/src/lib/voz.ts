@@ -1,6 +1,6 @@
 import type { Idioma } from '@edumind-hilo/nucleo'
 
-const LANG: Record<Idioma, string> = { es: 'es-ES', gl: 'gl-ES' }
+const LANG: Record<Idioma, string> = { es: 'es-ES', gl: 'gl-ES', en: 'en-GB' }
 
 /** Lee la pregunta con la voz del sistema. Sin red: es la del navegador. */
 export function hayVoz(): boolean {

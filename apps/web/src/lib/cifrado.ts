@@ -16,10 +16,10 @@ export interface Cifrado {
 const b64 = (b: Uint8Array) => btoa(String.fromCharCode(...b))
 const desb64 = (s: string) => Uint8Array.from(atob(s), c => c.charCodeAt(0))
 
-async function clave(password: string, salt: Uint8Array): Promise<CryptoKey> {
+async function clave(password: string, salt: Uint8Array, iteraciones = ITERACIONES): Promise<CryptoKey> {
   const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey'])
   return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: salt as BufferSource, iterations: ITERACIONES, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: salt as BufferSource, iterations: iteraciones, hash: 'SHA-256' },
     material,
     { name: 'AES-GCM', length: 256 },
     false,
@@ -49,4 +49,25 @@ export async function descifrarTexto(c: Cifrado, password: string): Promise<stri
 
 export function esCifrado(x: unknown): x is Cifrado {
   return typeof x === 'object' && x !== null && (x as { formato?: string }).formato === 'edumind-hilo-cifrado'
+}
+
+/** Copia cifrada de MiClase (.miclase): PBKDF2 con 100.000 iteraciones, misma estructura sin campo `formato`. */
+export interface CifradoMiClase {
+  version: 1
+  salt: string
+  iv: string
+  datos: string
+}
+export function esCifradoMiClase(x: unknown): x is CifradoMiClase {
+  const c = x as Partial<CifradoMiClase & { formato?: string }>
+  return typeof x === 'object' && x !== null && c.version === 1 && typeof c.salt === 'string' && typeof c.iv === 'string' && typeof c.datos === 'string' && !c.formato
+}
+export async function descifrarMiClase(c: CifradoMiClase, password: string): Promise<string> {
+  const k = await clave(password, desb64(c.salt), 100_000)
+  try {
+    const claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: desb64(c.iv) as BufferSource }, k, desb64(c.datos) as BufferSource)
+    return new TextDecoder().decode(claro)
+  } catch {
+    throw new Error('Contraseña incorrecta o copia de MiClase dañada.')
+  }
 }

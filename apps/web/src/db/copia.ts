@@ -20,6 +20,7 @@ export async function exportarCopia(): Promise<Copia> {
     participaciones: await db.participaciones.toArray(),
     eventos: await db.eventos.toArray(),
     notas: await db.notas.toArray(),
+    claves: await db.claves.toArray(),
   }
   return esquemaCopia.parse(copia)
 }
@@ -52,7 +53,7 @@ export async function importarCopia(texto: string): Promise<Record<string, numbe
   await db.transaction('rw', db.tables, async () => {
     for (const tabla of TABLAS) {
       const existentes = (await db.table(tabla).toArray()) as Sellado[]
-      const nuevos = fusionar(existentes, copia[tabla] as Sellado[])
+      const nuevos = fusionar(existentes, (copia[tabla] ?? []) as Sellado[])
       if (nuevos.length) await db.table(tabla).bulkPut(nuevos)
       contadores[tabla] = nuevos.length
     }

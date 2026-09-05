@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ETAPAS, ETIQUETA_ETAPA, IDIOMAS, analizarLista, type Etapa, type Idioma } from '@edumind-hilo/nucleo'
 import { crearGrupoDesdeLista } from '@/db/consultas'
+import { abrirMiClaseCifrado, crearGrupoDesdeMiClase, detectar } from '@/db/importar'
+import type { GrupoMiClase } from '@edumind-hilo/nucleo'
 import { useGrupos } from '@/db/hooks'
 import { fechaCorta } from '@/lib/fechas'
 
-const NOMBRE_IDIOMA: Record<Idioma, string> = { es: 'Castellano', gl: 'Galego' }
+const NOMBRE_IDIOMA: Record<Idioma, string> = { es: 'Castellano', gl: 'Galego', en: 'English' }
 
 function cursoActual(): string {
   const hoy = new Date()
@@ -23,7 +25,30 @@ export function Inicio() {
   const [lista, setLista] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [mostrarForm, setMostrarForm] = useState(false)
+  const [deMiClase, setDeMiClase] = useState<GrupoMiClase[] | null>(null)
   const nombres = analizarLista(lista)
+
+  async function importarFichero(f: File) {
+    setError(null)
+    try {
+      let d = detectar(await f.text())
+      if (d.tipo === 'miclase-cifrado') {
+        const password = prompt('La copia de MiClase está cifrada. Contraseña:') ?? ''
+        if (!password) return
+        d = { tipo: 'miclase', grupos: await abrirMiClaseCifrado(d.cifrado, password) }
+      }
+      if (d.tipo === 'hilo') throw new Error('Es una copia de Hilo: se importa desde Ajustes.')
+      if (d.tipo === 'lista') {
+        setLista(d.nombres.join('\n'))
+        setMostrarForm(true)
+        return
+      }
+      setDeMiClase(d.grupos)
+      setMostrarForm(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo leer el fichero.')
+    }
+  }
 
   async function crear(e: FormEvent) {
     e.preventDefault()
@@ -98,11 +123,29 @@ export function Inicio() {
               <span className="aviso">{nombres.length} nombres. Mejor solo el nombre de pila: es lo que verá el alumnado. Los nombres de pila repetidos se distinguen con la inicial del apellido.</span>
             </label>
             {error && <p className="error">{error}</p>}
-            <div className="acciones" style={{ display: 'flex', gap: 10 }}>
+            <div className="acciones" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <button type="submit" className="btn" disabled={nombres.length < 2}>Crear el grupo</button>
+              <label className="btn secundario" style={{ cursor: 'pointer' }}>
+                Importar fichero
+                <input type="file" accept=".csv,.tsv,.txt,.json,.miclase" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) void importarFichero(f); e.target.value = '' }} />
+              </label>
               {hayGrupos && <button type="button" className="btn secundario" onClick={() => setMostrarForm(false)}>Cancelar</button>}
             </div>
+            <p className="aviso">Importar admite un CSV con la lista (columna «nombre», o la primera) y la exportación de MiClase, en claro o cifrada: de ella solo se leen grupos y alumnos, y se conservan sus códigos.</p>
           </form>
+          {deMiClase && (
+            <div className="panel" style={{ marginTop: 18 }}>
+              <p className="blabel" style={{ marginTop: 0 }}>Grupos en la exportación de MiClase</p>
+              <ul className="rules">
+                {deMiClase.map((g, i) => (
+                  <li key={i}><span className="dash">—</span><span className="crece"><b>{g.nombre}</b> · {g.alumnos.length} alumnos · {ETIQUETA_ETAPA[g.etapa]}</span>
+                    <button type="button" className="btn pequeno" onClick={async () => { try { const gid = await crearGrupoDesdeMiClase(g, idioma); navegar(`/grupo/${gid}`) } catch (err) { setError(err instanceof Error ? err.message : 'No se pudo importar.') } }}>Importar</button>
+                  </li>
+                ))}
+              </ul>
+              <p className="aviso">Los nombres se reducen al nombre de pila, con la inicial del apellido solo cuando se repite.</p>
+            </div>
+          )}
         </section>
       )}
     </>

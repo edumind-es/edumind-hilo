@@ -4,7 +4,7 @@
  * local. Un registro que no valida se rechaza entero.
  */
 import { z } from 'zod'
-import { ESTADOS_TOMA, ETAPAS, IDIOMAS, ORIGENES, SITUACIONES } from './tipos'
+import { ESTADOS_TOMA, ETAPAS, IDIOMAS, ORIGENES, SITUACIONES, type ClaveJwk } from './tipos'
 
 const fechaIso = z.string().regex(
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/,
@@ -84,6 +84,12 @@ export const esquemaEvento = z.object({
   texto: z.string().trim().min(1).max(2000),
 })
 
+export const esquemaClaves = z.object({
+  ...registro,
+  publica: z.custom<ClaveJwk>(v => typeof v === 'object' && v !== null && typeof (v as ClaveJwk).x === 'string'),
+  privada: z.custom<ClaveJwk>(v => typeof v === 'object' && v !== null && typeof (v as ClaveJwk).d === 'string'),
+})
+
 export const esquemaNotaAlumno = z.object({
   ...registro,
   alumno_id: id,
@@ -106,5 +112,7 @@ export const esquemaCopia = z.object({
   participaciones: z.array(esquemaParticipacion),
   eventos: z.array(esquemaEvento),
   notas: z.array(esquemaNotaAlumno),
+  /** Desde 0.4: las claves de entrega del docente viajan con la copia. */
+  claves: z.array(esquemaClaves).optional(),
 })
 export type Copia = z.infer<typeof esquemaCopia>

@@ -41,13 +41,18 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [x] Informe de grupo: un HTML autocontenido en Lámina, el mismo en pantalla,
       impreso y descargado.
 
-## F3 · Tiempo y aula virtual
+## F3 · Tiempo y aula virtual — HECHO (v0.4)
 
-- [ ] Prueba autocontenida con código de acceso y respuesta cifrada con la
-      clave pública del docente (ECDH P-256 + AES-256-GCM).
-- [ ] Comparador de tomas y trayectoria por alumno con eventos.
-- [ ] Importación desde MiClase y desde CSV/XLSX.
-- [ ] Inglés.
+- [x] Prueba con código de acceso: enlace (o fichero HTML que lo abre) con la
+      lista y la clave pública del docente en el fragmento; el alumno entra
+      con su código y descarga una entrega cifrada (ECDH P-256 + AES-256-GCM)
+      que solo el dispositivo del docente abre. Recogida por arrastre.
+- [x] Comparador de tomas y trayectoria por alumno con los eventos del grupo.
+- [x] Importación desde MiClase (en claro o cifrada, conservando códigos) y
+      desde CSV: listas y matrices «quién elige a quién» de otras herramientas.
+- [x] Inglés en el cuestionario y en la pantalla del alumnado.
+- [ ] XLSX directo: de momento, guardar como CSV desde la hoja de cálculo.
+- [ ] Portal del docente en gallego e inglés (hoy solo en castellano).
 
 ## F4 · Opcional
 

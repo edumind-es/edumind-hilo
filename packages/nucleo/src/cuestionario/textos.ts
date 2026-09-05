@@ -95,7 +95,31 @@ const gl: Cuestionario = {
   },
 }
 
-export const CUESTIONARIOS: Record<Idioma, Cuestionario> = { es, gl }
+const en: Cuestionario = {
+  inicial: {
+    equipo: { pregunta: 'We are going to do something in teams. Who do you want to be with?', ayuda: 'Tap anyone you like.' },
+    recreo: { pregunta: 'At playtime, who do you play with?', ayuda: 'Tap anyone you like.' },
+    ayuda: { pregunta: 'If you feel sad, who do you tell?', ayuda: 'Tap anyone you like.' },
+    espejo: { pregunta: 'Who do you think wants you on their team?', ayuda: 'Tap anyone you like.' },
+    viaje: { pregunta: 'If we go on a trip, who do you want to go with?', ayuda: 'Tap anyone you like.' },
+  },
+  primaria: {
+    equipo: { pregunta: 'Tomorrow we start a team project. Who would you like to be in a team with?', ayuda: 'There are no right or wrong answers.' },
+    recreo: { pregunta: 'A long break, nothing organised. Who would you like to spend it with?', ayuda: 'There are no right or wrong answers.' },
+    ayuda: { pregunta: 'If you had a problem in class, who in the class would you tell?', ayuda: 'There are no right or wrong answers.' },
+    espejo: { pregunta: 'If the others chose the teams, who do you think would choose you?', ayuda: 'Think about who would choose you.' },
+    viaje: { pregunta: 'On a two-day trip, who would you share a room with?', ayuda: 'There are no right or wrong answers.' },
+  },
+  secundaria: {
+    equipo: { pregunta: 'A team project starts tomorrow. Who would you like to work with?', ayuda: 'Only your teachers will see your answers.', negativa: 'And if you could choose, who would you rather not be in that team with?' },
+    recreo: { pregunta: 'Some free time, nothing organised. Who would you like to spend it with?', ayuda: 'Only your teachers will see your answers.', negativa: 'Who would you rather not spend it with?' },
+    ayuda: { pregunta: 'If you had a problem, who in the class would you tell?', ayuda: 'Only your teachers will see your answers.' },
+    espejo: { pregunta: 'If the others chose the teams, who do you think would choose you?', ayuda: 'Think about who would choose you.' },
+    viaje: { pregunta: 'On a two-day trip, who would you share a room with?', ayuda: 'Only your teachers will see your answers.', negativa: 'Who would you rather not share it with?' },
+  },
+}
+
+export const CUESTIONARIOS: Record<Idioma, Cuestionario> = { es, gl, en }
 
 /** Textos de la interfaz del alumnado. Sin la palabra «sociograma». */
 export interface TextosAlumno {
@@ -114,6 +138,10 @@ export interface TextosAlumno {
   quienEres: string
   entregar: string
   siguientePersona: string
+  codigo: string
+  codigoMal: string
+  subir: (fichero: string) => string
+  descargarOtraVez: string
 }
 
 export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
@@ -133,6 +161,10 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     quienEres: '¿Quién eres?',
     entregar: 'Enséñale este código a tu profe para entregar.',
     siguientePersona: 'Ya está entregado',
+    codigo: 'Escribe tu código',
+    codigoMal: 'Ese código no es de esta clase. Míralo bien.',
+    subir: f => `Se ha descargado el fichero ${f}. Súbelo a la tarea para entregar.`,
+    descargarOtraVez: 'Descargar otra vez',
   },
   gl: {
     titulo: 'O meu equipo',
@@ -150,5 +182,30 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     quienEres: 'Quen es?',
     entregar: 'Amósalle este código á túa profe para entregar.',
     siguientePersona: 'Xa está entregado',
+    codigo: 'Escribe o teu código',
+    codigoMal: 'Ese código non é desta clase. Mírao ben.',
+    subir: f => `Descargouse o ficheiro ${f}. Súbeo á tarefa para entregar.`,
+    descargarOtraVez: 'Descargar outra vez',
+  },
+  en: {
+    titulo: 'My team',
+    paso: (n, t) => `Question ${n} of ${t}`,
+    limite: n => (n === 1 ? 'You can choose one person.' : `You can choose up to ${n}.`),
+    contador: (n, max) => `You chose ${n} of ${max}`,
+    siguiente: 'Next',
+    terminar: 'Finish',
+    escuchar: 'Listen to the question',
+    sinEleccion: 'You have not chosen anyone.',
+    confirmarSinEleccion: 'Skip without choosing',
+    seguirEligiendo: 'Go back and choose',
+    graciasTitulo: 'Thank you. All done.',
+    graciasTexto: 'You can hand the device back.',
+    quienEres: 'Who are you?',
+    entregar: 'Show this code to your teacher to hand in.',
+    siguientePersona: 'Handed in',
+    codigo: 'Type your code',
+    codigoMal: 'That code is not from this class. Check it again.',
+    subir: f => `The file ${f} has been downloaded. Upload it to the assignment to hand in.`,
+    descargarOtraVez: 'Download again',
   },
 }

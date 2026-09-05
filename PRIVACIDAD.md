@@ -8,7 +8,7 @@ No es asesoramiento jurídico: es la descripción técnica de cómo funciona el
 programa. Todo lo que se afirma aquí es comprobable en el código fuente y buena
 parte está cubierto por pruebas automáticas.
 
-Última revisión: 5 de septiembre de 2026 · fase 1.
+Última revisión: 5 de septiembre de 2026 · versión 1.0.
 
 ## 1. El principio de diseño
 
@@ -58,6 +58,11 @@ por red en ninguna modalidad.
 | Tablets | Lista del grupo (código y nombre de pila) y configuración de la toma, comprimidas en el fragmento de una URL | Un QR proyectado, leído por la cámara de la tablet | Las elecciones, por código de alumno | Un QR en la pantalla de la tablet, leído por la cámara del docente |
 | Hoja de marcas | La hoja impresa, con nombres de pila y un QR con la toma, el código del alumno y el orden de filas | Papel | Las marcas | La cámara del docente; la foto se descarta al confirmar |
 | Transcripción | Nada | — | Lo que teclea el docente | — |
+| Prueba por aula virtual | Lista del grupo (código y nombre de pila), configuración y **clave pública** del docente, en el fragmento de un enlace | El canal del centro (Moodle, aula virtual, correo), restringido al grupo | Un fichero de entrega cifrado con esa clave pública (ECDH P-256 + AES-256-GCM) | La tarea de Moodle; solo la clave privada, que no sale del dispositivo del docente, lo abre |
+
+La lista de la prueba viaja en claro dentro del enlace porque el alumnado tiene
+que leerla; por eso se distribuye por un canal ya restringido al grupo, con
+nombres de pila, y nunca en abierto. Los códigos de acceso se entregan aparte.
 
 El fragmento de una URL (lo que va detrás de `#`) no se envía nunca al
 servidor. La página de la tablet lo borra de la barra de direcciones y del
@@ -95,6 +100,12 @@ El tratamiento se enmarca en la función educativa y orientadora del centro
   devolverlos al alumnado; a las familias, solo lo relativo a su hijo o hija y a
   través del tutor.
 - Borrar las tomas al cambiar de etapa, salvo necesidad justificada.
+
+## 5 bis. Importaciones
+
+De una exportación de MiClase solo se leen tres tablas (grupos, alumnos y su
+relación); nada más se mira ni se guarda. Los nombres se reducen al nombre de
+pila, con la inicial del apellido solo cuando se repite.
 
 ## 6. Copias de seguridad
 

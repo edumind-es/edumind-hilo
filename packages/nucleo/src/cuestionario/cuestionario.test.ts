@@ -4,7 +4,7 @@ import { ETAPAS, IDIOMAS, SITUACIONES } from '../tipos'
 
 // Palabras que convierten una preferencia en un juicio, o que le explican al
 // alumno qué se está midiendo. Si aparecen, la pregunta está mal escrita.
-const PROHIBIDAS = [/sociograma/i, /mejores? amig/i, /mellores? amig/i, /por qu[eé]/i, /por que\b/i, /odias/i, /cae[ns]? mal/i, /no te gusta/i, /non che gusta/i]
+const PROHIBIDAS = [/sociogram/i, /mejores? amig/i, /mellores? amig/i, /best friend/i, /por qu[eé]/i, /por que\b/i, /\bwhy\b/i, /odias/i, /\bhate\b/i, /cae[ns]? mal/i, /no te gusta/i, /non che gusta/i, /don.t like/i]
 
 describe('banco de situaciones', () => {
   it('tiene texto para cada idioma, etapa y situación', () => {

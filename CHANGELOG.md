@@ -1,5 +1,10 @@
 # Cambios
 
+## 0.4.0 — 2026-09-05
+
+Fase 3. Prueba con código de acceso y entregas cifradas con clave pública,
+comparador de tomas, trayectoria, importación desde MiClase y CSV, inglés.
+
 ## 0.3.0 — 2026-09-05
 
 Fase 2. Grafo de fuerzas en SVG, ficha de alumno con notas y trayectoria,

@@ -1,6 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
 import { Marco } from './componentes/Marco'
 import { Ajustes } from './paginas/Ajustes'
+import { Comparar } from './paginas/Comparar'
+import { Entregas } from './paginas/Entregas'
+import { Prueba } from './paginas/Prueba'
+import { PruebaAlumno } from './paginas/PruebaAlumno'
 import { Escanear } from './paginas/Escanear'
 import { FichaAlumno } from './paginas/FichaAlumno'
 import { Informe } from './paginas/Informe'
@@ -20,6 +24,7 @@ export default function App() {
       <Route path="/toma/:id/responder" element={<Responder />} />
       <Route path="/toma/:id/hojas" element={<Hojas />} />
       <Route path="/s" element={<SesionAlumno />} />
+      <Route path="/p" element={<PruebaAlumno />} />
       <Route path="/toma/:id/informe" element={<Informe />} />
       <Route element={<Marco />}>
         <Route path="/" element={<Inicio />} />
@@ -29,6 +34,9 @@ export default function App() {
         <Route path="/toma/:id/escanear" element={<Escanear />} />
         <Route path="/toma/:id/transcribir" element={<Transcribir />} />
         <Route path="/alumno/:id" element={<FichaAlumno />} />
+        <Route path="/toma/:id/prueba" element={<Prueba />} />
+        <Route path="/toma/:id/entregas" element={<Entregas />} />
+        <Route path="/grupo/:id/comparar" element={<Comparar />} />
         <Route path="/ajustes" element={<Ajustes />} />
       </Route>
     </Routes>

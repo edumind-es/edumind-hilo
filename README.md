@@ -19,21 +19,27 @@ Hilo es el hilo invisible que une a un grupo.
   viaje), en tres registros por edad y en castellano y gallego. Sin motivo, sin
   ranking, sin resultados para el alumnado. Nominaciones negativas bloqueadas en
   Primaria por diseño; en Secundaria solo por activación expresa.
-- **Cinco formas de recoger, ninguna con servidor**: en el dispositivo del
+- **Seis formas de recoger, ninguna con servidor**: en el dispositivo del
   docente pasándolo de mano en mano; con tablets, proyectando un QR que lleva
   la lista y leyendo con la cámara el QR de respuesta de cada tablet; con
-  hojas de marcas impresas que la cámara lee; o transcribiendo del papel con
-  un teclado rápido.
+  hojas de marcas impresas que la cámara lee; transcribiendo del papel con un
+  teclado rápido; con una prueba por el aula virtual cuyas entregas vienen
+  cifradas con la clave pública del docente; o importando una matriz CSV de
+  otra herramienta.
 - **Análisis en el navegador**: matriz sociométrica, elecciones recibidas,
   reciprocidad, cohesión, ajuste perceptivo, subgrupos, puentes y lista de
   atención. Con negativas, los tipos de Coie y Dodge.
+- **Lectura en el tiempo**: comparador de dos tomas y trayectoria de cada
+  alumno con los eventos del grupo sobre la misma línea. Informe de grupo
+  autocontenido en HTML.
 - **Copia de seguridad** cifrada con contraseña (AES-256), importable en otro
-  dispositivo con fusión por fecha de modificación.
+  dispositivo con fusión por fecha de modificación. Importa grupos desde
+  MiClase y listas desde CSV.
+- **Cuestionario en castellano, gallego e inglés**, en tres registros por edad.
 - **Funciona sin conexión**: PWA instalable. No carga nada de ningún origen
   externo; el CI lo comprueba.
 
-Lo que viene (grafo, prueba con código de acceso cifrada para el aula virtual,
-lectura longitudinal) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
+Lo que queda (relé opcional, app nativa) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
 justificación pedagógica y la arquitectura, está en
 [docs/lamina-diseno.html](docs/lamina-diseno.html).
 

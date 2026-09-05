@@ -11,7 +11,7 @@ export const ETAPAS = ['inicial', 'primaria', 'secundaria'] as const
 /** Registro de presentación del cuestionario, no el curso administrativo. */
 export type Etapa = (typeof ETAPAS)[number]
 
-export const IDIOMAS = ['es', 'gl'] as const
+export const IDIOMAS = ['es', 'gl', 'en'] as const
 export type Idioma = (typeof IDIOMAS)[number]
 
 export const SITUACIONES = ['equipo', 'recreo', 'ayuda', 'espejo', 'viaje'] as const
@@ -94,6 +94,23 @@ export interface Evento extends Registro {
   grupo_id: string
   fecha: string
   texto: string
+}
+
+/** Clave en formato JWK, sin depender de los tipos del DOM. Compatible con JsonWebKey en ambos sentidos. */
+export interface ClaveJwk {
+  kty?: string
+  crv?: string
+  x?: string
+  y?: string
+  d?: string
+  ext?: boolean
+  key_ops?: string[]
+}
+
+/** Par de claves del docente para las entregas cifradas (ECDH P-256, JWK). */
+export interface ClavesDocente extends Registro {
+  publica: ClaveJwk
+  privada: ClaveJwk
 }
 
 export interface NotaAlumno extends Registro {

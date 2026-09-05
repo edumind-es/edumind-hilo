@@ -12,6 +12,7 @@ import {
   type Situacion,
 } from '@edumind-hilo/nucleo'
 import { actualizarAlumno, anadirAlumnos, anadirEvento, borrarAlumno, borrarGrupo, crearToma, tituloPorDefecto } from '@/db/consultas'
+import { importarMatriz } from '@/db/importar'
 import { useAlumnos, useEventos, useGrupo, useTomas } from '@/db/hooks'
 import { fechaCorta, hoyIso } from '@/lib/fechas'
 
@@ -56,6 +57,23 @@ export function Grupo() {
           const tid = await crearToma(grupo, datos)
           navegar(`/toma/${tid}`)
         }} />
+        <p className="no-imprimir" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          {(tomas?.length ?? 0) >= 2 && <Link className="btn secundario pequeno" to={`/grupo/${grupo.id}/comparar`}>Comparar tomas</Link>}
+          <label className="btn secundario pequeno" style={{ cursor: 'pointer' }}>
+            Importar matriz CSV como toma
+            <input type="file" accept=".csv,.tsv,.txt" style={{ display: 'none' }} onChange={async e => {
+              const f = e.target.files?.[0]
+              e.target.value = ''
+              if (!f || !alumnos) return
+              try {
+                const tid = await importarMatriz(grupo, alumnos, await f.text(), `Importada: ${f.name}`)
+                navegar(`/toma/${tid}`)
+              } catch (err) {
+                alert(err instanceof Error ? err.message : 'No se pudo importar la matriz.')
+              }
+            }} />
+          </label>
+        </p>
       </section>
 
       <section className="sec">

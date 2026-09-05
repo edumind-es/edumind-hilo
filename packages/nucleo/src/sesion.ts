@@ -103,6 +103,12 @@ export async function desempaquetarSesion(texto: string): Promise<Sesion> {
   }
 }
 
+/** Extrae la clave pública del docente del fragmento (`&k=…`), si va. */
+export function claveDeFragmento(hash: string): string | null {
+  const m = /(?:^|[#&])k=([A-Za-z0-9_-]+)/.exec(hash)
+  return m ? m[1]! : null
+}
+
 /** Extrae el paquete del fragmento de una URL (`#g=…`). */
 export function paqueteDeFragmento(hash: string): string | null {
   const m = /(?:^|[#&])g=([A-Za-z0-9_-]+)/.exec(hash)

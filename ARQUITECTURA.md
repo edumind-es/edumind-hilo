@@ -84,6 +84,23 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
 - **Transcripción.** `lib/buscar.ts` para el prefijo sin acentos; los pasos
   salen de `construirPasos`, los mismos que ve el alumnado.
 
+## Fase 3
+
+- **Prueba con código (modalidad D).** `Prueba` construye `/p#g=…&k=…`: el
+  mismo paquete de sesión más la clave pública del docente (`lib/clavePublica.ts`,
+  ECDH P-256). `PruebaAlumno` pide el código, reutiliza `PantallaAlumno` y
+  cifra la respuesta con un par efímero; `Entregas` la abre con la privada
+  (`db/claves.ts`, tabla `claves`, versión 2 de Dexie) y la registra por
+  `registrarDesdeCodigos`. Decisión: la prueba es un enlace a la app estática,
+  no un HTML con la app dentro; el fichero HTML descargable solo lo abre.
+  Así no hay dos implementaciones de la pantalla del alumnado.
+- **Tiempo.** `Comparar` y la trayectoria de `FichaAlumno` recalculan
+  `analizar()` por toma; nada se persiste. `informe/trayectoriaSvg.ts` dibuja
+  la línea con los eventos del grupo.
+- **Importación.** `nucleo/importacion/`: CSV sin librerías (listas y
+  matrices) y lectura de la exportación de MiClase (solo grupos y alumnos);
+  `db/importar.ts` decide qué es cada fichero.
+
 ## Invariantes que no se rompen
 
 - La pantalla del alumnado no muestra resultados ni la palabra «sociograma».
