@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@edumind-hilo/nucleo': resolve(__dirname, '../../packages/nucleo/src/index.ts'),
+      '@': resolve(import.meta.dirname, 'src'),
+      '@edumind-hilo/nucleo': resolve(import.meta.dirname, '../../packages/nucleo/src/index.ts'),
     },
   },
   test: {

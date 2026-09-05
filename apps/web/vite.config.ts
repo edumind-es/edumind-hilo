@@ -40,10 +40,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(import.meta.dirname, 'src'),
       // Siempre desde el código fuente del núcleo, nunca desde un dist
       // compilado: así lo que se prueba es lo que se está tocando.
-      '@edumind-hilo/nucleo': resolve(__dirname, '../../packages/nucleo/src/index.ts'),
+      '@edumind-hilo/nucleo': resolve(import.meta.dirname, '../../packages/nucleo/src/index.ts'),
     },
   },
   server: { port: 5190 },

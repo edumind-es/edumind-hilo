@@ -13,7 +13,7 @@ if (!dir) { console.error('uso: sin-origenes-externos.mjs <dist>'); process.exit
 // mensajes de error (enlaces a documentación: no se cargan nunca). En HTML,
 // CSS y manifiesto no se admite ninguna.
 const PERMITIDAS_JS = [
-  /^https?:\/\/(www\.)?(gnu\.org|joinup\.ec\.europa\.eu|edumind\.es|hilo\.edumind\.es|github\.com)/,
+  /^https?:\/\/(www\.)?(gnu\.org|joinup\.ec\.europa\.eu|edumind\.es|hilos\.edumind\.es|github\.com)/,
   /^http:\/\/www\.w3\.org\//,
   /^https?:\/\/schema\.org/,
   /^https:\/\/react\.dev\//,
@@ -21,7 +21,7 @@ const PERMITIDAS_JS = [
   /^https?:\/\/(bit\.ly|tinyurl\.com)\//,
   /^http:\/\/localhost/,
 ]
-const PERMITIDAS_RESTO = [/^https?:\/\/(www\.)?(edumind\.es|hilo\.edumind\.es|github\.com)/, /^http:\/\/www\.w3\.org\//]
+const PERMITIDAS_RESTO = [/^https?:\/\/(www\.)?(edumind\.es|hilos\.edumind\.es|github\.com)/, /^http:\/\/www\.w3\.org\//]
 function* ficheros(d) {
   for (const n of readdirSync(d)) {
     const r = join(d, n)
