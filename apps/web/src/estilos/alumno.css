@@ -1,0 +1,51 @@
+/* ===== Pantalla del alumnado · EDUmind-Alumno =====
+   La excepción canónica: color vivo, radio, sombra suave, tipografía cálida.
+   Todo acotado a .modo-alumno. Fuentes del sistema; nada se carga de fuera. */
+.modo-alumno{
+  --a-paper:#fafbfc;--a-paper-2:#f1f4f8;--a-card:#ffffff;
+  --a-ink:#0f172a;--a-ink-2:#334155;--a-ink-3:#64748b;--a-line:#e2e8f0;
+  --a-social:#ec4899;--a-emocional:#f59e0b;--a-fisico:#10b981;--a-mental:#3b82f6;--a-interior:#8b5cf6;
+  --a-color:var(--a-social);--a-tinte:#fdf2f8;
+  --a-r:20px;--a-r-sm:14px;--a-pill:999px;
+  --a-sombra:0 4px 20px rgba(15,23,42,.08);--a-sombra-lift:0 12px 32px rgba(15,23,42,.14);
+  --a-display:'Fraunces',Georgia,'Times New Roman',serif;
+  --a-body:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  position:fixed;inset:0;overflow:auto;background:var(--a-paper);color:var(--a-ink);
+  font:400 18px/1.45 var(--a-body);-webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.modo-alumno *{box-sizing:border-box}
+.modo-alumno .banda{height:8px;background:var(--a-color)}
+.modo-alumno .lienzo{max-width:960px;margin:0 auto;padding:28px clamp(18px,4vw,40px) 40px}
+.modo-alumno .paso{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--a-ink-3);margin-bottom:22px}
+.modo-alumno .puntos{display:flex;gap:7px}
+.modo-alumno .puntos i{width:12px;height:12px;border-radius:var(--a-pill);background:var(--a-line);display:block}
+.modo-alumno .puntos i.on{background:var(--a-color)}
+.modo-alumno .puntos i.hecho{background:var(--a-ink-3)}
+.modo-alumno .pregunta{font-family:var(--a-display);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.6rem);line-height:1.2;margin:0 0 8px;text-wrap:balance;max-width:24ch}
+.modo-alumno .ayuda{color:var(--a-ink-2);font-size:17px;margin:0 0 22px}
+.modo-alumno .fichas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:26px}
+.modo-alumno .ficha{appearance:none;background:var(--a-card);border:3px solid var(--a-line);border-radius:var(--a-r-sm);padding:14px 14px;min-height:64px;display:flex;align-items:center;gap:12px;font:500 19px/1.2 var(--a-body);color:var(--a-ink);cursor:pointer;text-align:left;box-shadow:var(--a-sombra);transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.modo-alumno .ficha i{width:28px;height:28px;border-radius:var(--a-pill);background:var(--a-line);flex:none;display:block}
+.modo-alumno .ficha.on{border-color:var(--a-color);background:var(--a-tinte)}
+.modo-alumno .ficha.on i{background:var(--a-color)}
+.modo-alumno .ficha:hover,.modo-alumno .ficha:focus-visible{transform:translateY(-2px);box-shadow:var(--a-sombra-lift)}
+.modo-alumno .ficha:focus-visible{outline:3px solid var(--a-mental);outline-offset:2px}
+.modo-alumno .ficha:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.modo-alumno .barra{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--a-paper);padding:14px 0 6px}
+.modo-alumno .contador{font-weight:700;font-size:16px;color:var(--a-ink-2)}
+.modo-alumno .boton{appearance:none;background:var(--a-color);color:#fff;font:700 18px/1 var(--a-body);padding:18px 30px;border:0;border-radius:var(--a-pill);box-shadow:var(--a-sombra);cursor:pointer;min-height:56px}
+.modo-alumno .boton:focus-visible{outline:3px solid var(--a-ink);outline-offset:2px}
+.modo-alumno .boton.suave{background:var(--a-card);color:var(--a-ink);border:2px solid var(--a-line);box-shadow:none}
+.modo-alumno .audio{appearance:none;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--a-body);color:var(--a-ink-2);border:2px solid var(--a-line);padding:12px 18px;border-radius:var(--a-pill);background:var(--a-card);cursor:pointer;min-height:48px}
+.modo-alumno .audio svg{width:20px;height:20px}
+.modo-alumno .confirmar{background:var(--a-paper-2);border-radius:var(--a-r);padding:18px 20px;margin:0 0 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.modo-alumno .confirmar p{margin:0;flex:1;font-weight:500}
+.modo-alumno .gracias{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px}
+.modo-alumno .gracias h1{font-family:var(--a-display);font-size:clamp(2.4rem,6vw,4rem);margin:0}
+.modo-alumno .gracias p{color:var(--a-ink-2);font-size:20px;margin:0}
+.modo-alumno .gracias svg{width:120px;height:120px;color:var(--a-color)}
+.modo-alumno .quien{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.modo-alumno .pie{margin-top:40px;font-size:13px;color:var(--a-ink-3);text-align:center}
+.modo-alumno .esquina{position:fixed;top:14px;right:14px;font:600 12px/1 var(--a-body);color:var(--a-ink-3);background:transparent;border:1px solid var(--a-line);border-radius:var(--a-pill);padding:8px 12px;cursor:pointer;opacity:.6}
+@media (prefers-reduced-motion:reduce){.modo-alumno *{transition:none !important}}

@@ -1,0 +1,12 @@
+node_modules
+dist
+apps/web/dist
+apps/web/releases/
+*.log
+*.tsbuildinfo
+.DS_Store
+# Nunca hay .env en Hilo (no tiene backend), pero el guardián global lo
+# bloquea igualmente por si alguien lo añade.
+.env
+.env.*
+!.env.example

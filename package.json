@@ -1,0 +1,29 @@
+{
+  "name": "edumind-hilo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "EDUmind Hilo: sociograma de aula local-first y sin servidor. PWA para el docente, pantalla adaptada para el alumnado.",
+  "author": "Luis Vilela Acuña <contacto@edumind.es>",
+  "license": "(AGPL-3.0-or-later OR EUPL-1.2)",
+  "homepage": "https://hilo.edumind.es",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edumind-es/edumind-hilo.git"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "npm --workspace @edumind-hilo/web run dev",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test:prohibidas && npm run test --workspaces --if-present",
+    "test:rapido": "npm run test:prohibidas && npm --workspace @edumind-hilo/nucleo run test",
+    "test:prohibidas": "node pruebas/cadenas-prohibidas.mjs",
+    "iconos": "python3 scripts/iconos.py"
+  }
+}

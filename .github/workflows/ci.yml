@@ -1,0 +1,35 @@
+# Integración continua de EDUmind Hilo.
+#
+# Corre exactamente lo mismo que `npm test` en local: no hay dos verdades
+# sobre si el proyecto está bien. NO despliega: el despliegue es siempre una
+# decisión manual de una persona (./desplegar.sh).
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Tipos
+        run: npm run typecheck
+      - name: Pruebas
+        run: npm test
+      - name: Compilar
+        run: npm run build
+      # La página del alumnado no puede hacer peticiones de red: si alguna
+      # dependencia mete un fetch a un tercero, se ve aquí.
+      - name: Comprobar que la app compilada no llama a ningún origen externo
+        run: node pruebas/sin-origenes-externos.mjs apps/web/dist

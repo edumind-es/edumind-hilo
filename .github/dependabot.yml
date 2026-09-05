@@ -1,0 +1,28 @@
+# Dependabot: un PR al mes por ecosistema, con todo agrupado. Las
+# actualizaciones de SEGURIDAD llegan por su propio canal, no dependen de esto.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      menores-y-parches:
+        update-types: ["minor", "patch"]
+      mayores:
+        update-types: ["major"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      menores-y-parches:
+        update-types: ["minor", "patch"]
+      mayores:
+        update-types: ["major"]

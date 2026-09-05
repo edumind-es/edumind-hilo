@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="Luis Vilela Acuña">
+<title>Hilo EDUmind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== EDUmind-Lámina v1.0 — hoja base canónica ===== */
+:root{
+  --paper:#ece9e1; --paper-2:#e4e0d6; --card:#f4f2ec;
+  --ink:#17181a; --ink-2:#3d3f42; --ink-3:#7c7a74;
+  --rule:#17181a; --hair:#c9c4b8;
+  --m-emocional:#c05f3c; --m-social:#c19a2e; --m-fisico:#7ba24f;
+  --m-mental:#6c8fb3; --m-interior:#4a5f68;
+  --ok:#4f7a3f; --alert:#b03a2e;
+  --font-display:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-body:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',monospace;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;border-radius:0 !important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:400 16.5px/1.55 var(--font-body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,56px)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:52px;align-items:start}
+.aside{position:sticky;top:32px}
+
+.worlds-bar{display:grid;grid-template-columns:repeat(5,1fr);height:6px}
+.worlds-bar i:nth-child(1){background:var(--m-emocional)}
+.worlds-bar i:nth-child(2){background:var(--m-social)}
+.worlds-bar i:nth-child(3){background:var(--m-fisico)}
+.worlds-bar i:nth-child(4){background:var(--m-mental)}
+.worlds-bar i:nth-child(5){background:var(--m-interior)}
+
+.topbar{border-bottom:2px solid var(--rule);background:var(--paper)}
+.topbar .wrap{display:flex;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px}
+.mono{font:400 11px/1.4 var(--font-mono);text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3)}
+.mono-ink{color:var(--ink);font-weight:500}
+
+.eyebrow{font:500 13px/1 var(--font-mono);letter-spacing:.06em;color:var(--m-emocional);margin:44px 0 14px}
+h1{font-family:var(--font-display);font-weight:800;letter-spacing:-.035em;line-height:.92;
+  font-size:clamp(2.9rem,7vw,5.2rem);margin:0 0 18px;max-width:14ch;text-wrap:balance}
+h1 .light{font-weight:400}
+.lede{font-size:19px;line-height:1.45;color:var(--ink-2);max-width:38ch;margin:0 0 28px}
+
+.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;
+  font:500 12px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;
+  padding:17px 22px;border:2px solid var(--ink);cursor:pointer;transition:background .15s ease,color .15s ease}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn-block{display:block;width:100%;text-align:center}
+.stamp{display:inline-block;border:1px solid var(--ok);color:var(--ok);
+  font:400 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.11em;padding:11px 14px;margin-left:12px}
+.stamp.pending{border-color:var(--m-social);color:#8a6c12}
+
+.metastrip{display:flex;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:34px}
+.metastrip span{font:400 13px/1 var(--font-mono);color:var(--ink-2);padding:14px 22px 14px 0;
+  border-right:1px solid var(--hair);margin-right:22px}
+.metastrip span:last-child{border-right:0}
+
+.sec{margin:74px 0}
+.sec:first-child{margin-top:0}
+.sec-head{display:flex;align-items:flex-start;gap:22px;margin-bottom:26px}
+.sec-num{font-family:var(--font-display);font-weight:800;font-size:40px;line-height:.9;
+  color:var(--m-mental);letter-spacing:-.03em}
+.sec-head h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:26px;
+  letter-spacing:-.02em;padding-top:12px;border-top:2px solid var(--rule);flex:1;text-wrap:balance}
+.sec-lede{font-size:20px;line-height:1.45;font-weight:500;margin:0 0 26px;max-width:60ch}
+.sec p{max-width:68ch}
+h3{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-.01em;margin:34px 0 10px}
+
+.rules{list-style:none;margin:0 0 30px;padding:0}
+.rules li{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);
+  font-size:16px;line-height:1.5}
+.rules li .dash{color:var(--ink-3);flex:none}
+.rules li b{font-weight:600}
+
+.blabel{font:400 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.14em;
+  color:var(--ink-3);margin:34px 0 12px}
+
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{font:500 12px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.1em;
+  padding:10px 14px;color:#fff;background:var(--c,var(--ink))}
+.badge::before{content:'●';margin-right:8px;font-size:9px;vertical-align:1px}
+.b-emocional{--c:var(--m-emocional)} .b-social{--c:var(--m-social)}
+.b-fisico{--c:var(--m-fisico)} .b-mental{--c:var(--m-mental)} .b-interior{--c:var(--m-interior)}
+
+.spec{border-top:2px solid var(--rule);margin-top:26px}
+.spec div{padding:14px 0;border-bottom:1px solid var(--hair)}
+.spec dt{font:400 11px/1.3 var(--font-mono);text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3);margin-bottom:5px}
+.spec dd{margin:0;font-weight:600;font-size:17px}
+
+.note{background:var(--card);border-left:3px solid var(--c,var(--ink));padding:20px 22px;margin:26px 0;max-width:68ch}
+.note .tag{display:inline-block;border:1px solid var(--c,var(--ink));color:var(--c,var(--ink));
+  font:400 10px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;padding:5px 8px;margin-bottom:10px}
+.note p{margin:0;color:var(--ink-2)}
+.note.alert{--c:var(--alert)}
+
+.panel{border:1px solid var(--hair);background:var(--card);padding:18px}
+.panel-head{display:flex;justify-content:space-between;border-bottom:1px solid var(--hair);padding-bottom:10px;margin-bottom:14px}
+
+.tablewrap{overflow-x:auto;margin:24px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:var(--ink);color:var(--paper);font:500 11px/1.3 var(--font-mono);
+  text-transform:uppercase;letter-spacing:.1em;text-align:left;padding:12px 14px;white-space:nowrap}
+td{padding:13px 14px;border-bottom:1px solid var(--hair);vertical-align:top}
+td.k{font:500 12px/1.5 var(--font-mono);letter-spacing:.04em;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;text-align:right}
+
+footer{border-top:2px solid var(--rule);margin-top:90px;padding:34px 0 0}
+footer .tm{font-size:11.5px;line-height:1.6;color:var(--ink-3);max-width:70ch;margin:14px 0 34px}
+
+/* ===== Ampliaciones para esta lámina ===== */
+
+/* Pareja de preguntas: cómo NO se pregunta / cómo SÍ */
+.pair{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--hair);margin:24px 0;max-width:68ch}
+.pair > div{padding:18px 20px}
+.pair > div:first-child{border-right:1px solid var(--hair);background:var(--paper-2)}
+.pair .tag{display:inline-block;font:400 10px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;padding:5px 8px;border:1px solid currentColor;margin-bottom:12px}
+.pair .no .tag{color:var(--alert)}
+.pair .si .tag{color:var(--ok)}
+.pair q{display:block;font-size:17px;font-weight:600;quotes:'«' '»';line-height:1.35}
+.pair small{display:block;margin-top:10px;color:var(--ink-3);font-size:13px;line-height:1.45}
+
+/* Diagrama de arquitectura */
+.diagram{border:1px solid var(--hair);background:var(--card);padding:18px;margin:26px 0}
+.diagram svg{width:100%;height:auto;display:block;font-family:var(--font-mono)}
+.diagram .cap{font:400 11px/1.5 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin:12px 0 0}
+
+/* Línea temporal de la sesión */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--rule);margin:26px 0}
+.timeline > div{padding:16px 16px 18px 0;border-right:1px solid var(--hair)}
+.timeline > div:last-child{border-right:0}
+.timeline .t{font:500 12px/1 var(--font-mono);letter-spacing:.08em;color:var(--m-mental);margin-bottom:10px}
+.timeline .n{font-weight:700;font-size:16px;margin-bottom:6px}
+.timeline p{margin:0;font-size:14px;line-height:1.45;color:var(--ink-2)}
+
+/* Fases de la hoja de ruta */
+.phase{display:grid;grid-template-columns:72px 1fr 150px;gap:20px;padding:18px 0;border-bottom:1px solid var(--hair);align-items:start}
+.phase .f{font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1;letter-spacing:-.03em;color:var(--m-social)}
+.phase .f small{display:block;font:400 10px/1.4 var(--font-mono);letter-spacing:.12em;color:var(--ink-3);margin-top:6px;text-transform:uppercase}
+.phase h4{margin:0 0 6px;font-size:17px;font-weight:700}
+.phase p{margin:0;font-size:15px;color:var(--ink-2);line-height:1.5}
+.phase .d{font:400 12px/1.5 var(--font-mono);letter-spacing:.06em;color:var(--ink-2);text-align:right}
+
+/* Mockup de la pantalla del alumnado: EXCEPCIÓN EDUmind-Alumno, acotada a este marco */
+.mockframe{border:1px solid var(--hair);background:var(--card);padding:18px;margin:26px 0}
+.mockframe .cap{font:400 11px/1.5 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin:0 0 14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mock-alumno{
+  --a-paper:#fafbfc;--a-card:#ffffff;--a-ink:#0f172a;--a-ink-2:#334155;--a-ink-3:#64748b;--a-line:#e2e8f0;
+  --a-social:#ec4899;--a-emocional:#f59e0b;
+  background:var(--a-paper);color:var(--a-ink);padding:28px 26px 26px;
+  font-family:'Space Grotesk',system-ui,sans-serif;position:relative;overflow:hidden}
+.mock-alumno,.mock-alumno *{border-radius:var(--r,0) !important}
+.mock-alumno{--r:20px}
+.mock-alumno .band{position:absolute;left:0;top:0;right:0;height:8px;background:var(--a-social);--r:0}
+.mock-alumno .step{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--a-ink-3);margin-bottom:18px}
+.mock-alumno .dots{display:flex;gap:6px}
+.mock-alumno .dots i{width:10px;height:10px;background:var(--a-line);display:block;--r:999px}
+.mock-alumno .dots i.on{background:var(--a-social)}
+.mock-alumno .q{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:clamp(1.6rem,3.2vw,2.3rem);line-height:1.2;margin:0 0 6px;text-wrap:balance;max-width:22ch}
+.mock-alumno .hint{color:var(--a-ink-2);font-size:16px;margin:0 0 20px}
+.mock-alumno .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px;margin-bottom:22px}
+.mock-alumno .kid{background:var(--a-card);border:2px solid var(--a-line);padding:14px 12px;display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px;--r:14px;min-height:56px;color:var(--a-ink)}
+.mock-alumno .kid i{width:26px;height:26px;display:block;flex:none;--r:999px;background:var(--a-line)}
+.mock-alumno .kid.on{border-color:var(--a-social);background:#fdf2f8}
+.mock-alumno .kid.on i{background:var(--a-social)}
+.mock-alumno .bar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.mock-alumno .cnt{font-weight:700;font-size:15px;color:var(--a-ink-2)}
+.mock-alumno .go{background:var(--a-social);color:#fff;font-weight:700;font-size:17px;padding:16px 28px;--r:999px;border:0;box-shadow:0 4px 20px rgba(15,23,42,.10)}
+.mock-alumno .audio{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--a-ink-2);border:2px solid var(--a-line);padding:10px 16px;--r:999px;background:var(--a-card)}
+.mock-alumno svg{width:18px;height:18px}
+
+/* Tabla comparada de dos modos */
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hair);margin:24px 0}
+.twocol > div{padding:18px 20px}
+.twocol > div:first-child{border-right:1px solid var(--hair)}
+.twocol h4{margin:0 0 12px;font:500 11px/1.4 var(--font-mono);text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3)}
+.twocol ul{list-style:none;margin:0;padding:0}
+.twocol li{padding:9px 0;border-bottom:1px solid var(--hair);font-size:15px;line-height:1.45}
+.twocol li:last-child{border-bottom:0}
+
+/* Índice sticky en la ficha */
+.toc{list-style:none;margin:20px 0 0;padding:0;border-top:1px solid var(--hair)}
+.toc li{border-bottom:1px solid var(--hair)}
+.toc a{display:flex;gap:12px;padding:9px 0;text-decoration:none;font-size:13.5px;line-height:1.35}
+.toc a:hover{background:var(--paper-2)}
+.toc .n{font:500 11px/1.6 var(--font-mono);color:var(--m-mental);flex:none;width:22px}
+
+@media (max-width:900px){
+  .cols{grid-template-columns:1fr;gap:34px}
+  .aside{position:static}
+  .sec{margin:52px 0}
+  .timeline{grid-template-columns:1fr 1fr}
+  .timeline > div:nth-child(2n){border-right:0}
+  .pair,.twocol{grid-template-columns:1fr}
+  .pair > div:first-child,.twocol > div:first-child{border-right:0;border-bottom:1px solid var(--hair)}
+  .phase{grid-template-columns:56px 1fr}
+  .phase .d{grid-column:2;text-align:left}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+@media print{
+  .aside,.topbar{position:static}
+  body{background:#fff}
+  .btn{display:none}
+  .sec{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="worlds-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="mono mono-ink">EDUMIND · LÁMINA DE APLICACIÓN</span>
+    <span class="mono">FIG. 13 — HILO</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <p class="eyebrow">SOCIAL · EMOCIONAL</p>
+  <h1>Hilo<br><span class="light">EDUmind</span></h1>
+  <p class="lede">Sociograma de aula local-first y sin servidor. Hilo es el hilo invisible que une a un grupo: el alumnado responde a preguntas asépticas y el docente lee, en su propio dispositivo, esa trama y cómo cambia a lo largo del curso. Ningún dato sale del aula.</p>
+
+  <p><a class="btn" href="#s01">Leer la propuesta →</a><span class="stamp pending">Propuesta de diseño · 09·2026</span></p>
+
+  <div class="metastrip">
+    <span>Primaria a adultos</span><span>Desde 6 años</span><span>Una sesión de 20 a 30 min</span><span>Tablets, papel, aula virtual o un solo dispositivo</span><span>3 tomas por curso</span>
+  </div>
+
+  <div class="cols" style="margin-top:64px">
+
+    <div>
+
+      <!-- 01 -->
+      <section class="sec" id="s01">
+        <div class="sec-head"><span class="sec-num">01</span><h2>Para qué sirve y a quién sirve</h2></div>
+        <p class="sec-lede">Un sociograma no es una encuesta: es un instrumento de evaluación inicial y de seguimiento. La herramienta sirve a quien va a analizar los datos, no a quien los recoge.</p>
+        <p>Lo que hoy existe obliga a elegir entre dos males. El papel es aséptico pero se tarda una tarde en tabularlo y no permite comparar tomas. Las herramientas en línea tabulan al instante pero se llevan los nombres del alumnado a un servidor ajeno y, casi siempre, plantean las preguntas de forma que el niño entiende perfectamente que está clasificando a sus compañeros.</p>
+        <p>Hilo aplica el principio de MiClase sin depender de ella: los datos del alumnado viven en el dispositivo del docente y, en el aula, no hay servidor de por medio. Los dos tramos de datos de una sesión caben en un código QR. Sobre esa base añade lo que un sociograma necesita y un cuaderno no: una pantalla para el alumnado pensada para su edad, un motor de análisis sociométrico en el navegador y una lectura longitudinal de las tomas.</p>
+
+        <p class="blabel">Mundos que trabaja</p>
+        <div class="badges">
+          <span class="badge b-social">Social</span>
+          <span class="badge b-emocional">Emocional</span>
+        </div>
+
+        <div class="note" style="--c:var(--m-social)">
+          <span class="tag">Tesis de diseño</span>
+          <p>Tres usuarios, tres lenguajes. El alumnado ve un juego de elegir equipo, sin resultados y sin jerarquías. El docente ve una lámina: matriz, grafo, índices y trayectorias. El servidor sirve la app y nada más.</p>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section class="sec" id="s02">
+        <div class="sec-head"><span class="sec-num">02</span><h2>Principios no negociables</h2></div>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Local-first.</b> Grupo, nombres, respuestas y análisis viven en IndexedDB del dispositivo del docente. La app funciona entera sin conexión.</span></li>
+          <li><span class="dash">—</span><span><b>Sin servidor en el aula.</b> Una sesión completa, con tablets incluidas, se hace sin red: la lista va en el QR proyectado y las respuestas vuelven en un QR que lee la cámara del docente. El servidor solo sirve la app estática.</span></li>
+          <li><span class="dash">—</span><span><b>Cifrado de extremo a extremo donde haga falta.</b> Solo hay tráfico si el docente activa el relé en vivo para no escanear tablets, o sincroniza sus propios dispositivos. En ambos casos viaja cifrado con una clave que el servidor nunca tiene, y el servidor no tiene ninguna tabla donde quepa un nombre en claro.</span></li>
+          <li><span class="dash">—</span><span><b>Preguntas asépticas.</b> El instrumento pregunta por situaciones, no por personas. Nunca pide justificar, nunca muestra ranking, nunca devuelve resultados al alumnado.</span></li>
+          <li><span class="dash">—</span><span><b>Autónoma, con MiClase como baza.</b> Funciona con una lista de nombres pegada a mano. Si el docente usa MiClase, importa el grupo desde su fichero de exportación y comparte con ella el código de 5 caracteres por alumno, de modo que la hoja de QR de MiClase sirve también aquí.</span></li>
+          <li><span class="dash">—</span><span><b>Adaptado al nivel.</b> El mismo cuestionario se presenta en tres registros: lector inicial, Primaria media y alta, Secundaria y adultos. Cambia el lenguaje, el apoyo (audio, pictograma) y el número de elecciones.</span></li>
+          <li><span class="dash">—</span><span><b>Longitudinal.</b> Una toma es una foto; el instrumento está pensado para tres por curso y para leer la trayectoria de cada alumno entre tomas.</span></li>
+          <li><span class="dash">—</span><span><b>Dos pieles, un sistema.</b> Portal del docente en EDUmind-Lámina. Pantalla del alumnado en EDUmind-Alumno. Los Cinco Mundos como marco de lectura en las dos.</span></li>
+          <li><span class="dash">—</span><span><b>Software libre y firma visible.</b> AGPL-3.0-or-later / EUPL-1.2 mediante el flujo legal existente. «Una app de EDUmind® · por Luis Vilela Acuña» en pie, meta y package. Ninguna institución en la firma.</span></li>
+        </ul>
+      </section>
+
+      <!-- 03 -->
+      <section class="sec" id="s03">
+        <div class="sec-head"><span class="sec-num">03</span><h2>El instrumento: preguntar sin señalar</h2></div>
+        <p class="sec-lede">La calidad de un sociograma se decide en la redacción de la pregunta. El alumnado debe elegir compañeros para una situación concreta, sin que la situación le explique qué está midiendo.</p>
+
+        <div class="pair">
+          <div class="no"><span class="tag">Así no</span><q>¿Quiénes son tus mejores amigos de la clase?</q><small>Pide una jerarquía afectiva explícita. El niño sabe que está clasificando y siente que quien no elige queda fuera.</small></div>
+          <div class="si"><span class="tag">Así sí</span><q>Mañana hacemos un proyecto por equipos. ¿Con quién te gustaría estar en el equipo?</q><small>Situación concreta, verbo de futuro, ningún adjetivo sobre las personas. Mide preferencia de trabajo sin nombrarla.</small></div>
+        </div>
+        <div class="pair">
+          <div class="no"><span class="tag">Así no</span><q>¿Con quién no te gustaría estar? ¿Por qué?</q><small>Nominación negativa con justificación. En Primaria produce daño y, además, sesga: el niño que ya está aislado sabe que va a salir aquí.</small></div>
+          <div class="si"><span class="tag">Así sí</span><q>Si el equipo lo eligieran los demás, ¿quién crees que te elegiría a ti?</q><small>Pregunta de percepción. Da la misma información sobre integración que una negativa, en positivo, y permite medir el ajuste entre lo que el alumno cree y lo que ocurre.</small></div>
+        </div>
+
+        <h3>Banco de situaciones</h3>
+        <p>Cada toma combina cuatro situaciones. Cada una activa una dimensión distinta del vínculo sin decirlo. El docente elige el conjunto o usa el propuesto por etapa.</p>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Situación</th><th>Dimensión que mide</th><th>Formulación para 1.º y 2.º</th><th>Formulación desde 3.º</th></tr></thead>
+          <tbody>
+            <tr><td class="k">EQUIPO</td><td>Preferencia de trabajo</td><td>Vamos a hacer una cosa por equipos. ¿Con quién quieres estar?</td><td>Mañana hacemos un proyecto por equipos. ¿Con quién te gustaría estar en el equipo?</td></tr>
+            <tr><td class="k">RECREO</td><td>Preferencia de juego y afecto</td><td>En el patio, ¿con quién juegas?</td><td>Un recreo largo, sin nada organizado. ¿Con quién te apetece pasarlo?</td></tr>
+            <tr><td class="k">AYUDA</td><td>Confianza y apoyo</td><td>Si te pasa algo y estás triste, ¿a quién se lo cuentas?</td><td>Si tuvieras un problema en clase, ¿a quién de la clase se lo contarías?</td></tr>
+            <tr><td class="k">ESPEJO</td><td>Percepción social propia</td><td>¿Quién crees que quiere estar contigo en su equipo?</td><td>Si el equipo lo eligieran los demás, ¿quién crees que te elegiría a ti?</td></tr>
+            <tr><td class="k">VIAJE</td><td>Preferencia fuera del aula (opcional)</td><td>—</td><td>En una excursión de dos días, ¿con quién compartirías habitación?</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3>Reglas de presentación</h3>
+        <ul class="rules">
+          <li><span class="dash">—</span><span>El orden de los compañeros se baraja en cada pregunta y en cada dispositivo. Nadie va siempre el primero ni el último.</span></li>
+          <li><span class="dash">—</span><span>El propio alumno no aparece en su lista. No hay opción «nadie» visible: si no elige a nadie, pasa con una confirmación neutra.</span></li>
+          <li><span class="dash">—</span><span>Elecciones no ordenadas. Tres como máximo en Primaria, cinco en Secundaria y adultos. No se muestra contador de «te han elegido».</span></li>
+          <li><span class="dash">—</span><span>Sin campo de motivo, nunca. El motivo es lo que convierte una preferencia en un juicio.</span></li>
+          <li><span class="dash">—</span><span>Nominaciones negativas desactivadas por defecto y bloqueadas en Primaria. En Secundaria y adultos pueden activarse por decisión expresa del equipo, con aviso en la lámina del docente.</span></li>
+          <li><span class="dash">—</span><span>Al alumnado se le presenta como «Mi equipo». La palabra sociograma no aparece en su pantalla.</span></li>
+          <li><span class="dash">—</span><span>Pantalla final idéntica para todos: una frase de agradecimiento y nada más. Ningún resultado se devuelve al alumnado, en ningún caso.</span></li>
+        </ul>
+
+        <div class="note alert">
+          <span class="tag">Límite ético</span>
+          <p>Los datos de una toma dicen quién está aislado hoy. No dicen por qué ni qué hacer. La app señala; la intervención la decide el docente con el equipo y, si procede, con orientación. Por eso Hilo no incluye recomendaciones automáticas ni etiquetas visibles de «rechazado» en la ficha del alumno.</p>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section class="sec" id="s04">
+        <div class="sec-head"><span class="sec-num">04</span><h2>La sesión, en media hora</h2></div>
+        <p class="sec-lede">Una toma completa cabe en una sesión: preparar el grupo, lanzar, recoger y cerrar. Se diseña para que el docente no tenga que tocar nada mientras el alumnado responde.</p>
+
+        <div class="timeline">
+          <div><div class="t">0 – 5 MIN</div><div class="n">Preparar</div><p>Grupo importado desde MiClase o pegado desde una lista. Se elige etapa, situaciones y modalidad. Se genera la toma con fecha.</p></div>
+          <div><div class="t">5 – 8 MIN</div><div class="n">Lanzar</div><p>El docente explica la actividad con el guion de la lámina. Se proyecta el QR con la lista del grupo o se pasa el dispositivo.</p></div>
+          <div><div class="t">8 – 25 MIN</div><div class="n">Recoger</div><p>Cada alumno responde en su tablet o por turnos. Al terminar, la tablet muestra un QR de respuesta y el docente lo lee con la cámara. La lámina muestra cuántos han entrado, nunca qué han contestado.</p></div>
+          <div><div class="t">25 – 30 MIN</div><div class="n">Cerrar</div><p>Se cierra la toma: las respuestas quedan en el dispositivo del docente y las tablets no conservan nada. El análisis está listo al instante.</p></div>
+        </div>
+
+        <h3>Cinco modalidades sin servidor, y una sexta opcional</h3>
+        <p>Todas producen las mismas filas en la tabla de respuestas y se pueden mezclar en una misma toma: la mitad del grupo en tablets y la otra mitad en papel, por ejemplo.</p>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Modalidad</th><th>Dispositivos</th><th>Red</th><th>Cuándo conviene</th></tr></thead>
+          <tbody>
+            <tr><td class="k">A · UN DISPOSITIVO</td><td>La tablet o portátil del docente, que pasa de mano en mano o se usa en un rincón</td><td>Ninguna</td><td>Infantil, 1.º y 2.º, grupos pequeños. Es la fase 0 y la que se entrega primero.</td></tr>
+            <tr><td class="k">B · TABLETS CON QR</td><td>Tablets del centro o móviles; un QR proyectado de ida y un QR por tablet de vuelta, leído con la cámara del docente</td><td>Ninguna. Solo la primera carga de la app, si no está instalada</td><td>Desde 3.º con carro de tablets; Secundaria y adultos con su propio móvil.</td></tr>
+            <tr><td class="k">C · HOJA DE MARCAS</td><td>Una hoja impresa por alumno con círculos; el docente la lee con la cámara del móvil o la webcam, dentro de la app</td><td>Ninguna</td><td>Aulas sin dispositivos. Es la modalidad más rápida de recoger: 25 hojas en menos de cinco minutos.</td></tr>
+            <tr><td class="k">D · CÓDIGO DE ACCESO</td><td>Un fichero de prueba que el docente envía por el aula virtual; cada alumno entra con su código y entrega un fichero cifrado</td><td>La del centro (Moodle, aula virtual, correo). Hilo no toca ninguna</td><td>Secundaria, adultos, formación a distancia, alumnado ausente el día de la toma.</td></tr>
+            <tr><td class="k">E · TRANSCRIPCIÓN</td><td>Cuestionario de papel de cualquier modelo; el docente lo pasa con un teclado rápido</td><td>Ninguna</td><td>Sociogramas ya hechos con otro modelo, o el cuestionario clásico de escribir nombres.</td></tr>
+            <tr><td class="k">F · RELÉ EN VIVO</td><td>Como B, pero las respuestas llegan solas al docente por un buzón cifrado</td><td>Internet, tráfico cifrado</td><td>Grupos grandes o docente que no quiere escanear 25 tablets. Opcional, fase 4.</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- 05 -->
+      <section class="sec" id="s05">
+        <div class="sec-head"><span class="sec-num">05</span><h2>Arquitectura: el servidor no está en el aula</h2></div>
+        <p class="sec-lede">Los dos tramos de datos de una sesión son pequeños: la lista de un grupo de 25 ocupa unos 300 bytes y la respuesta de un alumno menos de 100. Los dos caben en un código QR, así que el aula funciona sin red.</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 900 360" role="img" aria-label="Diagrama: el dispositivo del docente proyecta un QR cuyo fragmento lleva la lista del grupo; las tablets la leen sin red y, al terminar, muestran un QR con las respuestas que el docente lee con la cámara. El servidor solo sirve la app estática y no interviene en la sesión.">
+            <!-- Docente -->
+            <rect x="20" y="40" width="300" height="200" fill="#f4f2ec" stroke="#17181a" stroke-width="2"/>
+            <text x="36" y="66" font-size="11" letter-spacing="1.5" fill="#7c7a74">DISPOSITIVO DEL DOCENTE</text>
+            <text x="36" y="96" font-size="14" font-weight="500" fill="#17181a">IndexedDB (Dexie)</text>
+            <text x="36" y="118" font-size="12" fill="#3d3f42">grupo · nombres · tomas</text>
+            <text x="36" y="136" font-size="12" fill="#3d3f42">respuestas · análisis</text>
+            <line x1="36" y1="152" x2="304" y2="152" stroke="#c9c4b8"/>
+            <text x="36" y="176" font-size="12" fill="#17181a">genera el QR de ida (lista)</text>
+            <text x="36" y="194" font-size="12" fill="#17181a">lee con la cámara los QR de vuelta</text>
+            <text x="36" y="212" font-size="12" fill="#17181a">escáner jsQR de MiClase</text>
+            <!-- Tablets -->
+            <rect x="580" y="40" width="300" height="200" fill="#f4f2ec" stroke="#17181a" stroke-width="2"/>
+            <text x="596" y="66" font-size="11" letter-spacing="1.5" fill="#7c7a74">TABLETS DEL ALUMNADO</text>
+            <text x="596" y="96" font-size="14" font-weight="500" fill="#17181a">PWA instalada o página sin sesión</text>
+            <text x="596" y="118" font-size="12" fill="#3d3f42">lee la lista del fragmento #g= del QR</text>
+            <text x="596" y="136" font-size="12" fill="#3d3f42">la borra del historial al cargar</text>
+            <line x1="596" y1="152" x2="864" y2="152" stroke="#c9c4b8"/>
+            <text x="596" y="176" font-size="12" fill="#17181a">muestra un QR con las respuestas</text>
+            <text x="596" y="194" font-size="12" fill="#17181a">no guarda nada al cerrar</text>
+            <text x="596" y="212" font-size="12" fill="#17181a">no hace ninguna petición de red</text>
+            <!-- Flecha de ida: proyector -->
+            <line x1="320" y1="100" x2="580" y2="100" stroke="#c19a2e" stroke-width="2"/>
+            <polygon points="580,100 571,95 571,105" fill="#c19a2e"/>
+            <rect x="380" y="78" width="140" height="18" fill="#ece9e1"/>
+            <text x="450" y="91" font-size="10" text-anchor="middle" fill="#7c7a74">QR DE IDA · PROYECTOR</text>
+            <text x="450" y="118" font-size="10" text-anchor="middle" fill="#7c7a74">lista de 25 nombres ≈ 300 bytes</text>
+            <!-- Flecha de vuelta: cámara -->
+            <line x1="580" y1="190" x2="320" y2="190" stroke="#c05f3c" stroke-width="2"/>
+            <polygon points="320,190 329,185 329,195" fill="#c05f3c"/>
+            <rect x="380" y="168" width="140" height="18" fill="#ece9e1"/>
+            <text x="450" y="181" font-size="10" text-anchor="middle" fill="#7c7a74">QR DE VUELTA · CÁMARA</text>
+            <text x="450" y="208" font-size="10" text-anchor="middle" fill="#7c7a74">respuestas de un alumno &lt; 100 bytes</text>
+            <!-- Servidor, fuera del circuito -->
+            <rect x="300" y="278" width="300" height="62" fill="#ece9e1" stroke="#7c7a74" stroke-width="1" stroke-dasharray="5 4"/>
+            <text x="316" y="300" font-size="11" letter-spacing="1.5" fill="#7c7a74">SERVIDOR · FUERA DEL CIRCUITO</text>
+            <text x="316" y="320" font-size="12" fill="#3d3f42">sirve la app estática la primera vez</text>
+            <text x="316" y="334" font-size="12" fill="#b03a2e">no recibe ni un byte de la sesión</text>
+          </svg>
+          <p class="cap">Fig. 13a · Sesión con tablets. Los dos tramos van por luz: proyector de ida, cámara de vuelta. El servidor no interviene.</p>
+        </div>
+
+        <h3>Cómo funciona una sesión con tablets</h3>
+        <ul class="rules">
+          <li><span class="dash">—</span><span>El docente pulsa «Abrir toma». Su dispositivo genera un QR con <code>hilo.edumind.es/s#g=…</code>: el fragmento lleva la lista del grupo comprimida, con los códigos de 5 caracteres y los nombres. Todo lo que va detrás de la almohadilla lo lee el navegador y nunca sale en una petición. La lista viaja del proyector a la tablet por luz.</span></li>
+          <li><span class="dash">—</span><span>La tablet carga la app (desde su caché, si la PWA está instalada) y lee la lista del fragmento. Acto seguido la borra de la barra de direcciones y del historial. La lista existe solo en la RAM de esa pestaña.</span></li>
+          <li><span class="dash">—</span><span>El alumno responde. Al terminar, la tablet muestra un QR con sus elecciones codificadas por código de alumno, sin nombres: menos de 100 bytes. El docente lo lee con la cámara de su dispositivo, uno tras otro, unos 5 segundos por tablet. Con 25 alumnos, dos o tres minutos.</span></li>
+          <li><span class="dash">—</span><span>Un QR de vuelta leído dos veces no duplica nada: cada respuesta lleva el código del alumno y la toma, y la segunda lectura se descarta. Una tablet cuyo QR no se llegó a leer lo sigue mostrando hasta que se cierra la pestaña.</span></li>
+          <li><span class="dash">—</span><span>Al cerrar la toma, el dispositivo del docente marca la toma como cerrada e inmutable. No hay nada que borrar en ningún servidor porque no hubo servidor.</span></li>
+          <li><span class="dash">—</span><span><b>Relé opcional, fase 4.</b> Para grupos grandes, el docente puede activar el buzón ciego de MiClase: las tablets depositan sus respuestas cifradas con una clave que va en el mismo QR de ida y el docente las recibe por SSE sin escanear. El servidor ve ciphertext, un código de sesión y una caducidad de dos horas. Es una comodidad, no una dependencia.</span></li>
+          <li><span class="dash">—</span><span>Lo único que un navegador no puede hacer es escuchar conexiones entrantes. Un tramo tablet a docente sin QR y sin servidor solo existirá con la app nativa de Capacitor, también en fase 4.</span></li>
+        </ul>
+
+        <h3>Pila tecnológica</h3>
+        <p>La misma que MiClase y Board, para copiar los módulos de QR, cifrado y sincronización en vez de reescribirlos. Sin dependencia de ejecución entre apps.</p>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Capa</th><th>Elección</th><th>Por qué</th></tr></thead>
+          <tbody>
+            <tr><td class="k">FRONTEND</td><td>React 19 + Vite + TypeScript, PWA con Workbox</td><td>Lo que ya usan MiClase y Board. Instalable, arranca sin cobertura.</td></tr>
+            <tr><td class="k">DATOS LOCALES</td><td>Dexie sobre IndexedDB</td><td>Registros con <code>updated_at</code> y <code>deleted_at</code>, compatibles con el sync de MiClase.</td></tr>
+            <tr><td class="k">QR</td><td>qrcode para generar, jsQR para leer con la cámara; compresión del fragmento con CompressionStream</td><td>Los dos ya están en MiClase. Ninguna petición de red en la sesión.</td></tr>
+            <tr><td class="k">CIFRADO</td><td>Web Crypto: AES-256-GCM con PBKDF2 210k para copias y sync; par de claves ECDH P-256 del docente para las pruebas con código de acceso</td><td>Nativo del navegador, sin dependencias. La clave privada nunca sale del dispositivo del docente.</td></tr>
+            <tr><td class="k">HOJA DE MARCAS</td><td>Módulo propio sobre canvas: marcas de registro, corrección de perspectiva, umbral por hoja</td><td>Un problema acotado con hoja propia no necesita OpenCV. Probado con hojas sintéticas y fotos reales.</td></tr>
+            <tr><td class="k">ANÁLISIS</td><td>Módulo propio en TypeScript, sin dependencias: matriz, índices, detección de subgrupos</td><td>Puro y probado por unidad. Corre en un Web Worker para grupos grandes.</td></tr>
+            <tr><td class="k">GRAFO</td><td>Simulación de fuerzas propia sobre SVG</td><td>Un grafo de 30 nodos no justifica D3 entero. Exportable a HTML con fuentes incrustadas.</td></tr>
+            <tr><td class="k">CONTRATOS</td><td>Paquete <code>shared</code> con esquemas Zod</td><td>Patrón de Board: validación idéntica en API y web.</td></tr>
+            <tr><td class="k">BACKEND</td><td>Hasta fase 3, solo nginx sirviendo la PWA estática. Node 22 + Fastify + SQLite solo si se activa el relé o la sync</td><td>Sin backend no hay nada que asegurar ni que mantener. Cuando llegue, mismo patrón de socket de systemd que Board y MiClase.</td></tr>
+            <tr><td class="k">IDENTIDAD</td><td>Authentik OIDC, opcional</td><td>Solo para sincronizar entre dispositivos del docente. En modo local no hay sesión.</td></tr>
+            <tr><td class="k">NATIVO</td><td>Capacitor (fase 4)</td><td>Cuando la PWA esté estable. El enlace simbólico de dist ya tiene su nota en memoria.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="note" style="--c:var(--m-mental)">
+          <span class="tag">Lo que el servidor guarda</span>
+          <p>Hasta fase 3, nada: no hay base de datos. Si en fase 4 se activa el relé, dos tablas ciegas: <code>sesiones</code> con código y caducidad, y <code>sobres</code> con ciphertext y fecha. Ni un campo de texto libre en claro, en ningún caso.</p>
+        </div>
+      </section>
+
+      <!-- 06 -->
+      <section class="sec" id="s06">
+        <div class="sec-head"><span class="sec-num">06</span><h2>Papel y aula virtual: tres caminos más sin servidor</h2></div>
+        <p class="sec-lede">Hay aulas sin tablets y grupos que no coinciden en el tiempo. Los dos casos se resuelven con lo que el docente ya tiene: una impresora, una cámara y el aula virtual del centro.</p>
+
+        <h3>Hoja de marcas que la app lee (modalidad C)</h3>
+        <p>Es el principio del lector de notas de iDoceo aplicado al sociograma: el alumno rellena círculos y la cámara los cuenta. Todo el reconocimiento ocurre en un canvas del navegador del docente, sin librerías y sin red.</p>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>La hoja.</b> Una por alumno, generada e impresa desde Hilo. Cuatro marcas de registro en las esquinas, el código del alumno en texto y como código de barras corto, y una cuadrícula: una fila por compañero con su nombre impreso, una columna por situación. Círculos de 6 mm.</span></li>
+          <li><span class="dash">—</span><span><b>La lectura.</b> Cámara del móvil o webcam, dentro de la app. Se localizan las cuatro marcas, se corrige la perspectiva, se mide el relleno de cada círculo contra el umbral de la propia hoja. Una hoja por segundo con buena luz.</span></li>
+          <li><span class="dash">—</span><span><b>La confirmación.</b> La app superpone lo reconocido sobre la foto y pide confirmar hoja a hoja. Un círculo a medias o más marcas de las permitidas se resaltan para decidir a mano. Nunca se acepta una hoja sin ver.</span></li>
+          <li><span class="dash">—</span><span><b>Lo que queda.</b> La foto se descarta en cuanto se confirma la hoja: en el dispositivo quedan las filas de respuesta, no la imagen. La hoja de papel lleva nombres y por eso no sale del centro.</span></li>
+          <li><span class="dash">—</span><span><b>Límites.</b> Hasta 30 compañeros por 5 situaciones en un A4. Grupos mayores, en dos hojas con el mismo código.</span></li>
+        </ul>
+
+        <h3>Modelos de papel que la app entiende</h3>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Modelo</th><th>Quién lo rellena</th><th>Cómo entra en Hilo</th></tr></thead>
+          <tbody>
+            <tr><td class="k">HOJA DE MARCAS INDIVIDUAL</td><td>El alumno</td><td>Cámara, reconocimiento automático, confirmación por hoja.</td></tr>
+            <tr><td class="k">HOJA DE MARCAS DE GRUPO</td><td>El docente, copiando de cualquier papel: una sola hoja con la matriz completa de quién elige a quién</td><td>Cámara, reconocimiento automático. Es la forma de traducir un sociograma hecho con otro modelo en una sola foto.</td></tr>
+            <tr><td class="k">CUESTIONARIO CLÁSICO</td><td>El alumno escribe nombres en líneas</td><td>Teclado rápido de transcripción: tres letras del nombre y Enter. Unos 40 segundos por cuestionario.</td></tr>
+            <tr><td class="k">MATRIZ EN HOJA DE CÁLCULO</td><td>Otra herramienta o un curso anterior</td><td>Importación de CSV o XLSX con asignación de columnas y de códigos de alumno.</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="note" style="--c:var(--m-mental)">
+          <span class="tag">Lo que no se hace</span>
+          <p>Reconocer nombres manuscritos. Con letra infantil y nombres gallegos y castellanos mezclados, un modelo de escritura falla lo bastante como para no fiarse y obliga a cargar un modelo pesado. El teclado de transcripción es más rápido que corregir sus errores.</p>
+        </div>
+
+        <h3>Prueba con código de acceso (modalidad D)</h3>
+        <p>Para grupos que no comparten aula ni horario, la prueba viaja por el canal que el centro ya usa, y las respuestas vuelven cifradas de forma que solo el docente puede abrirlas. Aquí el cifrado de extremo a extremo es fundamental, y por eso existe.</p>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Generar.</b> Hilo produce un único fichero HTML autocontenido: la pantalla del alumnado con la lista del grupo dentro y la clave pública del docente. El docente lo cuelga en una tarea de Moodle, en el aula virtual o lo manda por correo.</span></li>
+          <li><span class="dash">—</span><span><b>Entrar.</b> Cada alumno abre el fichero y teclea su código de acceso de 5 caracteres, el mismo de la hoja de códigos. La app sabe quién es, le quita de su propia lista y baraja el resto.</span></li>
+          <li><span class="dash">—</span><span><b>Entregar.</b> Al terminar descarga un fichero <code>.hilo</code> de un kilobyte: sus respuestas cifradas con la clave pública del docente (ECDH P-256 y AES-256-GCM, Web Crypto). Lo sube a la misma tarea de Moodle. No hay nada más que hacer.</span></li>
+          <li><span class="dash">—</span><span><b>Recoger.</b> El docente descarga las entregas de la tarea y las arrastra a Hilo de golpe. Solo su dispositivo tiene la clave privada: ni Moodle, ni quien administre Moodle, ni un fichero perdido pueden leer una respuesta. Duplicados descartados por código y toma.</span></li>
+          <li><span class="dash">—</span><span><b>Lo que va en claro.</b> La lista del grupo, dentro del fichero de la prueba, porque el alumnado tiene que leerla. Por eso se distribuye por un canal restringido al grupo, con nombre de pila y sin apellidos, y nunca se publica en abierto.</span></li>
+          <li><span class="dash">—</span><span><b>Validez.</b> La toma registra una ventana de fechas. Se recomienda hacerla en la misma sesión aunque cada uno esté en su casa: un sociograma respondido a lo largo de una semana mide otra cosa.</span></li>
+        </ul>
+      </section>
+
+      <!-- 07 -->
+      <section class="sec" id="s07">
+        <div class="sec-head"><span class="sec-num">07</span><h2>Modelo de datos en el dispositivo</h2></div>
+        <p class="sec-lede">Pocas tablas, todas sincronizables con el mecanismo de sobres de MiClase. Los nombres solo existen en la tabla de alumnos.</p>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Tabla</th><th>Campos principales</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td class="k">grupos</td><td>id · nombre · etapa · curso escolar</td><td>Se crea pegando una lista de nombres. Si existe MiClase, se importa desde su fichero de exportación; nunca por red.</td></tr>
+            <tr><td class="k">alumnos</td><td>id · grupo_id · nombre · código de 5 caracteres · neae</td><td>El código es el que viaja en los QR de vuelta y en el papel. Es el mismo formato que MiClase, para que una hoja de códigos sirva en las dos apps. Nunca se muestra el nombre fuera de este dispositivo.</td></tr>
+            <tr><td class="k">tomas</td><td>id · grupo_id · fecha de inicio y fin · etapa de presentación · situaciones · máximo de elecciones · negativas activadas · estado</td><td>Una toma cerrada es inmutable: el análisis longitudinal depende de ello. La ventana de fechas importa en la modalidad de código de acceso.</td></tr>
+            <tr><td class="k">respuestas</td><td>id · toma_id · situación · de_alumno · a_alumno · signo · origen</td><td>Una fila por elección. Signo positivo salvo negativas activadas. Origen: dispositivo, QR, hoja, fichero o transcripción. Sin orden, sin motivo, sin marca temporal fina.</td></tr>
+            <tr><td class="k">claves</td><td>par ECDH del docente · fecha</td><td>Generado en el primer arranque. La privada solo existe aquí y en la copia de seguridad cifrada.</td></tr>
+            <tr><td class="k">eventos</td><td>id · grupo_id · fecha · texto</td><td>Anotaciones del docente: cambio de sitios, llegada de un alumno, intervención. Se dibujan sobre la línea temporal para leer las tomas con contexto.</td></tr>
+            <tr><td class="k">notas_alumno</td><td>id · alumno_id · fecha · texto</td><td>Observaciones cualitativas del docente. Solo suyas.</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </section>
+
+      <!-- 08 -->
+      <section class="sec" id="s08">
+        <div class="sec-head"><span class="sec-num">08</span><h2>Análisis: lo que ve el docente</h2></div>
+        <p class="sec-lede">Todo el cálculo ocurre en el navegador del docente. Tres vistas por toma y una ficha por alumno. Los índices son los clásicos de la sociometría, adaptados a un instrumento sin negativas.</p>
+
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Índice</th><th>Cálculo</th><th>Lectura</th></tr></thead>
+          <tbody>
+            <tr><td class="k">ELECCIONES RECIBIDAS</td><td>Número de compañeros que eligen al alumno, por situación y en total</td><td>Estatus. Se normaliza por tamaño del grupo para comparar entre clases y tomas.</td></tr>
+            <tr><td class="k">RECIPROCIDAD</td><td>Elecciones mutuas / elecciones emitidas</td><td>Cuántos de sus vínculos son correspondidos. Baja reciprocidad con muchas emisiones indica un alumno que busca sin ser buscado.</td></tr>
+            <tr><td class="k">AJUSTE PERCEPTIVO</td><td>Coincidencia entre ESPEJO y las elecciones recibidas reales</td><td>Si un alumno cree que le eligen quienes no le eligen, hay un desajuste que el docente debe conocer antes que nadie.</td></tr>
+            <tr><td class="k">COHESIÓN DEL GRUPO</td><td>Parejas recíprocas / parejas posibles</td><td>Un número por toma. Es el que se compara entre septiembre, enero y mayo.</td></tr>
+            <tr><td class="k">SUBGRUPOS</td><td>Componentes densos del grafo de reciprocidades</td><td>Cuántos grupos cerrados hay y quiénes hacen de puente entre ellos.</td></tr>
+            <tr><td class="k">POSICIÓN</td><td>Recibidas y reciprocidad tipificadas dentro del grupo</td><td>Cuatro posiciones sin carga: muy elegido, elegido, poco elegido, no elegido. Es la única lectura en Primaria.</td></tr>
+            <tr><td class="k">TIPO SOCIOMÉTRICO</td><td>Solo con negativas activadas (Secundaria y adultos). Preferencia social = positivas menos negativas; impacto social = positivas más negativas, ambas tipificadas</td><td>Los cinco tipos clásicos de Coie y Dodge: popular, rechazado, ignorado, controvertido y promedio. Se muestran en la lámina del docente con la advertencia de que son una foto, no un diagnóstico.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3>Las tres vistas de una toma</h3>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Matriz sociométrica.</b> Filas quien elige, columnas quien es elegido, una celda por situación. Es la vista de trabajo: en ella se ven los ceros de una columna antes que en ningún grafo.</span></li>
+          <li><span class="dash">—</span><span><b>Grafo.</b> Nodos por alumno, tamaño por elecciones recibidas, arista gruesa si es recíproca. Filtro por situación. Los subgrupos se colorean con los mundos desaturados, sin leyenda de «bueno» y «malo».</span></li>
+          <li><span class="dash">—</span><span><b>Lista de atención.</b> Alumnado sin ninguna elección recibida, alumnado con desajuste perceptivo alto, alumnado que ha bajado de posición respecto a la toma anterior. Ordenada, sin colores de alarma: es una lista de trabajo del tutor, no un semáforo.</span></li>
+        </ul>
+      </section>
+
+      <!-- 09 -->
+      <section class="sec" id="s09">
+        <div class="sec-head"><span class="sec-num">09</span><h2>Medio y largo plazo</h2></div>
+        <p class="sec-lede">La toma inicial de septiembre solo cobra sentido cuando se compara con la de enero y la de mayo. La app trata la trayectoria como un objeto de primera clase, no como un informe que se genera al final.</p>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Comparador de tomas.</b> Dos tomas del mismo grupo lado a lado: cohesión, número de subgrupos, alumnado sin elecciones. Cambios señalados en tinta, no en color.</span></li>
+          <li><span class="dash">—</span><span><b>Trayectoria por alumno.</b> Elecciones recibidas y reciprocidad en cada toma, con los eventos del docente sobre la misma línea. «Cambio de sitio en noviembre» y «sube de 0 a 2 en enero» se leen juntos.</span></li>
+          <li><span class="dash">—</span><span><b>Continuidad entre cursos.</b> Un grupo que pasa de 3.º a 4.º conserva su historial si el docente lo migra. Los códigos de alumno permiten enlazar tomas sin exportar nombres.</span></li>
+          <li><span class="dash">—</span><span><b>Informe imprimible.</b> HTML autocontenido en estilo Lámina, con las fuentes incrustadas como en MiClase. Informe de grupo para el equipo docente e informe individual para orientación. Nunca un informe pensado para el alumno.</span></li>
+          <li><span class="dash">—</span><span><b>Copia de seguridad.</b> Exportación cifrada con contraseña, importable en otro dispositivo. Es el único camino entre dispositivos hasta fase 4; la sincronización por buzón ciego llega entonces, como opción.</span></li>
+        </ul>
+      </section>
+
+      <!-- 10 -->
+      <section class="sec" id="s10">
+        <div class="sec-head"><span class="sec-num">10</span><h2>Dos pieles: Lámina para el docente, Alumno para el aula</h2></div>
+        <p class="sec-lede">El portal del docente es una lámina: papel, filete, mono y retícula. La pantalla del alumnado es la excepción canónica del sistema: color vivo, radio, tipografía cálida y pictogramas propios.</p>
+
+        <div class="twocol">
+          <div>
+            <h4>Portal del docente · EDUmind-Lámina</h4>
+            <ul>
+              <li>Cabecera fija con el grupo y la toma en curso, en mono.</li>
+              <li>Columna izquierda: matriz, grafo, lista de atención, comparador.</li>
+              <li>Columna derecha sticky: ficha de la toma, contador de respuestas, botón de cerrar.</li>
+              <li>Estados activos por inversión de tinta. Ningún color saturado, ninguna sombra.</li>
+              <li>Panel pentagonal de mundos en el informe: Social y Emocional activos.</li>
+              <li>Imprime bien: toda vista es un informe en potencia.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Pantalla del alumnado · EDUmind-Alumno</h4>
+            <ul>
+              <li>Una pregunta por pantalla, en Fraunces, legible a seis metros si se proyecta.</li>
+              <li>Compañeros como fichas grandes de 56 px mínimo, sin fotos, sin números.</li>
+              <li>Botón de escuchar la pregunta con voz del navegador para lectores iniciales.</li>
+              <li>Puntos de progreso, no barra de porcentaje. Contador «has elegido 2 de 3».</li>
+              <li>Cierre único: «Gracias. Ya está.» con pictograma. Sin confeti, sin puntuación.</li>
+              <li>Nada persiste al cerrar la pestaña.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mockframe">
+          <p class="cap"><span>Fig. 13b · Pantalla del alumnado, registro Primaria media. Nombres ficticios.</span><span>Modo EDUmind-Alumno</span></p>
+          <div class="mock-alumno" role="img" aria-label="Maqueta de la pantalla del alumnado: pregunta sobre con quién estar en un equipo, ocho fichas con nombres ficticios, dos seleccionadas, botón Siguiente.">
+            <div class="band"></div>
+            <div class="step"><span>Pregunta 1 de 4</span><span class="dots"><i class="on"></i><i></i><i></i><i></i></span></div>
+            <p class="q">Mañana hacemos un proyecto por equipos. ¿Con quién te gustaría estar en el equipo?</p>
+            <p class="hint">Puedes elegir hasta tres. No hay respuestas buenas ni malas.</p>
+            <div class="roster">
+              <div class="kid on"><i></i>Sabela</div>
+              <div class="kid"><i></i>Iker</div>
+              <div class="kid"><i></i>Antía</div>
+              <div class="kid on"><i></i>Brais</div>
+              <div class="kid"><i></i>Uxía</div>
+              <div class="kid"><i></i>Mateo</div>
+              <div class="kid"><i></i>Noa</div>
+              <div class="kid"><i></i>Roi</div>
+            </div>
+            <div class="bar">
+              <span class="audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>Escuchar la pregunta</span>
+              <span class="cnt">Has elegido 2 de 3</span>
+              <span class="go">Siguiente</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Adaptación por etapa</h3>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Registro</th><th>Edad</th><th>Apoyos</th><th>Elecciones</th><th>Situaciones</th></tr></thead>
+          <tbody>
+            <tr><td class="k">LECTOR INICIAL</td><td>6 – 8</td><td>Audio automático, frases de una línea, fichas de 64 px, modalidad A recomendada</td><td>2</td><td>EQUIPO · RECREO · ESPEJO</td></tr>
+            <tr><td class="k">PRIMARIA</td><td>8 – 12</td><td>Audio bajo demanda, texto completo</td><td>3</td><td>EQUIPO · RECREO · AYUDA · ESPEJO</td></tr>
+            <tr><td class="k">SECUNDARIA Y ADULTOS</td><td>12 +</td><td>Sin apoyos, tipografía y color más sobrios, móvil propio</td><td>5</td><td>Las cinco, negativas solo por decisión expresa</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>Idiomas: castellano y gallego desde el primer día, inglés en fase 4. El cuestionario es un fichero de textos por idioma y registro, editable por el docente sin tocar código.</p>
+      </section>
+
+      <!-- 11 -->
+      <section class="sec" id="s11">
+        <div class="sec-head"><span class="sec-num">11</span><h2>Ética y protección de datos</h2></div>
+        <p class="sec-lede">Un sociograma trata datos personales de menores sobre sus relaciones. La arquitectura resuelve dónde están los datos; lo que sigue resuelve cómo se usan.</p>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Base jurídica.</b> Función educativa y orientadora del centro (misión de interés público, LOE y desarrollo autonómico). La app lo documenta en un PRIVACIDAD.md al estilo de MiClase, escrito para el DPD del centro.</span></li>
+          <li><span class="dash">—</span><span><b>Información a las familias.</b> Plantilla de comunicación incluida en la lámina docente: qué se hace, para qué, dónde se guarda y quién lo ve.</span></li>
+          <li><span class="dash">—</span><span><b>Minimización.</b> Sin fotos, sin fecha de nacimiento, sin motivo de elección, sin marca temporal fina. El código de 5 caracteres sustituye al nombre en todo lo que sale del dispositivo.</span></li>
+          <li><span class="dash">—</span><span><b>Conservación.</b> El docente decide. La app propone borrar las tomas al cambiar de etapa y avisa cuando un grupo lleva dos cursos sin actividad.</span></li>
+          <li><span class="dash">—</span><span><b>Resultados.</b> Nunca al alumnado. A las familias, solo lo relativo a su hijo o hija y a través del tutor, no desde la app.</span></li>
+          <li><span class="dash">—</span><span><b>Nominaciones negativas.</b> Bloqueadas en Primaria por diseño, no por configuración. En Secundaria requieren activación expresa y dejan constancia en la toma.</span></li>
+        </ul>
+      </section>
+
+      <!-- 12 -->
+      <section class="sec" id="s12">
+        <div class="sec-head"><span class="sec-num">12</span><h2>Hoja de ruta</h2></div>
+        <p class="sec-lede">Cinco fases, unas catorce semanas hasta la última obligatoria. Las cuatro primeras no tienen backend: son una PWA que nginx sirve como ficheros estáticos. Cada fase se despliega con el mismo desplegar.sh con vuelta atrás que usan Board y MiClase.</p>
+
+        <div class="phase">
+          <div class="f">F0<small>Base</small></div>
+          <div><h4>Esqueleto y modalidad A</h4><p>Repositorio con la plantilla legal, frontend PWA, Dexie, grupos y alumnos pegando una lista, cuestionario por registro, modalidad de un dispositivo, matriz sociométrica. Sin backend. Ya se puede hacer la toma de septiembre.</p></div>
+          <div class="d">2 semanas</div>
+        </div>
+        <div class="phase">
+          <div class="f">F1<small>Aula</small></div>
+          <div><h4>Tablets por QR y hoja de marcas</h4><p>QR de ida con la lista en el fragmento, página del alumnado que la borra del historial, QR de vuelta por tablet, escáner con la cámara. Hoja de marcas individual y de grupo con reconocimiento en canvas y confirmación hoja a hoja. Teclado de transcripción. Pruebas de que la página del alumnado no hace ninguna petición de red.</p></div>
+          <div class="d">4 semanas</div>
+        </div>
+        <div class="phase">
+          <div class="f">F2<small>Lectura</small></div>
+          <div><h4>Análisis completo</h4><p>Índices, subgrupos, grafo de fuerzas propio, lista de atención, ficha de alumno. Negativas para Secundaria y adultos con activación expresa y tipos de Coie y Dodge. Todo probado por unidad con grupos sintéticos.</p></div>
+          <div class="d">3 semanas</div>
+        </div>
+        <div class="phase">
+          <div class="f">F3<small>Tiempo</small></div>
+          <div><h4>Código de acceso, longitudinal e informes</h4><p>Prueba autocontenida con clave pública del docente y fichero de respuesta cifrado para Moodle o aula virtual. Comparador de tomas, trayectoria por alumno con eventos, informe HTML autocontenido, copia cifrada, importación desde MiClase y desde CSV/XLSX.</p></div>
+          <div class="d">4 semanas</div>
+        </div>
+        <div class="phase">
+          <div class="f">F4<small>Opcional</small></div>
+          <div><h4>Relé cifrado, nativo e idiomas</h4><p>Primer backend: buzón ciego para el relé en vivo y la sincronización entre dispositivos del docente. Capacitor, canal directo en la misma red, inglés, publicación en la organización edumind-es con release saneada.</p></div>
+          <div class="d">A demanda</div>
+        </div>
+
+        <h3>Decisiones que quedan en tu mano</h3>
+        <ul class="rules">
+          <li><span class="dash">—</span><span><b>Número de figura.</b> No existía registro. Se crea <code>docs/REGISTRO_LAMINAS.md</code> con las figuras conocidas y Hilo toma el 13. Si aparece una lámina anterior con ese número, se cambia aquí y en el registro.</span></li>
+          <li><span class="dash">—</span><span><b>Orden de F1.</b> Tablets por QR y hoja de marcas van en la misma fase. Si hay prisa por la toma de septiembre, la hoja de marcas puede ir primero: no necesita tablets.</span></li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="aside">
+      <a class="btn btn-block" href="#s12">Ver la hoja de ruta</a>
+
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-head"><span class="mono">Los cinco mundos</span><span class="mono">2 / 5</span></div>
+        <svg viewBox="0 0 200 190" width="100%" height="128" role="img" aria-label="Dos de los cinco mundos activos: social y emocional">
+          <polygon points="100,20 172,72 145,158 55,158 28,72" fill="none" stroke="#17181a" stroke-width="1"/>
+          <g stroke="#c9c4b8" stroke-width="1">
+            <line x1="100" y1="90" x2="100" y2="20"/><line x1="100" y1="90" x2="172" y2="72"/>
+            <line x1="100" y1="90" x2="145" y2="158"/><line x1="100" y1="90" x2="55" y2="158"/>
+            <line x1="100" y1="90" x2="28" y2="72"/>
+          </g>
+          <circle cx="100" cy="20"  r="5" fill="#c05f3c"/>
+          <circle cx="172" cy="72"  r="5" fill="#c19a2e"/>
+          <circle cx="145" cy="158" r="4.5" fill="#ece9e1" stroke="#c9c4b8"/>
+          <circle cx="55"  cy="158" r="4.5" fill="#ece9e1" stroke="#c9c4b8"/>
+          <circle cx="28"  cy="72"  r="4.5" fill="#ece9e1" stroke="#c9c4b8"/>
+        </svg>
+        <dl class="spec" style="margin-top:6px;border-top:0">
+          <div><dt>Emocional</dt><dd style="font:400 12px/1 var(--font-mono);letter-spacing:.1em">ACTIVO</dd></div>
+          <div><dt>Social</dt><dd style="font:400 12px/1 var(--font-mono);letter-spacing:.1em">ACTIVO</dd></div>
+        </dl>
+      </div>
+
+      <dl class="spec">
+        <div><dt>Público</dt><dd>Tutores, orientación, equipos docentes</dd></div>
+        <div><dt>Etapa</dt><dd>Primaria a formación de adultos</dd></div>
+        <div><dt>Sesión</dt><dd>20 – 30 min, 3 tomas por curso</dd></div>
+        <div><dt>Datos del alumnado</dt><dd>Solo en el dispositivo del docente</dd></div>
+        <div><dt>Tráfico en el aula</dt><dd>Ninguno: QR, hoja de marcas o fichero cifrado</dd></div>
+        <div><dt>Pila</dt><dd>React 19 · Vite · Dexie · PWA estática</dd></div>
+        <div><dt>Dominio</dt><dd>hilo.edumind.es · :3280</dd></div>
+        <div><dt>MiClase</dt><dd>Opcional: importa su exportación, comparte códigos</dd></div>
+        <div><dt>Licencia</dt><dd>AGPL-3.0-or-later / EUPL-1.2</dd></div>
+        <div><dt>Estado</dt><dd>Propuesta · 5 · 09 · 2026</dd></div>
+      </dl>
+
+      <ul class="toc" aria-label="Secciones">
+        <li><a href="#s01"><span class="n">01</span>Para qué sirve</a></li>
+        <li><a href="#s02"><span class="n">02</span>Principios</a></li>
+        <li><a href="#s03"><span class="n">03</span>El instrumento</a></li>
+        <li><a href="#s04"><span class="n">04</span>La sesión</a></li>
+        <li><a href="#s05"><span class="n">05</span>Arquitectura</a></li>
+        <li><a href="#s06"><span class="n">06</span>Papel y aula virtual</a></li>
+        <li><a href="#s07"><span class="n">07</span>Modelo de datos</a></li>
+        <li><a href="#s08"><span class="n">08</span>Análisis</a></li>
+        <li><a href="#s09"><span class="n">09</span>Medio y largo plazo</a></li>
+        <li><a href="#s10"><span class="n">10</span>Dos pieles</a></li>
+        <li><a href="#s11"><span class="n">11</span>Ética y RGPD</a></li>
+        <li><a href="#s12"><span class="n">12</span>Hoja de ruta</a></li>
+      </ul>
+    </aside>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="mono mono-ink">EDUMIND® · LUIS VILELA ACUÑA</p>
+    <p class="tm">EDUmind® es una marca registrada en España (OEPM), titularidad de
+    Luis Vilela Acuña. El software puede distribuirse bajo licencias open-source,
+    pero el uso de la marca EDUmind® requiere autorización.
+    <a href="mailto:contacto@edumind.es">contacto@edumind.es</a> ·
+    <a href="https://edumind.es/es/legal">Brand / Legal</a>.</p>
+  </div>
+  <div class="worlds-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+</footer>
+
+</body>
+</html>

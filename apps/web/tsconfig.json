@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "vite-plugin-pwa/client"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@edumind-hilo/nucleo": [
+        "../../packages/nucleo/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
