@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.0.0 — 2026-09-05
+
+Primera versión completa: fases 0 a 3. Evaluación por fases en
+`docs/EVALUACION.md`. Sin cambios de código respecto a 0.4.0.
+
 ## 0.4.0 — 2026-09-05
 
 Fase 3. Prueba con código de acceso y entregas cifradas con clave pública,

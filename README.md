@@ -83,6 +83,7 @@ npm run build     # apps/web/dist
 | [DESPLIEGUE.md](DESPLIEGUE.md) | Puesta en producción como sitio estático |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo colaborar |
 | [docs/lamina-diseno.html](docs/lamina-diseno.html) | Lámina de aplicación FIG. 13: el diseño completo |
+| [docs/EVALUACION.md](docs/EVALUACION.md) | Qué se comprobó al cerrar cada fase y qué queda sin comprobar |
 
 ## Colaborar
 

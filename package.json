@@ -1,7 +1,7 @@
 {
   "name": "edumind-hilo",
   "private": true,
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "EDUmind Hilo: sociograma de aula local-first y sin servidor. PWA para el docente, pantalla adaptada para el alumnado.",
   "author": "Luis Vilela Acuña <contacto@edumind.es>",
   "license": "(AGPL-3.0-or-later OR EUPL-1.2)",
