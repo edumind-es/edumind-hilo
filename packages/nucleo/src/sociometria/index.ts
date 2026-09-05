@@ -263,3 +263,5 @@ export function listaAtencion(a: Analisis): { alumno_id: string; motivo: string 
   }
   return salida
 }
+
+export * from './grafo'

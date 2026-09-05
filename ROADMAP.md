@@ -32,11 +32,14 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
       arrugas). La lectura está probada con hojas sintéticas giradas.
 - [ ] Prueba automática de que `/s` no hace ninguna petición de red.
 
-## F2 · Lectura
+## F2 · Lectura — HECHO (v0.3)
 
-- [ ] Grafo de fuerzas propio en SVG, filtro por situación.
-- [ ] Ficha de alumno con notas.
-- [ ] Informe de grupo imprimible en Lámina.
+- [x] Grafo de fuerzas propio en SVG (Fruchterman-Reingold determinista),
+      filtro por situación, subgrupos por color, aislados con borde.
+- [x] Ficha de alumno: posición en cada toma, vínculos de la última, notas
+      del docente, trayectoria con los eventos del grupo cuando hay dos tomas.
+- [x] Informe de grupo: un HTML autocontenido en Lámina, el mismo en pantalla,
+      impreso y descargado.
 
 ## F3 · Tiempo y aula virtual
 

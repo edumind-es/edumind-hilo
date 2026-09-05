@@ -139,6 +139,13 @@ export async function anadirEvento(grupoId: string, fecha: string, texto: string
   await db.eventos.add({ id: nuevoId(), ...sello(), grupo_id: grupoId, fecha, texto: texto.trim() })
 }
 
+export async function anadirNota(alumnoId: string, fecha: string, texto: string) {
+  await db.notas.add({ id: nuevoId(), ...sello(), alumno_id: alumnoId, fecha, texto: texto.trim() })
+}
+export async function borrarNota(id: string) {
+  await db.notas.update(id, { deleted_at: ahora(), updated_at: ahora() })
+}
+
 /** Borra TODO. Solo desde Ajustes y con confirmación escrita. */
 export async function borrarTodo() {
   await db.transaction('rw', db.tables, async () => {

@@ -70,7 +70,7 @@ export function Grupo() {
                     <input type="text" defaultValue={a.nombre} aria-label={`Nombre de ${a.nombre}`} style={{ border: 0, background: 'transparent', padding: 0, maxWidth: 260 }}
                       onBlur={e => { const v = e.target.value.trim(); if (v && v !== a.nombre) void actualizarAlumno(a.id, { nombre: v }) }} />
                   </td>
-                  <td className="k">{a.codigo}</td>
+                  <td className="k"><Link to={`/alumno/${a.id}`}>{a.codigo}</Link></td>
                   <td><input type="checkbox" checked={a.neae} aria-label={`NEAE de ${a.nombre}`} onChange={e => void actualizarAlumno(a.id, { neae: e.target.checked })} /></td>
                   <td className="no-imprimir" style={{ textAlign: 'right' }}>
                     <button type="button" className="enlace" onClick={() => { if (confirm(`¿Quitar a ${a.nombre} del grupo?`)) void borrarAlumno(a.id) }}>quitar</button>

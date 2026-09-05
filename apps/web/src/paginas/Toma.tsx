@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ETIQUETA_ETAPA, ETIQUETA_SITUACION, SITUACIONES_PREFERENCIA, analizar, listaAtencion, type Alumno, type Situacion } from '@edumind-hilo/nucleo'
+import { Grafo } from '@/componentes/Grafo'
 import { cerrarToma } from '@/db/consultas'
 import { useAlumnos, useGrupo, useParticipaciones, useRespuestas, useToma } from '@/db/hooks'
 import { fechaHora } from '@/lib/fechas'
@@ -49,7 +50,7 @@ export function Toma() {
               <button type="button" className="btn secundario" onClick={() => { if (confirm('Cerrar la toma. Ya no se podrán añadir respuestas. ¿Seguir?')) void cerrarToma(toma.id) }}>Cerrar la toma</button>
             </>
           ) : <span className="stamp cerrada">Cerrada</span>}
-          <button type="button" className="btn secundario" onClick={() => print()}>Imprimir</button>
+          <Link className="btn secundario" to={`/toma/${toma.id}/informe`}>Informe</Link>
         </div>
       </div>
 
@@ -78,7 +79,12 @@ export function Toma() {
       </section>
 
       <section className="sec">
-        <div className="sec-head"><span className="sec-num">02</span><h2>Índices por alumno</h2></div>
+        <div className="sec-head"><span className="sec-num">02</span><h2>Grafo</h2></div>
+        <Grafo analisis={analisis} nombres={nombre} situaciones={toma.situaciones} />
+      </section>
+
+      <section className="sec">
+        <div className="sec-head"><span className="sec-num">03</span><h2>Índices por alumno</h2></div>
         <div className="tablewrap">
           <table>
             <thead>
@@ -97,7 +103,7 @@ export function Toma() {
                 if (!x) return null
                 return (
                   <tr key={a.id}>
-                    <td>{a.nombre}{analisis.sinRespuesta.includes(a.id) && <span className="mono"> · sin respuesta</span>}</td>
+                    <td><Link to={`/alumno/${a.id}`}>{a.nombre}</Link>{analisis.sinRespuesta.includes(a.id) && <span className="mono"> · sin respuesta</span>}</td>
                     {toma.situaciones.map(s => <td key={s} className="num">{s === 'espejo' ? '·' : x.recibidas[s] ?? 0}</td>)}
                     <td className="num"><b>{x.recibidasTotal}</b></td>
                     <td className="num">{x.emitidasTotal}</td>
@@ -116,13 +122,13 @@ export function Toma() {
       </section>
 
       <section className="sec">
-        <div className="sec-head"><span className="sec-num">03</span><h2>Matriz sociométrica</h2></div>
+        <div className="sec-head"><span className="sec-num">04</span><h2>Matriz sociométrica</h2></div>
         <Matriz alumnos={alumnos} analisis={analisis} situaciones={preferencia} negativas={toma.negativas} />
         <p className="aviso">Filas: quién elige. Columnas: a quién. La cifra es en cuántas situaciones le elige; «−» marca una negativa. La última columna suma lo recibido.</p>
       </section>
 
       <section className="sec">
-        <div className="sec-head"><span className="sec-num">04</span><h2>Subgrupos y puentes</h2></div>
+        <div className="sec-head"><span className="sec-num">05</span><h2>Subgrupos y puentes</h2></div>
         {analisis.subgrupos.length === 0 ? <p>Todavía no hay parejas recíprocas.</p> : (
           <ul className="rules">
             {analisis.subgrupos.map((sg, i) => (

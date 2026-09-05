@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom'
 import { Marco } from './componentes/Marco'
 import { Ajustes } from './paginas/Ajustes'
 import { Escanear } from './paginas/Escanear'
+import { FichaAlumno } from './paginas/FichaAlumno'
+import { Informe } from './paginas/Informe'
 import { Grupo } from './paginas/Grupo'
 import { Hojas } from './paginas/Hojas'
 import { Inicio } from './paginas/Inicio'
@@ -18,6 +20,7 @@ export default function App() {
       <Route path="/toma/:id/responder" element={<Responder />} />
       <Route path="/toma/:id/hojas" element={<Hojas />} />
       <Route path="/s" element={<SesionAlumno />} />
+      <Route path="/toma/:id/informe" element={<Informe />} />
       <Route element={<Marco />}>
         <Route path="/" element={<Inicio />} />
         <Route path="/grupo/:id" element={<Grupo />} />
@@ -25,6 +28,7 @@ export default function App() {
         <Route path="/toma/:id/sesion" element={<SesionQr />} />
         <Route path="/toma/:id/escanear" element={<Escanear />} />
         <Route path="/toma/:id/transcribir" element={<Transcribir />} />
+        <Route path="/alumno/:id" element={<FichaAlumno />} />
         <Route path="/ajustes" element={<Ajustes />} />
       </Route>
     </Routes>

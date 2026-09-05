@@ -30,6 +30,9 @@ export function useRespuestas(tomaId: string | undefined) {
 export function useParticipaciones(tomaId: string | undefined) {
   return useLiveQuery(async () => (tomaId ? vivos(await db.participaciones.where('toma_id').equals(tomaId).toArray()) : []), [tomaId])
 }
+export function useNotas(alumnoId: string | undefined) {
+  return useLiveQuery(async () => (alumnoId ? vivos(await db.notas.where('alumno_id').equals(alumnoId).toArray()).sort((a, b) => b.fecha.localeCompare(a.fecha)) : []), [alumnoId])
+}
 export function useEventos(grupoId: string | undefined) {
   return useLiveQuery(async () => (grupoId ? vivos(await db.eventos.where('grupo_id').equals(grupoId).toArray()).sort((a, b) => b.fecha.localeCompare(a.fecha)) : []), [grupoId])
 }
