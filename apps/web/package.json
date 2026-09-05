@@ -11,7 +11,8 @@
     "build": "tsc -p tsconfig.json --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prebuild": "node ../../scripts/guardia-dist.mjs"
   },
   "dependencies": {
     "@edumind-hilo/nucleo": "*",
