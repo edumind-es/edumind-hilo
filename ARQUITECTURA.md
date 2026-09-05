@@ -57,15 +57,32 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
 
 ## Cómo ampliar
 
-- **Nueva modalidad de recogida** (QR, hoja de marcas, fichero): produce
-  `Eleccion[]` para un alumno y llama a `registrarRespuestas` con su `origen`.
-  Nada más cambia. La codificación compacta ya está en `nucleo/codificacion.ts`.
+- **Nueva modalidad de recogida**: produce elecciones por código de alumno y
+  llama a `registrarDesdeCodigos` (`apps/web/src/db/recoger.ts`) con su
+  `origen`. Nada más cambia. Las tres de fase 1 (QR, hoja, transcripción)
+  entran por ahí.
 - **Nueva situación**: añadirla a `SITUACIONES`, escribir sus textos en los dos
   idiomas y tres registros; la prueba del cuestionario falla hasta que estén.
 - **Nuevo idioma**: un objeto más en `CUESTIONARIOS` y `TEXTOS_ALUMNO`.
 - **Nuevo índice**: función pura en `sociometria/` con su prueba.
 - **Sincronización o relé** (fase 4): workspace `apps/api` con buzón ciego
   (patrón de MiClase). Las tablas ya llevan lo que ese mecanismo necesita.
+
+## Fase 1: lo que hay detrás de cada modalidad
+
+- **Tablets.** `nucleo/sesion.ts` empaqueta la lista y la configuración
+  (deflate + base64url) en `/s#g=…`. `SesionAlumno` lo lee, lo borra del
+  historial y, al terminar, muestra un QR con `codificarRespuestas`. `Escanear`
+  lo lee con jsQR y lo registra.
+- **Hoja de marcas.** `nucleo/hoja/diseno.ts` da la geometría en mm; `Hojas`
+  la imprime y `nucleo/hoja/lectura.ts` la lee: marcadores por blob más
+  cuadrado de cada esquina, homografía por DLT, muestreo de cada burbuja
+  frente al papel que la rodea, umbral doble (llena, vacía, dudosa). El QR de
+  la hoja lleva el orden de filas, así la lectura no depende de que el grupo
+  no haya cambiado desde que se imprimió. La confirmación hoja a hoja es
+  obligatoria y el docente corrige antes de registrar.
+- **Transcripción.** `lib/buscar.ts` para el prefijo sin acentos; los pasos
+  salen de `construirPasos`, los mismos que ve el alumnado.
 
 ## Invariantes que no se rompen
 

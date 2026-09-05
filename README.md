@@ -19,19 +19,21 @@ Hilo es el hilo invisible que une a un grupo.
   viaje), en tres registros por edad y en castellano y gallego. Sin motivo, sin
   ranking, sin resultados para el alumnado. Nominaciones negativas bloqueadas en
   Primaria por diseño; en Secundaria solo por activación expresa.
-- **Toma en un dispositivo**: el docente pasa la tablet y cada alumno responde
-  en una pantalla pensada para su edad.
+- **Cinco formas de recoger, ninguna con servidor**: en el dispositivo del
+  docente pasándolo de mano en mano; con tablets, proyectando un QR que lleva
+  la lista y leyendo con la cámara el QR de respuesta de cada tablet; con
+  hojas de marcas impresas que la cámara lee; o transcribiendo del papel con
+  un teclado rápido.
 - **Análisis en el navegador**: matriz sociométrica, elecciones recibidas,
   reciprocidad, cohesión, ajuste perceptivo, subgrupos, puentes y lista de
   atención. Con negativas, los tipos de Coie y Dodge.
-- **Copia de seguridad** en JSON, importable en otro dispositivo con fusión por
-  fecha de modificación.
+- **Copia de seguridad** cifrada con contraseña (AES-256), importable en otro
+  dispositivo con fusión por fecha de modificación.
 - **Funciona sin conexión**: PWA instalable. No carga nada de ningún origen
   externo; el CI lo comprueba.
 
-Lo que viene (tablets por QR de ida y vuelta, hoja de marcas leída con la
-cámara, prueba con código de acceso cifrada para el aula virtual, lectura
-longitudinal) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
+Lo que viene (grafo, prueba con código de acceso cifrada para el aula virtual,
+lectura longitudinal) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
 justificación pedagógica y la arquitectura, está en
 [docs/lamina-diseno.html](docs/lamina-diseno.html).
 

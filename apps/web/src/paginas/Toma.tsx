@@ -42,6 +42,10 @@ export function Toma() {
           {toma.estado === 'abierta' ? (
             <>
               <Link className="btn" to={`/toma/${toma.id}/responder`}>Responder en este dispositivo</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/sesion`}>Sesión con tablets</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/escanear`}>Leer con la cámara</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/hojas`}>Hojas de marcas</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/transcribir`}>Transcribir</Link>
               <button type="button" className="btn secundario" onClick={() => { if (confirm('Cerrar la toma. Ya no se podrán añadir respuestas. ¿Seguir?')) void cerrarToma(toma.id) }}>Cerrar la toma</button>
             </>
           ) : <span className="stamp cerrada">Cerrada</span>}
@@ -59,7 +63,7 @@ export function Toma() {
       {respondieron === 0 && (
         <div className="note" style={{ '--c': 'var(--m-social)' } as React.CSSProperties}>
           <span className="tag">Todavía sin respuestas</span>
-          <p>Pulsa «Responder en este dispositivo», elige al alumno que va a contestar y entrégale la tablet. El análisis se actualiza solo.</p>
+          <p>Cinco formas de recoger: en este dispositivo pasándolo de mano en mano; con tablets, proyectando el código de «Sesión con tablets»; con hojas de marcas impresas y leídas con la cámara; o transcribiendo del papel. El análisis se actualiza solo.</p>
         </div>
       )}
 

@@ -49,3 +49,5 @@
 .modo-alumno .pie{margin-top:40px;font-size:13px;color:var(--a-ink-3);text-align:center}
 .modo-alumno .esquina{position:fixed;top:14px;right:14px;font:600 12px/1 var(--a-body);color:var(--a-ink-3);background:transparent;border:1px solid var(--a-line);border-radius:var(--a-pill);padding:8px 12px;cursor:pointer;opacity:.6}
 @media (prefers-reduced-motion:reduce){.modo-alumno *{transition:none !important}}
+.modo-alumno .qr-vuelta{background:#fff;padding:12px;border-radius:var(--a-r);box-shadow:var(--a-sombra);width:min(70vw,360px)}
+.modo-alumno .qr-vuelta svg{width:100%;height:auto;display:block}

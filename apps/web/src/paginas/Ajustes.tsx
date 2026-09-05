@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { exportarCopia, importarCopia } from '@/db/copia'
 import { borrarTodo } from '@/db/consultas'
+import { cifrarTexto, descifrarTexto, esCifrado } from '@/lib/cifrado'
 import { descargarTexto } from '@/lib/descargar'
 
 export function Ajustes() {
@@ -9,13 +10,38 @@ export function Ajustes() {
   async function exportar() {
     const copia = await exportarCopia()
     const fecha = copia.exportado.slice(0, 10)
-    descargarTexto(`hilo-copia-${fecha}.json`, JSON.stringify(copia, null, 1))
-    setMensaje(`Copia exportada: ${copia.grupos.length} grupos, ${copia.tomas.length} tomas, ${copia.respuestas.length} respuestas.`)
+    const resumen = `${copia.grupos.length} grupos, ${copia.tomas.length} tomas, ${copia.respuestas.length} respuestas`
+    const password = prompt('Contraseña para cifrar la copia (mínimo seis caracteres).\nDéjala vacía para exportar en claro, con nombres legibles.') ?? ''
+    if (!password) {
+      if (!confirm('Sin contraseña la copia lleva los nombres del alumnado en claro. ¿Exportar igualmente?')) return
+      descargarTexto(`hilo-copia-${fecha}.json`, JSON.stringify(copia, null, 1))
+      setMensaje(`Copia exportada en claro: ${resumen}.`)
+      return
+    }
+    try {
+      const cifrada = await cifrarTexto(JSON.stringify(copia), password)
+      descargarTexto(`hilo-copia-${fecha}.cifrada.json`, JSON.stringify(cifrada))
+      setMensaje(`Copia cifrada exportada: ${resumen}. Sin la contraseña no se puede abrir; no hay forma de recuperarla.`)
+    } catch (err) {
+      setMensaje(err instanceof Error ? err.message : 'No se pudo cifrar.')
+    }
   }
 
   async function importar(fichero: File) {
     try {
-      const contadores = await importarCopia(await fichero.text())
+      let texto = await fichero.text()
+      let bruto: unknown
+      try {
+        bruto = JSON.parse(texto)
+      } catch {
+        throw new Error('El fichero no es un JSON válido.')
+      }
+      if (esCifrado(bruto)) {
+        const password = prompt('Esta copia está cifrada. Contraseña:') ?? ''
+        if (!password) return
+        texto = await descifrarTexto(bruto, password)
+      }
+      const contadores = await importarCopia(texto)
       const total = Object.values(contadores).reduce((a, b) => a + b, 0)
       setMensaje(total ? `Importados ${total} registros nuevos o más recientes.` : 'La copia no traía nada más reciente que lo que ya hay.')
     } catch (err) {
@@ -36,7 +62,7 @@ export function Ajustes() {
       <section className="sec">
         <div className="sec-head"><span className="sec-num">01</span><h2>Copia de seguridad</h2></div>
         <p>Un fichero JSON con todos los grupos, tomas y respuestas. Al importarlo en otro dispositivo se fusiona: gana el registro modificado más tarde, así que se puede importar la misma copia dos veces sin duplicar nada.</p>
-        <div className="note alert"><span className="tag">En claro</span><p>La copia lleva los nombres del alumnado sin cifrar. Guárdala donde guardarías un cuaderno de notas. El cifrado con contraseña llega en la fase 3.</p></div>
+        <div className="note" style={{ '--c': 'var(--m-mental)' } as React.CSSProperties}><span className="tag">Cifrado</span><p>Al exportar se pide una contraseña: la copia sale cifrada (AES-256) y sin ella no se puede abrir, tampoco por EDUmind. Si la dejas vacía, la copia sale en claro, con los nombres legibles.</p></div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <button type="button" className="btn" onClick={() => void exportar()}>Exportar copia</button>
           <label className="btn secundario" style={{ cursor: 'pointer' }}>

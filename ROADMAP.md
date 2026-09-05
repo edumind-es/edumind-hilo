@@ -16,14 +16,21 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
       (woff2 en `public/fonts`, con su OFL en NOTICE). Hasta entonces, fuentes
       del sistema.
 
-## F1 · Aula: tablets por QR y hoja de marcas
+## F1 · Aula: tablets por QR y hoja de marcas — HECHO (v0.2)
 
-- [ ] QR de ida con la lista comprimida en el fragmento; página del alumnado
-      que la borra del historial; prueba de que no hace ninguna petición.
-- [ ] QR de vuelta por tablet y escáner con la cámara (jsQR).
-- [ ] Hoja de marcas individual y de grupo: impresión, lectura en canvas,
-      confirmación hoja a hoja.
-- [ ] Teclado de transcripción para el cuestionario clásico.
+- [x] QR de ida con la lista comprimida (deflate) en el fragmento; la página
+      del alumnado lo borra del historial y trabaja en memoria.
+- [x] QR de vuelta por tablet y lectura con la cámara (jsQR), con pegado
+      manual como alternativa.
+- [x] Hoja de marcas individual: impresión A4 desde `disenoHoja`, QR de
+      identidad con el orden de filas, lectura en canvas (marcadores,
+      homografía, umbral doble) y confirmación hoja a hoja con corrección.
+- [x] Teclado de transcripción para el cuestionario clásico.
+- [x] Copia de seguridad cifrada con contraseña (adelantada de F3).
+- [ ] Hoja de marcas de grupo (matriz completa en una hoja).
+- [ ] Validar la lectura de hojas con fotos reales de aula (luz, sombra,
+      arrugas). La lectura está probada con hojas sintéticas giradas.
+- [ ] Prueba automática de que `/s` no hace ninguna petición de red.
 
 ## F2 · Lectura
 
@@ -36,7 +43,7 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [ ] Prueba autocontenida con código de acceso y respuesta cifrada con la
       clave pública del docente (ECDH P-256 + AES-256-GCM).
 - [ ] Comparador de tomas y trayectoria por alumno con eventos.
-- [ ] Copia cifrada con contraseña. Importación desde MiClase y desde CSV/XLSX.
+- [ ] Importación desde MiClase y desde CSV/XLSX.
 - [ ] Inglés.
 
 ## F4 · Opcional

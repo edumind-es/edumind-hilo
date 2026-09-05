@@ -8,7 +8,7 @@ No es asesoramiento jurídico: es la descripción técnica de cómo funciona el
 programa. Todo lo que se afirma aquí es comprobable en el código fuente y buena
 parte está cubierto por pruebas automáticas.
 
-Última revisión: 5 de septiembre de 2026 · fase 0.
+Última revisión: 5 de septiembre de 2026 · fase 1.
 
 ## 1. El principio de diseño
 
@@ -49,7 +49,20 @@ Ninguno. No hay cuentas ni identificadores.
 **Ninguno.** El servidor que aloja la aplicación (hilos.edumind.es o cualquier
 otro) solo sirve ficheros estáticos y registra, como cualquier servidor web, la
 petición de descarga de la aplicación. Las respuestas del alumnado nunca viajan
-por red en las modalidades disponibles.
+por red en ninguna modalidad.
+
+### 2.4 Qué viaja entre dispositivos en el aula, y por dónde
+
+| Modalidad | Qué sale del dispositivo del docente | Por dónde | Qué vuelve | Por dónde |
+|---|---|---|---|---|
+| Tablets | Lista del grupo (código y nombre de pila) y configuración de la toma, comprimidas en el fragmento de una URL | Un QR proyectado, leído por la cámara de la tablet | Las elecciones, por código de alumno | Un QR en la pantalla de la tablet, leído por la cámara del docente |
+| Hoja de marcas | La hoja impresa, con nombres de pila y un QR con la toma, el código del alumno y el orden de filas | Papel | Las marcas | La cámara del docente; la foto se descarta al confirmar |
+| Transcripción | Nada | — | Lo que teclea el docente | — |
+
+El fragmento de una URL (lo que va detrás de `#`) no se envía nunca al
+servidor. La página de la tablet lo borra de la barra de direcciones y del
+historial al cargar, y no guarda nada: al cerrar la pestaña no queda ni la
+lista ni la respuesta.
 
 La aplicación compilada no carga recursos de ningún origen externo (fuentes,
 analíticas, CDN). Una prueba del CI (`pruebas/sin-origenes-externos.mjs`) lo
@@ -85,9 +98,10 @@ El tratamiento se enmarca en la función educativa y orientadora del centro
 
 ## 6. Copias de seguridad
 
-La exportación produce un fichero JSON **en claro** con todos los datos. El
-docente es responsable de dónde lo guarda. El cifrado con contraseña de la copia
-está previsto en la fase 3 (ver ROADMAP.md).
+Al exportar se pide una contraseña y la copia sale cifrada con AES-256-GCM
+(clave derivada con PBKDF2, 210.000 iteraciones). Sin la contraseña no puede
+abrirla nadie, tampoco EDUmind. Si el docente deja la contraseña vacía, la
+copia sale en claro, con un aviso previo; es su responsabilidad dónde la guarda.
 
 ## 7. Cómo comprobar todo esto
 

@@ -112,6 +112,8 @@ export interface TextosAlumno {
   graciasTitulo: string
   graciasTexto: string
   quienEres: string
+  entregar: string
+  siguientePersona: string
 }
 
 export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
@@ -129,6 +131,8 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     graciasTitulo: 'Gracias. Ya está.',
     graciasTexto: 'Puedes devolver el dispositivo.',
     quienEres: '¿Quién eres?',
+    entregar: 'Enséñale este código a tu profe para entregar.',
+    siguientePersona: 'Ya está entregado',
   },
   gl: {
     titulo: 'O meu equipo',
@@ -144,5 +148,7 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     graciasTitulo: 'Grazas. Xa está.',
     graciasTexto: 'Podes devolver o dispositivo.',
     quienEres: 'Quen es?',
+    entregar: 'Amósalle este código á túa profe para entregar.',
+    siguientePersona: 'Xa está entregado',
   },
 }
