@@ -14,7 +14,7 @@ RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WEB="$RAIZ/apps/web"
 RELEASES="$WEB/releases"
 VIVA="$WEB/dist"
-URL="${HILO_URL:-https://hilo.edumind.es}"
+URL="${HILO_URL:-https://hilos.edumind.es}"
 CONSERVAR=5
 
 rojo()  { printf '\033[31m%s\033[0m\n' "$*"; }

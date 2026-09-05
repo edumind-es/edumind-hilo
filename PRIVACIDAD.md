@@ -46,7 +46,7 @@ Ninguno. No hay cuentas ni identificadores.
 
 ### 2.3 Datos que llegan a un servidor
 
-**Ninguno.** El servidor que aloja la aplicación (hilo.edumind.es o cualquier
+**Ninguno.** El servidor que aloja la aplicación (hilos.edumind.es o cualquier
 otro) solo sirve ficheros estáticos y registra, como cualquier servidor web, la
 petición de descarga de la aplicación. Las respuestas del alumnado nunca viajan
 por red en las modalidades disponibles.

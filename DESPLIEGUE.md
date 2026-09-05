@@ -13,25 +13,15 @@ con HTTPS. No hay proceso que mantener vivo ni base de datos que migrar.
 El script compila aparte y cambia el enlace simbólico `apps/web/dist` de golpe:
 nginx nunca ve un directorio a medias. Conserva las cinco últimas versiones.
 
-## nginx (referencia)
+## nginx
 
-```nginx
-server {
-    server_name hilo.edumind.es;
-    root /var/www/edumind_hilo/apps/web/dist;
-    index index.html;
-    location / { try_files $uri $uri/ /index.html; }
-    # El service worker no debe cachearse en el navegador.
-    location = /sw.js { add_header Cache-Control "no-cache"; }
-    location /assets/ { add_header Cache-Control "public, max-age=31536000, immutable"; }
-}
-```
+El vhost definitivo y sus cabeceras están en `deploy/`. En el servidor de
+EDUmind el alta la hace, con sudo, `/var/www/.edumind_ops/hilos_site_install.py`:
+instala un vhost temporal con certificado prestado, emite el de
+hilos.edumind.es con certbot, instala el definitivo y recarga nginx. Revierte
+si `nginx -t` falla en cualquier punto.
 
-Cabeceras de seguridad recomendadas (CSP sin ningún origen externo):
-
-```
-Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; worker-src 'self'; frame-ancestors 'none'
-```
+La CSP no admite ningún origen externo, en coherencia con la app.
 
 ## En cualquier otro sitio
 
