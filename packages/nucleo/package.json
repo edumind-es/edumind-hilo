@@ -1,7 +1,7 @@
 {
   "name": "@edumind-hilo/nucleo",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "description": "Núcleo de Hilo: modelo, cuestionario y motor sociométrico. Sin dependencias de navegador.",
   "author": "Luis Vilela Acuña <contacto@edumind.es>",

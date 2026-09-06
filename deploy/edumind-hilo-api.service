@@ -1,0 +1,27 @@
+# /etc/systemd/system/edumind-hilo-api.service
+# API opcional de Hilo: buzón ciego para el relé y la sincronización.
+# Alta: sudo python3 /var/www/.edumind_ops/hilos_api_install.py
+[Unit]
+Description=EDUmind Hilo API (buzón ciego)
+After=network.target
+
+[Service]
+Type=simple
+User=nuevoadmin
+Group=dev-www
+WorkingDirectory=/var/www/edumind_hilo
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3280
+Environment=DATABASE_PATH=/var/www/edumind_hilo/data/hilo-api.sqlite
+Environment=LOG_LEVEL=warn
+ExecStart=/usr/bin/node /var/www/edumind_hilo/apps/api/src/servidor.js
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/www/edumind_hilo/data
+
+[Install]
+WantedBy=multi-user.target

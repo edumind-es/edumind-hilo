@@ -54,8 +54,10 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [x] Portal del docente en gallego e inglés (v1.2). El informe descargable
       sigue en castellano.
 
-## F4 · Opcional
+## F4 · Opcional — HECHO en parte (v1.3)
 
-- [ ] `apps/api`: buzón ciego para relé en vivo y sincronización entre
-      dispositivos del docente (patrón MiClase).
-- [ ] Capacitor. Canal directo en la misma red.
+- [x] `apps/api`: buzón ciego para relé en vivo y sincronización entre
+      dispositivos del docente. Sin cuentas: token secreto, hash en el servidor,
+      clave derivada por HKDF en el cliente.
+- [ ] Sincronización automática en segundo plano (hoy es un botón).
+- [ ] Capacitor (andamiaje). Canal directo en la misma red.

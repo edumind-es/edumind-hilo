@@ -46,7 +46,24 @@ Ninguno. No hay cuentas ni identificadores.
 
 ### 2.3 Datos que llegan a un servidor
 
-**Ninguno.** El servidor que aloja la aplicación (hilos.edumind.es o cualquier
+**Ninguno, salvo que el docente active una de las dos funciones opcionales
+del buzón ciego**, y entonces solo ciphertext:
+
+- **Relé en vivo** (sesión con tablets): cada tablet deposita su respuesta
+  cifrada con una clave de 256 bits que viaja en el QR proyectado y que el
+  servidor nunca recibe. El servidor guarda el código de sesión, el sobre y la
+  fecha; la sesión caduca a las dos horas y se borra al cerrarla.
+- **Sincronización entre dispositivos del docente**: cada registro viaja como
+  sobre cifrado con una clave derivada (HKDF) de un token secreto que solo
+  tienen los dispositivos del docente. El servidor identifica el buzón por el
+  hash del token y guarda tabla, identificador, fecha de modificación y
+  ciphertext. No hay cuentas ni identidad. El docente puede purgar el buzón
+  cuando quiera.
+
+El código del servidor está en `apps/api` y sus pruebas comprueban que rechaza
+cualquier cosa que no tenga forma de ciphertext.
+
+Sin activar nada de esto, el servidor que aloja la aplicación (hilos.edumind.es o cualquier
 otro) solo sirve ficheros estáticos y registra, como cualquier servidor web, la
 petición de descarga de la aplicación. Las respuestas del alumnado nunca viajan
 por red en ninguna modalidad.

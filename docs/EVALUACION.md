@@ -98,6 +98,20 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
   al mostrarse. Sin revisión por hablante nativo de gallego: conviene una
   lectura.
 
+## 1.3 · Buzón ciego (fase 4)
+
+- **Verificado**: la API rechaza sobres que no tienen forma de ciphertext,
+  exige token, aísla buzones, aplica último-en-escribir-gana y sirve
+  incrementos por secuencia; la purga deja el buzón vacío (pruebas con
+  `fastify.inject`). En el cliente, los sobres del relé no se abren con otra
+  clave y el mismo token da la misma clave en dos dispositivos.
+- **Sin verificar**: un ciclo de sincronización entre dos navegadores reales
+  y una sesión de relé con tablets reales. Las piezas están probadas por
+  separado; el flujo completo, no.
+- **Decisión**: sin cuentas ni SSO. El token secreto hace de identidad y de
+  clave; es más simple y deja al servidor con menos información que cualquier
+  esquema con usuarios.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

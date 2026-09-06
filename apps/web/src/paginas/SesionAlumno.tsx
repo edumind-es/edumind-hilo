@@ -7,19 +7,24 @@ import { useEffect, useState } from 'react'
 import { codificarRespuestas, desempaquetarSesion, paqueteDeFragmento, textosAlumno, type Eleccion, type Sesion } from '@edumind-hilo/nucleo'
 import { Gracias, PantallaAlumno } from '@/alumno/PantallaAlumno'
 import { qrSvg } from '@/lib/qr'
+import { cerrarSobre, importarClave } from '@/lib/sobres'
 
 type Estado =
   | { fase: 'cargando' }
   | { fase: 'sin-sesion'; motivo: string }
   | { fase: 'quien'; sesion: Sesion }
   | { fase: 'responder'; sesion: Sesion; codigo: string }
-  | { fase: 'entregar'; sesion: Sesion; svg: string }
+  | { fase: 'entregar'; sesion: Sesion; svg: string; entregado: boolean | null }
 
 export function SesionAlumno() {
   const [estado, setEstado] = useState<Estado>({ fase: 'cargando' })
+  const [rele, setRele] = useState<{ codigo: string; clave: string } | null>(null)
 
   useEffect(() => {
     const paquete = paqueteDeFragmento(location.hash)
+    const r = /(?:^|[#&])r=([A-Z2-9]{8})/.exec(location.hash)?.[1]
+    const k = /(?:^|[#&])k=([A-Za-z0-9_-]{40,50})/.exec(location.hash)?.[1]
+    if (r && k) setRele({ codigo: r, clave: k })
     // El fragmento se borra del historial nada más leerlo: la lista del grupo
     // no debe quedar en la barra de direcciones de una tablet compartida.
     history.replaceState(null, '', '/s')
@@ -34,7 +39,19 @@ export function SesionAlumno() {
 
   async function terminar(sesion: Sesion, codigo: string, elecciones: Eleccion[]) {
     const texto = codificarRespuestas({ toma: sesion.toma, de: codigo, elecciones: elecciones.map(e => ({ situacion: e.situacion, a: e.a_alumno, signo: e.signo })) })
-    setEstado({ fase: 'entregar', sesion, svg: await qrSvg(texto, 'M') })
+    const svg = await qrSvg(texto, 'M')
+    setEstado({ fase: 'entregar', sesion, svg, entregado: rele ? null : false })
+    // Con relé: se entrega también por el servidor, cifrado con la clave del QR.
+    // Es la única petición de red de esta página, y solo si el QR lo pidió.
+    if (rele) {
+      try {
+        const clave = await importarClave(rele.clave)
+        const r = await fetch(`/api/rele/${rele.codigo}/sobres`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ciphertext: await cerrarSobre(clave, texto) }) })
+        setEstado(e => (e.fase === 'entregar' ? { ...e, entregado: r.ok } : e))
+      } catch {
+        setEstado(e => (e.fase === 'entregar' ? { ...e, entregado: false } : e))
+      }
+    }
   }
 
   if (estado.fase === 'cargando') return <div className="modo-alumno"><div className="lienzo"><p>…</p></div></div>
@@ -95,7 +112,7 @@ export function SesionAlumno() {
       <div className="lienzo">
         <div className="gracias" style={{ minHeight: 'auto', paddingTop: 10 }}>
           <h1>{t.graciasTitulo}</h1>
-          <p>{t.entregar}</p>
+          <p>{estado.entregado === true ? t.entregadoServidor : t.entregar}</p>
           <div className="qr-vuelta" aria-label="Código de respuesta" dangerouslySetInnerHTML={{ __html: estado.svg }} />
           <button type="button" className="boton suave" onClick={() => setEstado({ fase: 'quien', sesion: estado.sesion })}>{t.siguientePersona}</button>
         </div>

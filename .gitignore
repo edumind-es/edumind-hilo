@@ -10,3 +10,5 @@ apps/web/releases/
 .env
 .env.*
 !.env.example
+# Base del buzón ciego (solo ciphertext), generada por la API
+data/

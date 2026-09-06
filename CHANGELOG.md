@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.3.0 — 2026-09-06
+
+Fase 4, opcional: primer backend. `apps/api` es un buzón ciego (Fastify +
+SQLite) que solo guarda ciphertext: relé en vivo para que las tablets entreguen
+solas, y sincronización entre los dispositivos del docente sin cuentas, con
+un token secreto del que el servidor solo conoce el hash. Todo lo anterior
+sigue funcionando sin él.
+
 ## 1.2.0 — 2026-09-06
 
 Portal del docente en gallego e inglés (patrón gettext: el castellano es la

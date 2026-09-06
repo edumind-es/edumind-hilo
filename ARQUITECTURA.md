@@ -101,6 +101,27 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
   matrices) y lectura de la exportación de MiClase (solo grupos y alumnos);
   `db/importar.ts` decide qué es cada fichero.
 
+## Fase 4 (opcional): el buzón ciego
+
+`apps/api` (Fastify 5 + better-sqlite3, puerto 3280 solo local, nginx en
+`/api/`). Dos usos, mismo principio: el servidor guarda sobres que no puede
+abrir.
+
+- **Relé** (`rutas/rele.js`): `POST /api/rele/sesiones` da un código; las
+  tablets hacen `POST /api/rele/:codigo/sobres` con el ciphertext (clave en el
+  QR, `lib/sobres.ts`); el docente lee por `GET …/sobres?desde=seq` cada 3 s
+  desde `SesionQr`. Caducidad 2 h, 300 sobres, limpieza cada minuto.
+- **Buzón** (`rutas/buzon.js`): `Authorization: Bearer <token>`; el servidor
+  guarda `sha256(token)` como id. `PUT /api/buzon/registros` (LWW por
+  `updated_at`, cuotas) y `GET …?desde=seq`. El cliente (`db/sync.ts`) cifra
+  cada registro con la clave HKDF del token y fusiona con `fusionar()`, la
+  misma regla que la copia de seguridad. Cursores en `ajustes`.
+- **Invariante**: la página de la tablet solo llama a la red si el QR trae
+  `r=` y `k=`; sin relé no hay ninguna petición, y la prueba lo vigila.
+- **Operación**: `deploy/edumind-hilo-api.service`, alta con
+  `.edumind_ops/hilos_api_install.py`; `desplegar.sh` reinicia la API solo si
+  `apps/api` cambió.
+
 ## Invariantes que no se rompen
 
 - La pantalla del alumnado no muestra resultados ni la palabra «sociograma».

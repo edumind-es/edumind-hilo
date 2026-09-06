@@ -52,8 +52,13 @@ apps/web/          PWA React + Vite. Portal del docente (EDUmind-Lámina) y
                    pantalla del alumnado (EDUmind-Alumno). IndexedDB vía Dexie.
 ```
 
-No hay `apps/api`. Si algún día hace falta un relé opcional (fase 4), nacerá
-como workspace aparte y el resto no cambia. Ver [ARQUITECTURA.md](ARQUITECTURA.md).
+```
+apps/api/          Opcional. Buzón ciego (Fastify + SQLite): relé en vivo y
+                   sincronización entre dispositivos del docente. Solo ciphertext.
+```
+
+Todo funciona sin `apps/api`; es una comodidad que el docente activa. Ver
+[ARQUITECTURA.md](ARQUITECTURA.md).
 
 ## Arrancar en local
 

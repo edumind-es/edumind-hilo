@@ -144,6 +144,7 @@ export interface TextosAlumno {
   descargarOtraVez: string
   copiar: string
   verTexto: string
+  entregadoServidor: string
 }
 
 export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
@@ -169,6 +170,7 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     descargarOtraVez: 'Descargar otra vez',
     copiar: 'Copiar el texto',
     verTexto: 'Ver el texto para copiarlo a mano',
+    entregadoServidor: 'Entregado. Si tu profe te lo pide, enséñale también este código.',
   },
   gl: {
     titulo: 'O meu equipo',
@@ -192,6 +194,7 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     descargarOtraVez: 'Descargar outra vez',
     copiar: 'Copiar o texto',
     verTexto: 'Ver o texto para copialo á man',
+    entregadoServidor: 'Entregado. Se a túa profe cho pide, amósalle tamén este código.',
   },
   en: {
     titulo: 'My team',
@@ -215,5 +218,6 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     descargarOtraVez: 'Download again',
     copiar: 'Copy the text',
     verTexto: 'Show the text to copy it by hand',
+    entregadoServidor: 'Handed in. If your teacher asks, show this code too.',
   },
 }
