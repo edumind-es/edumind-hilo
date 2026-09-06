@@ -132,6 +132,27 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
 - **Decisión**: se excluyen del catálogo las escalas de valoración uno a uno
   y los bloques de atribución de conductas; se documenta por qué.
 
+## 1.5.1 · Referencias del catálogo, comprobadas
+
+Cada referencia se contrastó el 6 de septiembre de 2026 con la fuente que se
+indica. Lo que no se pudo confirmar no se cita.
+
+| Instrumento | Referencia | Fuente de comprobación |
+|---|---|---|
+| Moreno | Moreno, J. L. (1934). *Who shall survive? A new approach to the problem of human interrelations.* Nervous and Mental Disease Publishing Co. | Fichas de libreros de primera edición y Wellcome Collection (wellcomecollection.org/works/kwjbgxeh) |
+| Coie y Dodge | Coie, J. D., Dodge, K. A. y Coppotelli, H. (1982). Dimensions and types of social status: A cross-age perspective. *Developmental Psychology, 18*(4), 557-570. doi 10.1037/0012-1649.18.4.557 | Scholars@Duke (scholars.duke.edu/publication/658269) |
+| Percepción sociométrica | Arruga i Valeri, A. (1974). *Introducción al test sociométrico.* Herder. ISBN 84-254-0925-X | Google Books (id dBXhPQAACAAJ) |
+| Percepción sociométrica | González Álvarez, J. (1990). *Sociometria per ordinador: el test sociomètric.* Generalitat Valenciana. ISBN 84-7890-081-0 | Dialnet (dialnet.unirioja.es/servlet/libro?codigo=130683) |
+| Amistad recíproca | Bukowski, W. M., Newcomb, A. F. y Hartup, W. W. (Eds.) (1996). *The company they keep: Friendships in childhood and adolescence.* Cambridge University Press. | Cambridge University Press (cambridge.org/9780521627252) |
+| Amistad recíproca | Cillessen, A. H. N. (2009). Sociometric methods. En Rubin, Bukowski y Laursen (Eds.), *Handbook of peer interactions, relationships, and groups* (pp. 82-99). Guilford Press. | Citas concordantes en literatura indexada; catálogo de Guilford para el volumen |
+| Bull-S | Cerezo Ramírez, F. (2012). *Bull-S. Test de evaluación sociométrica de la violencia entre escolares. Manual de referencia (versión 2.2).* COHS, Consultores en Ciencias Humanas / Grupo Albor-Cohs. ISBN 978-84-95180-63-6 | Página de créditos del manual (gac.com.es/editorial/INFO/Manuales/bullMANU.pdf): depósito legal BI-1035-2012 |
+| Equipos cooperativos | Johnson, D. W., Johnson, R. T. y Holubec, E. J. (1999). *El aprendizaje cooperativo en el aula.* Paidós. | Ediciones digitalizadas del texto en repositorios universitarios (UCM, ULPGC) |
+
+Se retiraron: «Arruga (1983)» (no existe tal edición: 1974 y reimpresión de
+1992), «Cerezo (2000), Albor-Cohs» (la edición de 2000 solo aparece en citas
+secundarias; se cita la de 2012, que tiene ficha) y el título «Friendship» en
+singular.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

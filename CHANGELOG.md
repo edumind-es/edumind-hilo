@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.5.1 — 2026-09-06
+
+Referencias del catálogo comprobadas contra fichas editoriales y
+bibliográficas; corregidas Arruga (1974), Bull-S (Cerezo Ramírez, 2012,
+versión 2.2, con ISBN), Bukowski («Friendships») y González Álvarez (título
+catalán, ISBN). Fuentes en docs/EVALUACION.md.
+
 ## 1.5.0 — 2026-09-06
 
 - Preguntas propias del docente en cada toma: etiqueta, texto, ayuda, tipo
