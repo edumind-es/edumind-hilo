@@ -20,6 +20,8 @@ const PERMITIDAS_JS = [
   /^https:\/\/reactrouter\.com\//,
   /^https?:\/\/(bit\.ly|tinyurl\.com)\//,
   /^http:\/\/localhost/,
+  // DOI de las referencias del catálogo: texto de una cita, no una carga.
+  /^https:\/\/doi\.org\//,
 ]
 const PERMITIDAS_RESTO = [/^https?:\/\/(www\.)?(edumind\.es|hilos\.edumind\.es|github\.com)/, /^http:\/\/www\.w3\.org\//]
 function* ficheros(d) {

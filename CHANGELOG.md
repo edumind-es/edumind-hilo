@@ -2,6 +2,8 @@
 
 ## 1.5.1 — 2026-09-06
 
+La guardia de orígenes externos admite el DOI de una referencia como texto.
+
 Referencias del catálogo comprobadas contra fichas editoriales y
 bibliográficas; corregidas Arruga (1974), Bull-S (Cerezo Ramírez, 2012,
 versión 2.2, con ISBN), Bukowski («Friendships») y González Álvarez (título
