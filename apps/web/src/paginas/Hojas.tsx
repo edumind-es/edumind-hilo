@@ -8,9 +8,11 @@ import { Link, useParams } from 'react-router-dom'
 import { ETIQUETA_SITUACION, MAX_FILAS_HOJA, codificarIdentidadHoja, disenoHoja, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
 import { qrSvg } from '@/lib/qr'
+import { useT } from '@/i18n'
 import '@/estilos/hoja.css'
 
 export function Hojas() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const grupo = useGrupo(toma?.grupo_id)
@@ -29,8 +31,8 @@ export function Hojas() {
     })()
   }, [toma, alumnos])
 
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !grupo || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !grupo || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
   if (alumnos.length - 1 > MAX_FILAS_HOJA) return <p className="error">El grupo tiene más de {MAX_FILAS_HOJA + 1} alumnos: la hoja de una página no da para tantas filas. Usa las tablets o la transcripción.</p>
 
   const cortos = nombresParaAlumnado(alumnos.map(a => a.nombre))
@@ -43,7 +45,7 @@ export function Hojas() {
       <div className="hojas-barra no-imprimir">
         <Link to={`/toma/${toma.id}`} className="mono mono-ink">← {toma.titulo}</Link>
         <span className="mono">{alumnos.length} hojas · {toma.situaciones.length} columnas · máximo {toma.max_elecciones} por columna</span>
-        <button type="button" className="btn pequeno" onClick={() => print()}>Imprimir</button>
+        <button type="button" className="btn pequeno" onClick={() => print()}>{tr("Imprimir")}</button>
       </div>
       {alumnos.map(a => {
         const filas = alumnos.filter(b => b.id !== a.id)
@@ -58,12 +60,12 @@ export function Hojas() {
             </div>
             <div className="instrucciones" style={{ left: mm(diseno.tituloX), top: mm(diseno.tituloY + 1), width: mm(diseno.ancho - diseno.tituloX - 16) }}>
               {toma.situaciones.map(s => (
-                <p key={s}><b>{ETIQUETA_SITUACION[s]}.</b> {textoSituacion(toma.idioma, toma.etapa, s).pregunta}</p>
+                <p key={s}><b>{tr(ETIQUETA_SITUACION[s])}.</b> {textoSituacion(toma.idioma, toma.etapa, s).pregunta}</p>
               ))}
               <p>Rellena del todo el círculo de cada persona que elijas. Como mucho {toma.max_elecciones} por columna. Sin nombres, sin motivos.</p>
             </div>
             {toma.situaciones.map((s, c) => (
-              <div key={s} className="cabecera-col" style={{ left: mm(diseno.columnas[c]! - 8), top: mm(diseno.cabeceraY - 4), width: mm(16) }}>{ETIQUETA_SITUACION[s]}</div>
+              <div key={s} className="cabecera-col" style={{ left: mm(diseno.columnas[c]! - 8), top: mm(diseno.cabeceraY - 4), width: mm(16) }}>{tr(ETIQUETA_SITUACION[s])}</div>
             ))}
             {filas.map((b, f) => (
               <div key={b.id}>

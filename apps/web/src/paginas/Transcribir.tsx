@@ -9,8 +9,10 @@ import { construirPasos } from '@/alumno/PantallaAlumno'
 import { registrarRespuestas } from '@/db/consultas'
 import { useAlumnos, useParticipaciones, useToma } from '@/db/hooks'
 import { coincidencias } from '@/lib/buscar'
+import { useT } from '@/i18n'
 
 export function Transcribir() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const alumnos = useAlumnos(toma?.grupo_id)
@@ -28,8 +30,8 @@ export function Transcribir() {
     setElegidos(pasos.map(() => []))
   }, [pasos, quien])
 
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
 
   const yaRespondieron = new Set(participaciones?.map(p => p.alumno_id) ?? [])
   const pendientes = alumnos.filter(a => !yaRespondieron.has(a.id))
@@ -49,7 +51,7 @@ export function Transcribir() {
       const primero = c[0]
       if (!primero) return
       if ((elegidos[i]?.length ?? 0) >= toma!.max_elecciones) {
-        setMensaje(`Máximo ${toma!.max_elecciones} en cada pregunta.`)
+        setMensaje(tr('Máximo {n} en cada pregunta.', { n: toma!.max_elecciones }))
         return
       }
       setElegidos(prev => prev.map((l, k) => (k === i ? [...l, primero.id] : l)))
@@ -65,12 +67,12 @@ export function Transcribir() {
     const elecciones: Eleccion[] = pasos.flatMap((p, i) => (elegidos[i] ?? []).map(a_alumno => ({ situacion: p.situacion, a_alumno, signo: p.signo })))
     try {
       await registrarRespuestas({ toma, alumnoId: quien, elecciones, origen: 'transcripcion' })
-      setMensaje(`${nombre.get(quien)}: ${elecciones.length} elecciones guardadas.`)
+      setMensaje(tr('{nombre}: {n} elecciones guardadas.', { nombre: nombre.get(quien) ?? '', n: elecciones.length }))
       const siguiente = pendientes.find(a => a.id !== quien)
       setQuien(siguiente?.id ?? '')
       setTimeout(() => entradas.current[0]?.focus(), 50)
     } catch (e) {
-      setMensaje(e instanceof Error ? e.message : 'No se pudo guardar.')
+      setMensaje(e instanceof Error ? tr(e.message) : 'No se pudo guardar.')
     }
   }
 
@@ -79,15 +81,15 @@ export function Transcribir() {
       <div className="cabecera">
         <div>
           <p className="eyebrow"><Link to={`/toma/${toma.id}`} style={{ textDecoration: 'none' }}>{toma.titulo}</Link> · transcribir</p>
-          <h1>Transcribir<br /><span className="light">del papel</span></h1>
-          <p className="lede">Elige quién responde, escribe tres letras del nombre y pulsa Enter. Enter con la casilla vacía pasa a la siguiente pregunta; en la última, guarda. Retroceso quita el último.</p>
+          <h1>{tr("Transcribir")}<br /><span className="light">{tr("del papel")}</span></h1>
+          <p className="lede">{tr("Elige quién responde, escribe tres letras del nombre y pulsa Enter. Enter con la casilla vacía pasa a la siguiente pregunta; en la última, guarda. Retroceso quita el último.")}</p>
         </div>
       </div>
 
       <div className="fila">
         <label className="campo" style={{ flex: '0 1 360px' }}><span>Quién responde ({pendientes.length} pendientes)</span>
           <select value={quien} onChange={e => setQuien(e.target.value)}>
-            <option value="">— elegir —</option>
+            <option value="">{tr("— elegir —")}</option>
             {pendientes.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
           </select>
         </label>
@@ -119,7 +121,7 @@ export function Transcribir() {
             </div>
           ))}
           <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-            <button type="submit" className="btn">Guardar y pasar al siguiente</button>
+            <button type="submit" className="btn">{tr("Guardar y pasar al siguiente")}</button>
           </div>
         </form>
       )}

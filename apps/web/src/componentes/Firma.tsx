@@ -1,4 +1,6 @@
+import { useT } from '@/i18n'
 export function Firma() {
+  const tr = useT()
   return (
     <footer>
       <div className="wrap">
@@ -10,7 +12,7 @@ export function Firma() {
           </p>
         </div>
         <p className="mono" style={{ margin: 0 }}>
-          <a href="https://github.com/edumind-es/edumind-hilo">Código fuente</a> · <a href="https://edumind.es/es/legal">Legal</a>
+          <a href="https://github.com/edumind-es/edumind-hilo">{tr("Código fuente")}</a> · <a href="https://edumind.es/es/legal">{tr("Legal")}</a>
         </p>
       </div>
       <div className="worlds-bar" aria-hidden="true"><i /><i /><i /><i /><i /></div>

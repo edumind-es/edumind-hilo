@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.2.0 — 2026-09-06
+
+Portal del docente en gallego e inglés (patrón gettext: el castellano es la
+clave; lo que falte sale en castellano). Selector en Ajustes, guardado en la
+base local. El informe descargable sigue en castellano.
+
 ## 1.1.0 — 2026-09-06
 
 - Fuentes Archivo, JetBrains Mono, Fraunces y Space Grotesk incrustadas

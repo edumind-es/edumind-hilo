@@ -4,9 +4,11 @@ import { Link, useParams } from 'react-router-dom'
 import { ETIQUETA_SITUACION, MAX_ALUMNOS_HOJA_GRUPO, SITUACIONES_PREFERENCIA, codificarIdentidadHojaGrupo, disenoHojaGrupo, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
 import { qrSvg } from '@/lib/qr'
+import { useT } from '@/i18n'
 import '@/estilos/hoja.css'
 
 export function HojasGrupo() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const grupo = useGrupo(toma?.grupo_id)
@@ -22,8 +24,8 @@ export function HojasGrupo() {
     })()
   }, [toma, alumnos])
 
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !grupo || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !grupo || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
   if (alumnos.length > MAX_ALUMNOS_HOJA_GRUPO || alumnos.length < 2) return <p className="error">La hoja de grupo admite entre 2 y {MAX_ALUMNOS_HOJA_GRUPO} alumnos.</p>
 
   const cortos = nombresParaAlumnado(alumnos.map(a => a.nombre))
@@ -36,13 +38,13 @@ export function HojasGrupo() {
       <div className="hojas-barra no-imprimir">
         <Link to={`/toma/${toma.id}`} className="mono mono-ink">← {toma.titulo}</Link>
         <span className="mono">{situaciones.length} hojas, una por situación · {alumnos.length} × {alumnos.length}</span>
-        <button type="button" className="btn pequeno" onClick={() => print()}>Imprimir</button>
+        <button type="button" className="btn pequeno" onClick={() => print()}>{tr("Imprimir")}</button>
       </div>
       {situaciones.map(s => (
         <div className="hoja" key={s} style={{ width: mm(d.ancho), height: mm(d.alto) }}>
           {d.marcadores.map((m, i) => <div key={i} className="marcador" style={{ left: mm(m.x - d.ladoMarcador / 2), top: mm(m.y - d.ladoMarcador / 2), width: mm(d.ladoMarcador), height: mm(d.ladoMarcador) }} />)}
           <div className="qr" style={{ left: mm(d.qr.x), top: mm(d.qr.y), width: mm(d.qr.lado), height: mm(d.qr.lado) }} dangerouslySetInnerHTML={{ __html: qrs[s] ?? '' }} />
-          <div className="titulo" style={{ left: mm(d.tituloX), top: mm(d.tituloY - 6) }}><b>{ETIQUETA_SITUACION[s]}</b> · {grupo.nombre} · {toma.titulo}</div>
+          <div className="titulo" style={{ left: mm(d.tituloX), top: mm(d.tituloY - 6) }}><b>{tr(ETIQUETA_SITUACION[s])}</b> · {grupo.nombre} · {toma.titulo}</div>
           <div className="instrucciones" style={{ left: mm(d.tituloX), top: mm(d.tituloY + 2), width: mm(d.ancho - d.tituloX - 16) }}>
             <p>{textoSituacion(toma.idioma, toma.etapa, s).pregunta}</p>
             <p>Hoja de grupo: cada fila es quien elige; cada columna, a quién. Rellena del todo el círculo. La diagonal no se lee. Máximo {toma.max_elecciones} por fila.</p>
@@ -60,7 +62,7 @@ export function HojasGrupo() {
               ))}
             </div>
           ))}
-          <div className="pie-hoja" style={{ left: mm(d.nombreX + 12), top: mm(d.alto - 17) }}>{grupo.nombre} · {ETIQUETA_SITUACION[s]} · una app de EDUmind, por Luis Vilela Acuña</div>
+          <div className="pie-hoja" style={{ left: mm(d.nombreX + 12), top: mm(d.alto - 17) }}>{grupo.nombre} · {tr(ETIQUETA_SITUACION[s])} · una app de EDUmind, por Luis Vilela Acuña</div>
         </div>
       ))}
     </div>

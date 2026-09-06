@@ -6,11 +6,13 @@ import { analizar } from '@edumind-hilo/nucleo'
 import { useAlumnos, useGrupo, useTomas } from '@/db/hooks'
 import { db } from '@/db/localDb'
 import { fechaCorta } from '@/lib/fechas'
+import { useT } from '@/i18n'
 
 const pct = (x: number) => `${Math.round(x * 100)} %`
 const delta = (a: number, b: number) => (b === a ? '=' : b > a ? `+${b - a}` : `${b - a}`)
 
 export function Comparar() {
+  const tr = useT()
   const { id } = useParams()
   const grupo = useGrupo(id)
   const alumnos = useAlumnos(id)
@@ -30,43 +32,43 @@ export function Comparar() {
     return { A: de(a), B: de(b) }
   }, [alumnos, respuestas, participaciones, a, b])
 
-  if (grupo === undefined) return <p className="mono">Cargando…</p>
-  if (!grupo || !alumnos) return <p>Este grupo no existe.</p>
+  if (grupo === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!grupo || !alumnos) return <p>{tr("Este grupo no existe.")}</p>
 
   return (
     <>
       <div className="cabecera">
         <div>
           <p className="eyebrow"><Link to={`/grupo/${grupo.id}`} style={{ textDecoration: 'none' }}>{grupo.nombre}</Link> · comparar tomas</p>
-          <h1>Antes<br /><span className="light">y después</span></h1>
-          <p className="lede">Dos tomas del mismo grupo. Lo que cambia se marca en negrita. Una toma de septiembre solo cobra sentido con la de enero al lado.</p>
+          <h1>{tr("Antes")}<br /><span className="light">{tr("y después")}</span></h1>
+          <p className="lede">{tr("Dos tomas del mismo grupo. Lo que cambia se marca en negrita. Una toma de septiembre solo cobra sentido con la de enero al lado.")}</p>
         </div>
       </div>
-      {orden.length < 2 ? <p className="aviso">Hacen falta al menos dos tomas de este grupo.</p> : (
+      {orden.length < 2 ? <p className="aviso">{tr("Hacen falta al menos dos tomas de este grupo.")}</p> : (
         <>
           <div className="fila">
-            <label className="campo"><span>Toma A</span><select value={a?.id ?? ''} onChange={e => setIdA(e.target.value)}>{orden.map(t => <option key={t.id} value={t.id}>{t.titulo} · {fechaCorta(t.inicio)}</option>)}</select></label>
-            <label className="campo"><span>Toma B</span><select value={b?.id ?? ''} onChange={e => setIdB(e.target.value)}>{orden.map(t => <option key={t.id} value={t.id}>{t.titulo} · {fechaCorta(t.inicio)}</option>)}</select></label>
+            <label className="campo"><span>{tr("Toma A")}</span><select value={a?.id ?? ''} onChange={e => setIdA(e.target.value)}>{orden.map(t => <option key={t.id} value={t.id}>{t.titulo} · {fechaCorta(t.inicio)}</option>)}</select></label>
+            <label className="campo"><span>{tr("Toma B")}</span><select value={b?.id ?? ''} onChange={e => setIdB(e.target.value)}>{orden.map(t => <option key={t.id} value={t.id}>{t.titulo} · {fechaCorta(t.inicio)}</option>)}</select></label>
           </div>
           {analisis && a && b && (
             <>
               <div className="tablewrap">
                 <table>
-                  <thead><tr><th></th><th className="num">{a.titulo}</th><th className="num">{b.titulo}</th><th className="num">Cambio</th></tr></thead>
+                  <thead><tr><th></th><th className="num">{a.titulo}</th><th className="num">{b.titulo}</th><th className="num">{tr("Cambio")}</th></tr></thead>
                   <tbody>
-                    <tr><td>Cohesión</td><td className="num">{pct(analisis.A.cohesion)}</td><td className="num">{pct(analisis.B.cohesion)}</td><td className="num"><b>{Math.round((analisis.B.cohesion - analisis.A.cohesion) * 100)} pt</b></td></tr>
-                    <tr><td>Parejas recíprocas</td><td className="num">{analisis.A.parejasReciprocas.length}</td><td className="num">{analisis.B.parejasReciprocas.length}</td><td className="num"><b>{delta(analisis.A.parejasReciprocas.length, analisis.B.parejasReciprocas.length)}</b></td></tr>
-                    <tr><td>Subgrupos</td><td className="num">{analisis.A.subgrupos.length}</td><td className="num">{analisis.B.subgrupos.length}</td><td className="num"><b>{delta(analisis.A.subgrupos.length, analisis.B.subgrupos.length)}</b></td></tr>
-                    <tr><td>Sin elecciones</td><td className="num">{analisis.A.sinElecciones.length}</td><td className="num">{analisis.B.sinElecciones.length}</td><td className="num"><b>{delta(analisis.A.sinElecciones.length, analisis.B.sinElecciones.length)}</b></td></tr>
-                    <tr><td>Respondieron</td><td className="num">{alumnos.length - analisis.A.sinRespuesta.length}</td><td className="num">{alumnos.length - analisis.B.sinRespuesta.length}</td><td></td></tr>
+                    <tr><td>{tr("Cohesión")}</td><td className="num">{pct(analisis.A.cohesion)}</td><td className="num">{pct(analisis.B.cohesion)}</td><td className="num"><b>{Math.round((analisis.B.cohesion - analisis.A.cohesion) * 100)} pt</b></td></tr>
+                    <tr><td>{tr("Parejas recíprocas")}</td><td className="num">{analisis.A.parejasReciprocas.length}</td><td className="num">{analisis.B.parejasReciprocas.length}</td><td className="num"><b>{delta(analisis.A.parejasReciprocas.length, analisis.B.parejasReciprocas.length)}</b></td></tr>
+                    <tr><td>{tr("Subgrupos")}</td><td className="num">{analisis.A.subgrupos.length}</td><td className="num">{analisis.B.subgrupos.length}</td><td className="num"><b>{delta(analisis.A.subgrupos.length, analisis.B.subgrupos.length)}</b></td></tr>
+                    <tr><td>{tr("Sin elecciones")}</td><td className="num">{analisis.A.sinElecciones.length}</td><td className="num">{analisis.B.sinElecciones.length}</td><td className="num"><b>{delta(analisis.A.sinElecciones.length, analisis.B.sinElecciones.length)}</b></td></tr>
+                    <tr><td>{tr("Respondieron")}</td><td className="num">{alumnos.length - analisis.A.sinRespuesta.length}</td><td className="num">{alumnos.length - analisis.B.sinRespuesta.length}</td><td></td></tr>
                   </tbody>
                 </table>
               </div>
               <section className="sec">
-                <div className="sec-head"><span className="sec-num">01</span><h2>Por alumno</h2></div>
+                <div className="sec-head"><span className="sec-num">01</span><h2>{tr("Por alumno")}</h2></div>
                 <div className="tablewrap">
                   <table>
-                    <thead><tr><th>Alumno</th><th className="num">Recibidas A</th><th className="num">Recibidas B</th><th className="num">Cambio</th><th>Posición A</th><th>Posición B</th><th className="num">Reciprocidad A</th><th className="num">Reciprocidad B</th></tr></thead>
+                    <thead><tr><th>{tr("Alumno")}</th><th className="num">{tr("Recibidas A")}</th><th className="num">{tr("Recibidas B")}</th><th className="num">{tr("Cambio")}</th><th>{tr("Posición A")}</th><th>{tr("Posición B")}</th><th className="num">{tr("Reciprocidad A")}</th><th className="num">{tr("Reciprocidad B")}</th></tr></thead>
                     <tbody>
                       {alumnos.map(al => {
                         const x = analisis.A.porAlumno[al.id]
@@ -78,7 +80,7 @@ export function Comparar() {
                             <td><Link to={`/alumno/${al.id}`}>{al.nombre}</Link></td>
                             <td className="num">{x.recibidasTotal}</td><td className="num">{y.recibidasTotal}</td>
                             <td className="num"><b>{delta(x.recibidasTotal, y.recibidasTotal)}</b></td>
-                            <td>{x.posicion}</td><td>{cambia ? <b>{y.posicion}</b> : y.posicion}</td>
+                            <td>{tr(x.posicion)}</td><td>{cambia ? <b>{y.posicion}</b> : y.posicion}</td>
                             <td className="num">{x.emitidasTotal ? pct(x.reciprocidad) : '—'}</td><td className="num">{y.emitidasTotal ? pct(y.reciprocidad) : '—'}</td>
                           </tr>
                         )

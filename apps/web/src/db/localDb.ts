@@ -8,6 +8,14 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Alumno, ClavesDocente, Evento, Grupo, NotaAlumno, Participacion, Respuesta, Toma } from '@edumind-hilo/nucleo'
 
+export interface Ajuste {
+  id: string
+  idioma: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
 export class HiloDb extends Dexie {
   grupos!: EntityTable<Grupo, 'id'>
   alumnos!: EntityTable<Alumno, 'id'>
@@ -17,6 +25,7 @@ export class HiloDb extends Dexie {
   eventos!: EntityTable<Evento, 'id'>
   notas!: EntityTable<NotaAlumno, 'id'>
   claves!: EntityTable<ClavesDocente, 'id'>
+  ajustes!: EntityTable<Ajuste, 'id'>
 
   constructor(nombre = 'edumind-hilo') {
     super(nombre)
@@ -33,6 +42,10 @@ export class HiloDb extends Dexie {
     // Las migraciones nunca se editan: los cambios van en la versión siguiente.
     this.version(2).stores({
       claves: 'id, updated_at',
+    })
+    // v3: ajustes del portal (idioma). No viajan en la copia: son del dispositivo.
+    this.version(3).stores({
+      ajustes: 'id',
     })
   }
 }

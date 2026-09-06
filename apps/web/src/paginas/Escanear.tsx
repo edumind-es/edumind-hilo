@@ -23,6 +23,7 @@ import { useAlumnos, useParticipaciones, useToma } from '@/db/hooks'
 import { registrarSituacion } from '@/db/consultas'
 import { registrarDesdeCodigos, registrarQr } from '@/db/recoger'
 import { abrirCamara, capturar, cerrarCamara } from '@/lib/camara'
+import { useT } from '@/i18n'
 
 interface Linea {
   texto: string
@@ -46,6 +47,7 @@ interface HojaPendiente {
 }
 
 export function Escanear() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const alumnos = useAlumnos(toma?.grupo_id)
@@ -71,7 +73,7 @@ export function Escanear() {
       setActiva(true)
       setErrorCamara(null)
     } catch (e) {
-      setErrorCamara(e instanceof Error ? e.message : 'No se pudo abrir la cámara.')
+      setErrorCamara(e instanceof Error ? tr(e.message) : 'No se pudo abrir la cámara.')
     }
   }
   function apagar() {
@@ -114,9 +116,9 @@ export function Escanear() {
       else if (texto.startsWith('H1|')) {
         const r = await registrarQr(toma, alumnos, texto)
         anotar(`${r.alumno.nombre}: ${r.elecciones} elecciones registradas`, true)
-      } else anotar('Código desconocido', false)
+      } else anotar(tr("Código desconocido"), false)
     } catch (e) {
-      anotar(e instanceof Error ? e.message : 'Error al leer', false)
+      anotar(e instanceof Error ? tr(e.message) : 'Error al leer', false)
     } finally {
       ocupado.current = false
     }
@@ -125,14 +127,14 @@ export function Escanear() {
   async function leerHojaDeCamara(texto: string) {
     if (!toma || !video.current || !canvas.current) return
     const identidad = decodificarIdentidadHoja(texto)
-    if (!identidad) throw new Error('La hoja no se reconoce.')
-    if (identidad.toma !== toma.id) throw new Error('Esta hoja es de otra toma.')
+    if (!identidad) throw new Error(tr("La hoja no se reconoce."))
+    if (identidad.toma !== toma.id) throw new Error(tr("Esta hoja es de otra toma."))
     const datos = capturar(video.current, canvas.current, 1920)
-    if (!datos) throw new Error('Sin imagen.')
+    if (!datos) throw new Error(tr("Sin imagen."))
     const gris = aGris(datos.data, datos.width, datos.height)
     const diseno = disenoHoja(identidad.filas.length, toma.situaciones.length)
     const lectura = leerHoja(gris, diseno)
-    if (lectura.escala < 2) throw new Error('La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen.')
+    if (lectura.escala < 2) throw new Error(tr("La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen."))
     const elegidas = new Set(lectura.marcas.filter(m => m.estado === 'llena').map(m => `${m.fila},${m.columna}`))
     setHoja({ identidad, lectura, imagen: canvas.current.toDataURL('image/jpeg', 0.7), elegidas })
   }
@@ -140,13 +142,13 @@ export function Escanear() {
   async function leerHojaGrupoDeCamara(texto: string) {
     if (!toma || !video.current || !canvas.current) return
     const identidad = decodificarIdentidadHojaGrupo(texto)
-    if (!identidad) throw new Error('La hoja de grupo no se reconoce.')
-    if (identidad.toma !== toma.id) throw new Error('Esta hoja es de otra toma.')
-    if (!toma.situaciones.includes(identidad.situacion as Situacion)) throw new Error('Esa situación no está en la toma.')
+    if (!identidad) throw new Error(tr("La hoja de grupo no se reconoce."))
+    if (identidad.toma !== toma.id) throw new Error(tr("Esta hoja es de otra toma."))
+    if (!toma.situaciones.includes(identidad.situacion as Situacion)) throw new Error(tr("Esa situación no está en la toma."))
     const datos = capturar(video.current, canvas.current, 1920)
-    if (!datos) throw new Error('Sin imagen.')
+    if (!datos) throw new Error(tr("Sin imagen."))
     const lectura = leerHoja(aGris(datos.data, datos.width, datos.height), disenoHojaGrupo(identidad.codigos.length))
-    if (lectura.escala < 2) throw new Error('La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen.')
+    if (lectura.escala < 2) throw new Error(tr("La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen."))
     const elegidas = new Set(lectura.marcas.filter(m => m.estado === 'llena' && m.fila !== m.columna).map(m => `${m.fila},${m.columna}`))
     setHojaGrupo({ identidad, lectura, imagen: canvas.current.toDataURL('image/jpeg', 0.7), elegidas })
   }
@@ -164,9 +166,9 @@ export function Escanear() {
     }
     try {
       const n = await registrarSituacion({ toma, situacion: hojaGrupo.identidad.situacion as Situacion, porAlumno, origen: 'hoja' })
-      anotar(`Hoja de grupo (${ETIQUETA_SITUACION[hojaGrupo.identidad.situacion as Situacion]}): ${n} alumnos con elecciones`, true)
+      anotar(tr('Hoja de grupo ({situacion}): {n} alumnos con elecciones', { situacion: tr(ETIQUETA_SITUACION[hojaGrupo.identidad.situacion as Situacion]), n }), true)
     } catch (e) {
-      anotar(e instanceof Error ? e.message : 'No se pudo registrar la hoja de grupo', false)
+      anotar(e instanceof Error ? tr(e.message) : 'No se pudo registrar la hoja de grupo', false)
     }
     setHojaGrupo(null)
   }
@@ -182,13 +184,13 @@ export function Escanear() {
       anotar(`${r.alumno.nombre}: hoja registrada con ${r.elecciones} elecciones`, true)
       setHoja(null)
     } catch (e) {
-      anotar(e instanceof Error ? e.message : 'No se pudo registrar la hoja', false)
+      anotar(e instanceof Error ? tr(e.message) : 'No se pudo registrar la hoja', false)
       setHoja(null)
     }
   }
 
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
 
   const respondieron = participaciones?.length ?? 0
 
@@ -197,34 +199,34 @@ export function Escanear() {
       <div className="cabecera">
         <div>
           <p className="eyebrow"><Link to={`/toma/${toma.id}`} style={{ textDecoration: 'none' }}>{toma.titulo}</Link> · leer respuestas</p>
-          <h1>Leer<br /><span className="light">con la cámara</span></h1>
-          <p className="lede">Códigos de respuesta de las tablets y hojas de marcas. La foto no se guarda: solo quedan las elecciones.</p>
+          <h1>{tr("Leer")}<br /><span className="light">{tr("con la cámara")}</span></h1>
+          <p className="lede">{tr("Códigos de respuesta de las tablets y hojas de marcas. La foto no se guarda: solo quedan las elecciones.")}</p>
         </div>
         <div className="acciones">
-          {activa ? <button type="button" className="btn secundario" onClick={apagar}>Apagar la cámara</button> : <button type="button" className="btn" onClick={() => void encender()}>Encender la cámara</button>}
+          {activa ? <button type="button" className="btn secundario" onClick={apagar}>{tr("Apagar la cámara")}</button> : <button type="button" className="btn" onClick={() => void encender()}>{tr("Encender la cámara")}</button>}
         </div>
       </div>
 
       {errorCamara && <p className="error">{errorCamara}</p>}
-      {toma.estado !== 'abierta' && <p className="error">La toma está cerrada: no se registrará nada.</p>}
+      {toma.estado !== 'abierta' && <p className="error">{tr("La toma está cerrada: no se registrará nada.")}</p>}
 
       <div className="camara">
         <video ref={video} muted playsInline />
         <canvas ref={canvas} hidden />
-        {!activa && <p className="mono" style={{ padding: 20 }}>Cámara apagada</p>}
+        {!activa && <p className="mono" style={{ padding: 20 }}>{tr("Cámara apagada")}</p>}
       </div>
 
       <dl className="cifras">
-        <div><dt>Han respondido</dt><dd>{respondieron}<small>de {alumnos.length}</small></dd></div>
-        <div><dt>Leídas ahora</dt><dd>{lineas.filter(l => l.ok).length}</dd></div>
+        <div><dt>{tr("Han respondido")}</dt><dd>{respondieron}<small>de {alumnos.length}</small></dd></div>
+        <div><dt>{tr("Leídas ahora")}</dt><dd>{lineas.filter(l => l.ok).length}</dd></div>
       </dl>
 
       {hoja && <ConfirmarHoja hoja={hoja} toma={toma} alumnos={alumnos} onCambiar={setHoja} onRegistrar={() => void registrarHoja()} />}
       {hojaGrupo && <ConfirmarHojaGrupo hoja={hojaGrupo} toma={toma} alumnos={alumnos} onCambiar={setHojaGrupo} onRegistrar={() => void registrarHojaGrupo()} />}
 
       <section className="sec">
-        <div className="sec-head"><span className="sec-num">01</span><h2>Registro</h2></div>
-        {lineas.length === 0 ? <p className="aviso">Todavía nada. Acerca un código a la cámara.</p> : (
+        <div className="sec-head"><span className="sec-num">01</span><h2>{tr("Registro")}</h2></div>
+        {lineas.length === 0 ? <p className="aviso">{tr("Todavía nada. Acerca un código a la cámara.")}</p> : (
           <ul className="rules">
             {lineas.map((l, i) => <li key={i}><span className="dash">{l.ok ? '✓' : '×'}</span><span className="crece">{l.texto}</span><span className="meta">{l.hora}</span></li>)}
           </ul>
@@ -232,11 +234,11 @@ export function Escanear() {
       </section>
 
       <section className="sec">
-        <div className="sec-head"><span className="sec-num">02</span><h2>Sin cámara</h2></div>
-        <p>Si la tablet puede compartir el texto del código (o lo copias a mano), pégalo aquí.</p>
+        <div className="sec-head"><span className="sec-num">02</span><h2>{tr("Sin cámara")}</h2></div>
+        <p>{tr("Si la tablet puede compartir el texto del código (o lo copias a mano), pégalo aquí.")}</p>
         <form className="fila" onSubmit={e => { e.preventDefault(); void procesar(manual.trim()); setManual('') }}>
-          <label className="campo" style={{ flex: '1 1 400px' }}><span>Código de respuesta</span><input type="text" value={manual} onChange={e => setManual(e.target.value)} placeholder="H1|…" /></label>
-          <div className="campo"><span>&nbsp;</span><button type="submit" className="btn pequeno">Registrar</button></div>
+          <label className="campo" style={{ flex: '1 1 400px' }}><span>{tr("Código de respuesta")}</span><input type="text" value={manual} onChange={e => setManual(e.target.value)} placeholder="H1|…" /></label>
+          <div className="campo"><span>&nbsp;</span><button type="submit" className="btn pequeno">{tr("Registrar")}</button></div>
         </form>
       </section>
     </>
@@ -244,6 +246,7 @@ export function Escanear() {
 }
 
 function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: HojaPendiente; toma: Toma; alumnos: Alumno[]; onCambiar: (h: HojaPendiente | null) => void; onRegistrar: () => void }) {
+  const tr = useT()
   const nombre = new Map(alumnos.map(a => [a.codigo, a.nombre]))
   const quien = nombre.get(hoja.identidad.codigo) ?? hoja.identidad.codigo
   const dudosas = hoja.lectura.marcas.filter(m => m.estado === 'dudosa').length
@@ -260,13 +263,13 @@ function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: 
 
   return (
     <section className="sec panel" aria-live="polite">
-      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de {quien}</h2></div>
-      <p className="aviso">{dudosas ? `${dudosas} marcas dudosas, resaltadas: decide a mano.` : 'Ninguna marca dudosa.'} Toca una casilla para corregirla y registra.</p>
+      <div className="sec-head"><span className="sec-num">✓</span><h2>{tr('Hoja de {nombre}', { nombre: quien })}</h2></div>
+      <p className="aviso">{dudosas ? tr('{n} marcas dudosas, resaltadas: decide a mano.', { n: dudosas }) : tr('Ninguna marca dudosa.')} {tr('Toca una casilla para corregirla y registra.')}</p>
       <div className="hoja-confirmacion">
-        <img src={hoja.imagen} alt="Foto de la hoja leída" />
+        <img src={hoja.imagen} alt={tr("Foto de la hoja leída")} />
         <div className="tablewrap">
           <table>
-            <thead><tr><th>Compañero</th>{toma.situaciones.map((s: Situacion) => <th key={s}>{ETIQUETA_SITUACION[s]}</th>)}</tr></thead>
+            <thead><tr><th>{tr("Compañero")}</th>{toma.situaciones.map((s: Situacion) => <th key={s}>{tr(ETIQUETA_SITUACION[s])}</th>)}</tr></thead>
             <tbody>
               {hoja.identidad.filas.map((codigo, f) => (
                 <tr key={codigo}>
@@ -286,16 +289,17 @@ function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: 
           </table>
         </div>
       </div>
-      {exceso && <p className="error">Alguna columna supera el máximo de {toma.max_elecciones} elecciones. Quita marcas antes de registrar.</p>}
+      {exceso && <p className="error">{tr('Alguna columna supera el máximo de {n} elecciones. Quita marcas antes de registrar.', { n: toma.max_elecciones })}</p>}
       <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
-        <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>Registrar la hoja</button>
-        <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>Repetir la foto</button>
+        <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>{tr("Registrar la hoja")}</button>
+        <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>{tr("Repetir la foto")}</button>
       </div>
     </section>
   )
 }
 
 function ConfirmarHojaGrupo({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: HojaGrupoPendiente; toma: Toma; alumnos: Alumno[]; onCambiar: (h: HojaGrupoPendiente | null) => void; onRegistrar: () => void }) {
+  const tr = useT()
   const nombre = new Map(alumnos.map(a => [a.codigo, a.nombre]))
   const n = hoja.identidad.codigos.length
   const dudosas = hoja.lectura.marcas.filter(m => m.estado === 'dudosa' && m.fila !== m.columna).length
@@ -309,13 +313,13 @@ function ConfirmarHojaGrupo({ hoja, toma, alumnos, onCambiar, onRegistrar }: { h
   }
   return (
     <section className="sec panel" aria-live="polite">
-      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de grupo · {ETIQUETA_SITUACION[hoja.identidad.situacion as Situacion]}</h2></div>
+      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de grupo · {tr(ETIQUETA_SITUACION[hoja.identidad.situacion as Situacion])}</h2></div>
       <p className="aviso">{dudosas ? `${dudosas} marcas dudosas, resaltadas.` : 'Ninguna marca dudosa.'} Filas: quién elige. Toca una casilla para corregirla. Al registrar se sustituyen las respuestas de esta situación para las filas con marcas.</p>
       <div className="hoja-confirmacion">
-        <img src={hoja.imagen} alt="Foto de la hoja de grupo" />
+        <img src={hoja.imagen} alt={tr("Foto de la hoja de grupo")} />
         <div className="tablewrap">
           <table className="matriz">
-            <thead><tr><th className="fila">elige →</th>{hoja.identidad.codigos.map(c => <th key={c} className="col">{nombre.get(c) ?? c}</th>)}</tr></thead>
+            <thead><tr><th className="fila">{tr("elige →")}</th>{hoja.identidad.codigos.map(c => <th key={c} className="col">{nombre.get(c) ?? c}</th>)}</tr></thead>
             <tbody>
               {hoja.identidad.codigos.map((cf, f) => (
                 <tr key={cf}>
@@ -333,8 +337,8 @@ function ConfirmarHojaGrupo({ hoja, toma, alumnos, onCambiar, onRegistrar }: { h
       </div>
       {exceso && <p className="error">Alguna fila supera el máximo de {toma.max_elecciones}. Quita marcas antes de registrar.</p>}
       <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
-        <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>Registrar la hoja de grupo</button>
-        <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>Repetir la foto</button>
+        <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>{tr("Registrar la hoja de grupo")}</button>
+        <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>{tr("Repetir la foto")}</button>
       </div>
     </section>
   )

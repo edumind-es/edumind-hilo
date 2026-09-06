@@ -1,21 +1,23 @@
 /** Etiquetas recortables con nombre y código, 24 por A4, para repartir en mano. */
 import { Link, useParams } from 'react-router-dom'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
+import { useT } from '@/i18n'
 import '@/estilos/hoja.css'
 
 export function Etiquetas() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const grupo = useGrupo(toma?.grupo_id)
   const alumnos = useAlumnos(toma?.grupo_id)
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !grupo || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !grupo || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
   return (
     <div className="hojas">
       <div className="hojas-barra no-imprimir">
         <Link to={`/toma/${toma.id}/prueba`} className="mono mono-ink">← {toma.titulo}</Link>
         <span className="mono">{alumnos.length} etiquetas · 24 por hoja</span>
-        <button type="button" className="btn pequeno" onClick={() => print()}>Imprimir</button>
+        <button type="button" className="btn pequeno" onClick={() => print()}>{tr("Imprimir")}</button>
       </div>
       <div className="etiquetas">
         {alumnos.map(a => (

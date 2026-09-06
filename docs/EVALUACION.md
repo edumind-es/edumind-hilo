@@ -88,6 +88,16 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
 - **Entrega .txt**: cambio de nombre y tipo; el contenido y el cifrado son los
   mismos que ya estaban probados.
 
+## 1.2 · Portal en gallego e inglés
+
+- Diccionarios con las mismas claves en los dos idiomas y marcadores de
+  interpolación conservados (prueba automática). Traducción hecha por pase
+  automático sobre los textos completos de cada página; lo que no es un texto
+  completo (frases con elementos anidados) queda en castellano. Las etiquetas
+  del núcleo (situaciones, registros, posiciones, tipos, motivos) se traducen
+  al mostrarse. Sin revisión por hablante nativo de gallego: conviene una
+  lectura.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

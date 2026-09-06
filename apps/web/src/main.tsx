@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
 import App from './App'
+import { ProveedorIdioma } from './i18n'
 import './estilos/base.css'
 import './estilos/alumno.css'
 
@@ -14,7 +15,9 @@ registerSW({ immediate: true })
 createRoot(document.getElementById('raiz')!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <ProveedorIdioma>
+        <App />
+      </ProveedorIdioma>
     </BrowserRouter>
   </StrictMode>,
 )

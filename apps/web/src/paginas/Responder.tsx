@@ -9,10 +9,12 @@ import { nombresParaAlumnado, type Eleccion } from '@edumind-hilo/nucleo'
 import { Gracias, PantallaAlumno } from '@/alumno/PantallaAlumno'
 import { registrarRespuestas } from '@/db/consultas'
 import { useAlumnos, useParticipaciones, useToma } from '@/db/hooks'
+import { useT } from '@/i18n'
 
 type Estado = { fase: 'elegir' } | { fase: 'responder'; alumnoId: string } | { fase: 'gracias' }
 
 export function Responder() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const alumnos = useAlumnos(toma?.grupo_id)
@@ -20,9 +22,9 @@ export function Responder() {
   const [estado, setEstado] = useState<Estado>({ fase: 'elegir' })
   const [error, setError] = useState<string | null>(null)
 
-  if (!toma || !alumnos || !participaciones) return <div className="modo-alumno"><div className="lienzo"><p>Cargando…</p></div></div>
+  if (!toma || !alumnos || !participaciones) return <div className="modo-alumno"><div className="lienzo"><p>{tr("Cargando…")}</p></div></div>
   if (toma.estado !== 'abierta') {
-    return <div className="modo-alumno"><div className="lienzo"><p>Esta toma está cerrada.</p><Link to={`/toma/${toma.id}`}>Volver</Link></div></div>
+    return <div className="modo-alumno"><div className="lienzo"><p>Esta toma está cerrada.</p><Link to={`/toma/${toma.id}`}>{tr("Volver")}</Link></div></div>
   }
 
   const yaRespondieron = new Set(participaciones.map(p => p.alumno_id))
@@ -35,7 +37,7 @@ export function Responder() {
       await registrarRespuestas({ toma: toma!, alumnoId, elecciones, origen: 'dispositivo' })
       setEstado({ fase: 'gracias' })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo guardar.')
+      setError(err instanceof Error ? tr(err.message) : 'No se pudo guardar.')
       setEstado({ fase: 'elegir' })
     }
   }
@@ -73,14 +75,14 @@ export function Responder() {
   return (
     <div className="modo-alumno">
       <div className="banda" />
-      <Link to={`/toma/${toma.id}`} className="esquina">Volver a la toma</Link>
+      <Link to={`/toma/${toma.id}`} className="esquina">{tr("Volver a la toma")}</Link>
       <div className="lienzo">
         <div className="paso"><span>{toma.titulo}</span><span>{alumnos.length - pendientes.length} de {alumnos.length} han respondido</span></div>
-        <h1 className="pregunta">¿Quién responde ahora?</h1>
-        <p className="ayuda">Elige al alumno y entrégale el dispositivo. Al terminar, verá una pantalla de gracias y podrás elegir al siguiente.</p>
+        <h1 className="pregunta">{tr("¿Quién responde ahora?")}</h1>
+        <p className="ayuda">{tr("Elige al alumno y entrégale el dispositivo. Al terminar, verá una pantalla de gracias y podrás elegir al siguiente.")}</p>
         {error && <p className="ayuda" style={{ color: '#b03a2e' }}>{error}</p>}
         {pendientes.length === 0 ? (
-          <p className="ayuda">Todo el grupo ha respondido. <Link to={`/toma/${toma.id}`}>Ver el análisis</Link>.</p>
+          <p className="ayuda">Todo el grupo ha respondido. <Link to={`/toma/${toma.id}`}>{tr("Ver el análisis")}</Link>.</p>
         ) : (
           <div className="quien">
             {pendientes.map(a => (

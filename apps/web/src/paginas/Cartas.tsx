@@ -10,9 +10,11 @@ import { obtenerOCrearClaves } from '@/db/claves'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
 import { publicaCompacta } from '@/lib/clavePublica'
 import { qrSvg } from '@/lib/qr'
+import { useT } from '@/i18n'
 import '@/estilos/hoja.css'
 
 export function Cartas() {
+  const tr = useT()
   const { id } = useParams()
   const toma = useToma(id)
   const grupo = useGrupo(toma?.grupo_id)
@@ -33,15 +35,15 @@ export function Cartas() {
     })()
   }, [toma, alumnos])
 
-  if (toma === undefined) return <p className="mono">Cargando…</p>
-  if (!toma || !grupo || !alumnos) return <p>Esta toma no existe.</p>
+  if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
+  if (!toma || !grupo || !alumnos) return <p>{tr("Esta toma no existe.")}</p>
 
   return (
     <div className="hojas">
       <div className="hojas-barra no-imprimir" style={{ flexWrap: 'wrap' }}>
         <Link to={`/toma/${toma.id}/prueba`} className="mono mono-ink">← {toma.titulo}</Link>
         <label className="campo" style={{ margin: 0, flex: '1 1 260px' }}><span>Dónde se entrega (aparece en la carta)</span><input type="text" value={tarea} onChange={e => setTarea(e.target.value)} placeholder="Tarea «Mi equipo» del aula virtual, antes del viernes" /></label>
-        <button type="button" className="btn pequeno" onClick={() => print()}>Imprimir</button>
+        <button type="button" className="btn pequeno" onClick={() => print()}>{tr("Imprimir")}</button>
       </div>
       {alumnos.map(a => (
         <div className="carta" key={a.id}>

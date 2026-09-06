@@ -51,7 +51,8 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
       desde CSV: listas y matrices «quién elige a quién» de otras herramientas.
 - [x] Inglés en el cuestionario y en la pantalla del alumnado.
 - [x] XLSX directo sin librería (v1.1).
-- [ ] Portal del docente en gallego e inglés (hoy solo en castellano).
+- [x] Portal del docente en gallego e inglés (v1.2). El informe descargable
+      sigue en castellano.
 
 ## F4 · Opcional
 
