@@ -12,3 +12,12 @@ apps/web/releases/
 !.env.example
 # Base del buzón ciego (solo ciphertext), generada por la API
 data/
+# App nativa (Capacitor): lo que se regenera al compilar. El proyecto Gradle SÍ se versiona.
+apps/web/dist-nativo/
+apps/web/android/app/src/main/assets/public/
+apps/web/android/.gradle/
+apps/web/android/build/
+apps/web/android/app/build/
+apps/web/android/local.properties
+apps/web/android/.idea/
+apps/web/android/capacitor-cordova-android-plugins/build/

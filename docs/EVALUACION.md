@@ -112,6 +112,13 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
   clave; es más simple y deja al servidor con menos información que cualquier
   esquema con usuarios.
 
+## 1.4 · Andamiaje nativo
+
+- `cap add android` y `cap sync` ejecutados en el servidor: el proyecto
+  Gradle está versionado y recibe la web compilada. No se ha compilado ningún
+  APK (sin SDK en el servidor): esa verificación queda para una máquina con
+  Android Studio.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

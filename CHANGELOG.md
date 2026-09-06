@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.4.0 — 2026-09-06
+
+Andamiaje de la app nativa con Capacitor: proyecto Android versionado,
+`npm run nativo:sync` compila la web a un directorio real y la copia al
+proyecto. Compilar el APK requiere Android Studio o el SDK en la máquina.
+
 ## 1.3.0 — 2026-09-06
 
 Fase 4, opcional: primer backend. `apps/api` es un buzón ciego (Fastify +

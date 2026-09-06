@@ -23,6 +23,18 @@ si `nginx -t` falla en cualquier punto.
 
 La CSP no admite ningún origen externo, en coherencia con la app.
 
+## App nativa (Capacitor)
+
+```bash
+npm --workspace @edumind-hilo/web run nativo:sync      # compila a dist-nativo y copia al proyecto Android
+npm --workspace @edumind-hilo/web run nativo:android   # abre Android Studio
+```
+
+`webDir` es `apps/web/dist-nativo`, un directorio real: `dist` es un enlace
+simbólico y Capacitor copiaría el enlace en vez de seguirlo. Compilar y firmar
+el APK necesita Android Studio o el SDK; el proyecto iOS se añade con
+`npx cap add ios` desde un Mac.
+
 ## En cualquier otro sitio
 
 `npm ci && npm run build` y copiar `apps/web/dist` a la raíz del servidor. Al

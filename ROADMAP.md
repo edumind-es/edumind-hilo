@@ -60,4 +60,6 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
       dispositivos del docente. Sin cuentas: token secreto, hash en el servidor,
       clave derivada por HKDF en el cliente.
 - [ ] Sincronización automática en segundo plano (hoy es un botón).
-- [ ] Capacitor (andamiaje). Canal directo en la misma red.
+- [x] Capacitor: andamiaje Android (v1.4). Falta compilar y firmar el APK
+      con el SDK, y el proyecto iOS (necesita un Mac).
+- [ ] Canal directo en la misma red (WebRTC).
