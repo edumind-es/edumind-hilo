@@ -73,6 +73,21 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
   descargable solo lo abre. Se descartó incrustar la app entera en un HTML
   para no mantener dos pantallas del alumnado.
 
+## 1.1 · Pendientes cerrados (2026-09-06)
+
+- **Fuentes incrustadas**: verificado que la app compilada no referencia
+  ningún origen externo y que el informe descargado lleva las fuentes dentro.
+- **XLSX**: lector propio probado con dos libros generados con openpyxl
+  (lista con cabecera, matriz con números y marcas); rechaza lo que no es ZIP.
+- **Hoja de grupo**: geometría probada hasta 30 alumnos con burbujas de 4 mm;
+  la lectura reutiliza el mismo motor que la individual, así que hereda su
+  estado: probada con hojas sintéticas, pendiente de foto real.
+- **Cartas y etiquetas**: solo maquetación para impresión; sin prueba
+  automática. Conviene imprimir una y medir que las etiquetas caen en la
+  retícula de 70 × 37 mm.
+- **Entrega .txt**: cambio de nombre y tipo; el contenido y el cifrado son los
+  mismos que ya estaban probados.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

@@ -135,6 +135,33 @@ export async function registrarRespuestas(datos: { toma: Toma; alumnoId: string;
   })
 }
 
+/**
+ * Hoja de grupo: entra una situación entera para todo el grupo, y puede venir
+ * otra hoja con otra situación después. Por eso no vale la regla de «una
+ * participación y ya»: aquí se añade la participación si falta y se
+ * sustituyen las respuestas de ese alumno SOLO en esa situación.
+ */
+export async function registrarSituacion(datos: { toma: Toma; situacion: Situacion; porAlumno: Map<string, string[]>; origen: Origen }): Promise<number> {
+  if (datos.toma.estado !== 'abierta') throw new Error('La toma está cerrada.')
+  if (!datos.toma.situaciones.includes(datos.situacion)) throw new Error('Esa situación no está en la toma.')
+  const t = ahora()
+  let registrados = 0
+  await db.transaction('rw', db.participaciones, db.respuestas, async () => {
+    for (const [alumnoId, elegidos] of datos.porAlumno) {
+      const ya = await db.participaciones.where('[toma_id+alumno_id]').equals([datos.toma.id, alumnoId]).first()
+      if (!ya || ya.deleted_at) {
+        await db.participaciones.add({ id: nuevoId(), created_at: t, updated_at: t, deleted_at: null, toma_id: datos.toma.id, alumno_id: alumnoId, origen: datos.origen })
+      }
+      const previas = await db.respuestas.where('toma_id').equals(datos.toma.id).filter(r => r.de_alumno === alumnoId && r.situacion === datos.situacion && !r.deleted_at).toArray()
+      for (const r of previas) await db.respuestas.update(r.id, { deleted_at: t, updated_at: t })
+      const filas: Respuesta[] = elegidos.filter(a => a !== alumnoId).map(a => ({ id: nuevoId(), created_at: t, updated_at: t, deleted_at: null, toma_id: datos.toma.id, situacion: datos.situacion, de_alumno: alumnoId, a_alumno: a, signo: 1, origen: datos.origen }))
+      if (filas.length) await db.respuestas.bulkAdd(filas)
+      registrados++
+    }
+  })
+  return registrados
+}
+
 export async function anadirEvento(grupoId: string, fecha: string, texto: string) {
   await db.eventos.add({ id: nuevoId(), ...sello(), grupo_id: grupoId, fecha, texto: texto.trim() })
 }

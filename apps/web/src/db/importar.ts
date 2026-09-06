@@ -1,5 +1,5 @@
 /** Importaciones: grupo desde MiClase, lista desde CSV, matriz desde CSV. */
-import { analizarCsv, analizarLista, esExportacionMiClase, esquemaGrupo, generarCodigosUnicos, leerExportacionMiClase, matrizDeCsv, nombresDeCsv, nombresParaAlumnado, type Alumno, type Etapa, type Grupo, type GrupoMiClase, type Idioma, type Participacion, type Respuesta, type Toma } from '@edumind-hilo/nucleo'
+import { analizarCsv, analizarLista, esExportacionMiClase, esquemaGrupo, generarCodigosUnicos, leerExportacionMiClase, leerXlsx, matrizDeCsv, nombresDeCsv, nombresParaAlumnado, pareceXlsx, type Alumno, type Etapa, type Grupo, type GrupoMiClase, type Idioma, type Participacion, type Respuesta, type Toma } from '@edumind-hilo/nucleo'
 import { descifrarMiClase, esCifradoMiClase } from '@/lib/cifrado'
 import { crearToma } from './consultas'
 import { ahora, nuevoId } from './ids'
@@ -16,7 +16,24 @@ export type Detectado =
   | { tipo: 'lista'; nombres: string[] }
   | { tipo: 'hilo' }
 
+/** Filas de un fichero tabular: XLSX (sin librería) o CSV/TSV. */
+export async function filasDeFichero(f: File): Promise<string[][]> {
+  const bytes = new Uint8Array(await f.arrayBuffer())
+  if (pareceXlsx(bytes)) return leerXlsx(bytes)
+  return analizarCsv(new TextDecoder().decode(bytes))
+}
+
 /** Mira qué es un fichero antes de decidir qué hacer con él. */
+export async function detectarFichero(f: File): Promise<Detectado> {
+  const bytes = new Uint8Array(await f.arrayBuffer())
+  if (pareceXlsx(bytes)) {
+    const nombres = nombresDeCsv(await leerXlsx(bytes))
+    if (nombres.length < 2) throw new Error('No se reconocen nombres en la hoja de cálculo.')
+    return { tipo: 'lista', nombres }
+  }
+  return detectar(new TextDecoder().decode(bytes))
+}
+
 export function detectar(texto: string): Detectado {
   let bruto: unknown = null
   try {
@@ -61,8 +78,8 @@ export async function crearGrupoDesdeMiClase(g: GrupoMiClase, idioma: Idioma, et
 }
 
 /** Una matriz «quién elige a quién» de otra herramienta entra como toma cerrada con una sola situación. */
-export async function importarMatriz(grupo: Grupo, alumnos: Alumno[], texto: string, titulo: string): Promise<string> {
-  const { nombres, elecciones } = matrizDeCsv(analizarCsv(texto))
+export async function importarMatriz(grupo: Grupo, alumnos: Alumno[], filas: string[][], titulo: string): Promise<string> {
+  const { nombres, elecciones } = matrizDeCsv(filas)
   const porNombre = new Map<string, Alumno>()
   for (const a of alumnos) porNombre.set(a.nombre.toLocaleLowerCase('es'), a)
   const sinCasar = nombres.filter(n => !porNombre.has(n.toLocaleLowerCase('es')))

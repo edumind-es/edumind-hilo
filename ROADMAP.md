@@ -12,9 +12,8 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [x] Análisis: matriz, índices, reciprocidad, cohesión, ajuste perceptivo,
       subgrupos, puentes, lista de atención, Coie y Dodge con negativas.
 - [x] Copia de seguridad JSON con fusión por fecha.
-- [ ] Fuentes Archivo, JetBrains Mono, Fraunces y Space Grotesk incrustadas
-      (woff2 en `public/fonts`, con su OFL en NOTICE). Hasta entonces, fuentes
-      del sistema.
+- [x] Fuentes Archivo, JetBrains Mono, Fraunces y Space Grotesk incrustadas
+      (woff2 en `public/fonts`, con su OFL en NOTICE), v1.1.
 
 ## F1 · Aula: tablets por QR y hoja de marcas — HECHO (v0.2)
 
@@ -27,7 +26,7 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
       homografía, umbral doble) y confirmación hoja a hoja con corrección.
 - [x] Teclado de transcripción para el cuestionario clásico.
 - [x] Copia de seguridad cifrada con contraseña (adelantada de F3).
-- [ ] Hoja de marcas de grupo (matriz completa en una hoja).
+- [x] Hoja de marcas de grupo (matriz completa en una hoja, v1.1).
 - [ ] Validar la lectura de hojas con fotos reales de aula (luz, sombra,
       arrugas). La lectura está probada con hojas sintéticas giradas.
 - [ ] Prueba automática de que `/s` no hace ninguna petición de red.
@@ -51,7 +50,7 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [x] Importación desde MiClase (en claro o cifrada, conservando códigos) y
       desde CSV: listas y matrices «quién elige a quién» de otras herramientas.
 - [x] Inglés en el cuestionario y en la pantalla del alumnado.
-- [ ] XLSX directo: de momento, guardar como CSV desde la hoja de cálculo.
+- [x] XLSX directo sin librería (v1.1).
 - [ ] Portal del docente en gallego e inglés (hoy solo en castellano).
 
 ## F4 · Opcional

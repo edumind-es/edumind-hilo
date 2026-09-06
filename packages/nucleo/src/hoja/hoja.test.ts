@@ -1,4 +1,4 @@
-import { codificarIdentidadHoja, decodificarIdentidadHoja, disenoHoja } from './diseno'
+import { codificarIdentidadHoja, codificarIdentidadHojaGrupo, decodificarIdentidadHoja, decodificarIdentidadHojaGrupo, disenoHoja, disenoHojaGrupo } from './diseno'
 import { aplicar, encontrarMarcadores, homografia, leerHoja, type ImagenGris } from './lectura'
 
 /**
@@ -53,6 +53,13 @@ describe('hoja de marcas · diseño', () => {
     expect(d.filas.at(-1)!).toBeLessThan(d.alto - 20)
     expect(d.columnas.at(-1)!).toBeLessThan(d.ancho - 20)
     expect(d.paso).toBeGreaterThan(5.5)
+  })
+  it('la hoja de grupo de 30 cabe en A4 con burbujas legibles', () => {
+    const d = disenoHojaGrupo(30)
+    expect(d.columnas.at(-1)!).toBeLessThan(d.ancho - 14)
+    expect(d.filas.at(-1)!).toBeLessThan(d.alto - 18)
+    expect(d.diametro).toBeGreaterThanOrEqual(4)
+    expect(decodificarIdentidadHojaGrupo(codificarIdentidadHojaGrupo('t', 'equipo', ['AB3DE', 'F2GH7']))).toEqual({ toma: 't', situacion: 'equipo', codigos: ['AB3DE', 'F2GH7'] })
   })
   it('identidad de la hoja: ida y vuelta', () => {
     const t = codificarIdentidadHoja('toma-1', 'AB3DE', ['F2GH7', 'K9M2N'])

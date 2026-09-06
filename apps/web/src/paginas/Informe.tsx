@@ -30,7 +30,7 @@ export function Informe() {
       <div className="hojas-barra no-imprimir" style={{ maxWidth: 1080 }}>
         <Link to={`/toma/${datos.toma.id}`} className="mono mono-ink">← {datos.toma.titulo}</Link>
         <span style={{ display: 'flex', gap: 10 }}>
-          <button type="button" className="btn pequeno secundario" onClick={() => descargarTexto(`hilo-informe-${datos.grupo.nombre}-${datos.toma.inicio.slice(0, 10)}.html`.replace(/\s+/g, '_'), documentoInforme(datos), 'text/html')}>Descargar HTML</button>
+          <button type="button" className="btn pequeno secundario" onClick={async () => descargarTexto(`hilo-informe-${datos.grupo.nombre}-${datos.toma.inicio.slice(0, 10)}.html`.replace(/\s+/g, '_'), await documentoInforme(datos), 'text/html')}>Descargar HTML</button>
           <button type="button" className="btn pequeno" onClick={() => print()}>Imprimir</button>
         </span>
       </div>

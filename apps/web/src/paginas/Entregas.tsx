@@ -56,7 +56,7 @@ export function Entregas() {
         <div>
           <p className="eyebrow"><Link to={`/toma/${toma.id}`} style={{ textDecoration: 'none' }}>{toma.titulo}</Link> · entregas</p>
           <h1>Recoger<br /><span className="light">las entregas</span></h1>
-          <p className="lede">Descarga los ficheros de la tarea y súbelos aquí de golpe. Se abren con la clave privada de este dispositivo y se registran. Los repetidos se descartan.</p>
+          <p className="lede">Descarga las entregas de la tarea (ficheros .txt, o el texto pegado si la tarea era de texto en línea) y súbelas aquí de golpe. Se abren con la clave privada de este dispositivo y se registran. Los repetidos se descartan.</p>
         </div>
       </div>
       {toma.estado !== 'abierta' && <p className="error">La toma está cerrada: no se registrará nada.</p>}
@@ -69,8 +69,8 @@ export function Entregas() {
       <section className="sec">
         <div className="sec-head"><span className="sec-num">01</span><h2>Ficheros</h2></div>
         <label className="zona-soltar" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); void procesarFicheros(e.dataTransfer.files) }}>
-          <span>Arrastra aquí los ficheros <b>.hilo</b> o pulsa para elegirlos</span>
-          <input type="file" multiple accept=".hilo,application/json" style={{ display: 'none' }} onChange={e => { void procesarFicheros(e.target.files); e.target.value = '' }} />
+          <span>Arrastra aquí los ficheros de respuesta (<b>.txt</b>) o pulsa para elegirlos</span>
+          <input type="file" multiple style={{ display: 'none' }} onChange={e => { void procesarFicheros(e.target.files); e.target.value = '' }} />
         </label>
         {lineas.length > 0 && (
           <ul className="rules">
@@ -82,7 +82,7 @@ export function Entregas() {
       <section className="sec">
         <div className="sec-head"><span className="sec-num">02</span><h2>Pegar</h2></div>
         <form onSubmit={e => { e.preventDefault(); void procesarTexto('pegado', pegado.trim()); setPegado('') }}>
-          <label className="campo"><span>Contenido de un fichero .hilo</span><textarea value={pegado} onChange={e => setPegado(e.target.value)} /></label>
+          <label className="campo"><span>Texto de una entrega (empieza por {'{"formato":"hilo-respuesta"'})</span><textarea value={pegado} onChange={e => setPegado(e.target.value)} /></label>
           <button type="submit" className="btn pequeno">Registrar</button>
         </form>
       </section>

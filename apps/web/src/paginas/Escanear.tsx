@@ -10,7 +10,9 @@ import {
   ETIQUETA_SITUACION,
   aGris,
   decodificarIdentidadHoja,
+  decodificarIdentidadHojaGrupo,
   disenoHoja,
+  disenoHojaGrupo,
   leerHoja,
   type Alumno,
   type LecturaHoja,
@@ -18,6 +20,7 @@ import {
   type Toma,
 } from '@edumind-hilo/nucleo'
 import { useAlumnos, useParticipaciones, useToma } from '@/db/hooks'
+import { registrarSituacion } from '@/db/consultas'
 import { registrarDesdeCodigos, registrarQr } from '@/db/recoger'
 import { abrirCamara, capturar, cerrarCamara } from '@/lib/camara'
 
@@ -25,6 +28,13 @@ interface Linea {
   texto: string
   ok: boolean
   hora: string
+}
+
+interface HojaGrupoPendiente {
+  identidad: { toma: string; situacion: string; codigos: string[] }
+  lectura: LecturaHoja
+  imagen: string
+  elegidas: Set<string>
 }
 
 interface HojaPendiente {
@@ -49,6 +59,7 @@ export function Escanear() {
   const [errorCamara, setErrorCamara] = useState<string | null>(null)
   const [lineas, setLineas] = useState<Linea[]>([])
   const [hoja, setHoja] = useState<HojaPendiente | null>(null)
+  const [hojaGrupo, setHojaGrupo] = useState<HojaGrupoPendiente | null>(null)
   const [manual, setManual] = useState('')
 
   const anotar = (texto: string, ok: boolean) => setLineas(l => [{ texto, ok, hora: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) }, ...l].slice(0, 40))
@@ -76,7 +87,7 @@ export function Escanear() {
     let vivo = true
     const tic = async () => {
       if (!vivo) return
-      if (!ocupado.current && !hoja && video.current && canvas.current) {
+      if (!ocupado.current && !hoja && !hojaGrupo && video.current && canvas.current) {
         const datos = capturar(video.current, canvas.current, 960)
         if (datos) {
           const qr = jsQR(datos.data, datos.width, datos.height, { inversionAttempts: 'dontInvert' })
@@ -99,6 +110,7 @@ export function Escanear() {
     ocupado.current = true
     try {
       if (texto.startsWith('H1H|')) await leerHojaDeCamara(texto)
+      else if (texto.startsWith('H1G|')) await leerHojaGrupoDeCamara(texto)
       else if (texto.startsWith('H1|')) {
         const r = await registrarQr(toma, alumnos, texto)
         anotar(`${r.alumno.nombre}: ${r.elecciones} elecciones registradas`, true)
@@ -123,6 +135,40 @@ export function Escanear() {
     if (lectura.escala < 2) throw new Error('La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen.')
     const elegidas = new Set(lectura.marcas.filter(m => m.estado === 'llena').map(m => `${m.fila},${m.columna}`))
     setHoja({ identidad, lectura, imagen: canvas.current.toDataURL('image/jpeg', 0.7), elegidas })
+  }
+
+  async function leerHojaGrupoDeCamara(texto: string) {
+    if (!toma || !video.current || !canvas.current) return
+    const identidad = decodificarIdentidadHojaGrupo(texto)
+    if (!identidad) throw new Error('La hoja de grupo no se reconoce.')
+    if (identidad.toma !== toma.id) throw new Error('Esta hoja es de otra toma.')
+    if (!toma.situaciones.includes(identidad.situacion as Situacion)) throw new Error('Esa situación no está en la toma.')
+    const datos = capturar(video.current, canvas.current, 1920)
+    if (!datos) throw new Error('Sin imagen.')
+    const lectura = leerHoja(aGris(datos.data, datos.width, datos.height), disenoHojaGrupo(identidad.codigos.length))
+    if (lectura.escala < 2) throw new Error('La hoja está demasiado lejos: acércala hasta que ocupe casi toda la imagen.')
+    const elegidas = new Set(lectura.marcas.filter(m => m.estado === 'llena' && m.fila !== m.columna).map(m => `${m.fila},${m.columna}`))
+    setHojaGrupo({ identidad, lectura, imagen: canvas.current.toDataURL('image/jpeg', 0.7), elegidas })
+  }
+
+  async function registrarHojaGrupo() {
+    if (!hojaGrupo || !toma || !alumnos) return
+    const porCodigo = new Map(alumnos.map(a => [a.codigo, a.id]))
+    const porAlumno = new Map<string, string[]>()
+    for (const k of hojaGrupo.elegidas) {
+      const [f, c] = k.split(',').map(Number)
+      const de = porCodigo.get(hojaGrupo.identidad.codigos[f!]!)
+      const a = porCodigo.get(hojaGrupo.identidad.codigos[c!]!)
+      if (!de || !a) continue
+      porAlumno.set(de, [...(porAlumno.get(de) ?? []), a])
+    }
+    try {
+      const n = await registrarSituacion({ toma, situacion: hojaGrupo.identidad.situacion as Situacion, porAlumno, origen: 'hoja' })
+      anotar(`Hoja de grupo (${ETIQUETA_SITUACION[hojaGrupo.identidad.situacion as Situacion]}): ${n} alumnos con elecciones`, true)
+    } catch (e) {
+      anotar(e instanceof Error ? e.message : 'No se pudo registrar la hoja de grupo', false)
+    }
+    setHojaGrupo(null)
   }
 
   async function registrarHoja() {
@@ -174,6 +220,7 @@ export function Escanear() {
       </dl>
 
       {hoja && <ConfirmarHoja hoja={hoja} toma={toma} alumnos={alumnos} onCambiar={setHoja} onRegistrar={() => void registrarHoja()} />}
+      {hojaGrupo && <ConfirmarHojaGrupo hoja={hojaGrupo} toma={toma} alumnos={alumnos} onCambiar={setHojaGrupo} onRegistrar={() => void registrarHojaGrupo()} />}
 
       <section className="sec">
         <div className="sec-head"><span className="sec-num">01</span><h2>Registro</h2></div>
@@ -242,6 +289,51 @@ function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: 
       {exceso && <p className="error">Alguna columna supera el máximo de {toma.max_elecciones} elecciones. Quita marcas antes de registrar.</p>}
       <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
         <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>Registrar la hoja</button>
+        <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>Repetir la foto</button>
+      </div>
+    </section>
+  )
+}
+
+function ConfirmarHojaGrupo({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: HojaGrupoPendiente; toma: Toma; alumnos: Alumno[]; onCambiar: (h: HojaGrupoPendiente | null) => void; onRegistrar: () => void }) {
+  const nombre = new Map(alumnos.map(a => [a.codigo, a.nombre]))
+  const n = hoja.identidad.codigos.length
+  const dudosas = hoja.lectura.marcas.filter(m => m.estado === 'dudosa' && m.fila !== m.columna).length
+  const exceso = hoja.identidad.codigos.some((_, f) => [...hoja.elegidas].filter(k => k.startsWith(`${f},`)).length > toma.max_elecciones)
+  function alternar(f: number, c: number) {
+    const k = `${f},${c}`
+    const s = new Set(hoja.elegidas)
+    if (s.has(k)) s.delete(k)
+    else s.add(k)
+    onCambiar({ ...hoja, elegidas: s })
+  }
+  return (
+    <section className="sec panel" aria-live="polite">
+      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de grupo · {ETIQUETA_SITUACION[hoja.identidad.situacion as Situacion]}</h2></div>
+      <p className="aviso">{dudosas ? `${dudosas} marcas dudosas, resaltadas.` : 'Ninguna marca dudosa.'} Filas: quién elige. Toca una casilla para corregirla. Al registrar se sustituyen las respuestas de esta situación para las filas con marcas.</p>
+      <div className="hoja-confirmacion">
+        <img src={hoja.imagen} alt="Foto de la hoja de grupo" />
+        <div className="tablewrap">
+          <table className="matriz">
+            <thead><tr><th className="fila">elige →</th>{hoja.identidad.codigos.map(c => <th key={c} className="col">{nombre.get(c) ?? c}</th>)}</tr></thead>
+            <tbody>
+              {hoja.identidad.codigos.map((cf, f) => (
+                <tr key={cf}>
+                  <td className="fila">{nombre.get(cf) ?? cf}</td>
+                  {Array.from({ length: n }, (_, c) => {
+                    if (f === c) return <td key={c} className="diag" />
+                    const m = hoja.lectura.marcas.find(x => x.fila === f && x.columna === c)
+                    return <td key={c} className={m?.estado === 'dudosa' ? 'dudosa' : ''}><input type="checkbox" checked={hoja.elegidas.has(`${f},${c}`)} onChange={() => alternar(f, c)} aria-label={`${nombre.get(cf)} elige a ${nombre.get(hoja.identidad.codigos[c]!)}`} /></td>
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {exceso && <p className="error">Alguna fila supera el máximo de {toma.max_elecciones}. Quita marcas antes de registrar.</p>}
+      <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+        <button type="button" className="btn" disabled={exceso} onClick={onRegistrar}>Registrar la hoja de grupo</button>
         <button type="button" className="btn secundario" onClick={() => onCambiar(null)}>Repetir la foto</button>
       </div>
     </section>

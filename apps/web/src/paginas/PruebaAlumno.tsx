@@ -37,8 +37,10 @@ export function PruebaAlumno() {
     const texto = codificarRespuestas({ toma: sesion.toma, de: codigo, elecciones: elecciones.map(e => ({ situacion: e.situacion, a: e.a_alumno, signo: e.signo })) })
     const sobre = await cifrarParaDocente(texto, clave, sesion.toma)
     const fichero = JSON.stringify(sobre)
-    const nombre = `respuesta-${codigo}.hilo`
-    descargarTexto(nombre, fichero, 'application/json')
+    // .txt y no una extensión propia: las tareas de Moodle y de otras aulas
+    // virtuales aceptan texto plano en cualquier configuración.
+    const nombre = `hilo-respuesta-${codigo}.txt`
+    descargarTexto(nombre, fichero, 'text/plain')
     setEstado({ fase: 'entregar', sesion, fichero, nombre })
   }
 
@@ -93,7 +95,11 @@ export function PruebaAlumno() {
         <div className="gracias" style={{ minHeight: 'auto', paddingTop: 10 }}>
           <h1>{t.graciasTitulo}</h1>
           <p>{t.subir(estado.nombre)}</p>
-          <button type="button" className="boton suave" onClick={() => descargarTexto(estado.nombre, estado.fichero, 'application/json')}>{t.descargarOtraVez}</button>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button type="button" className="boton suave" onClick={() => descargarTexto(estado.nombre, estado.fichero, 'text/plain')}>{t.descargarOtraVez}</button>
+            <button type="button" className="boton suave" onClick={async () => { try { await navigator.clipboard.writeText(estado.fichero) } catch { /* sin portapapeles */ } }}>{t.copiar}</button>
+          </div>
+          <details style={{ maxWidth: 640, textAlign: 'left' }}><summary>{t.verTexto}</summary><textarea readOnly value={estado.fichero} style={{ width: '100%', minHeight: 120, fontSize: 12 }} /></details>
         </div>
       </div>
     </div>

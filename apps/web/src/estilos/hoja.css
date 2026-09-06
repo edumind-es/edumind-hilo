@@ -20,3 +20,22 @@
   .hoja{margin:0;page-break-after:always;break-after:page}
   .hoja:last-child{page-break-after:auto}
 }
+
+/* Cartas: dos por A4 */
+.carta{position:relative;background:#fff;color:#000;width:210mm;height:148.5mm;margin:0 auto 12px;display:grid;grid-template-columns:52mm 1fr;gap:6mm;padding:12mm 14mm;box-sizing:border-box;border-bottom:.3mm dashed #999;font-family:var(--font-body)}
+.carta-qr svg{width:48mm;height:48mm;display:block}
+.carta-rotulo{font:400 8pt/1.4 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;color:#555;margin:0 0 2mm}
+.carta-nombre{font-size:16pt;font-weight:700;margin:0 0 3mm}
+.carta-codigo-rotulo{font:400 8pt/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;color:#555;margin:0 0 1mm}
+.carta-codigo{font:700 30pt/1 var(--font-mono);letter-spacing:.18em;margin:0 0 4mm}
+.carta-pasos{margin:0 0 3mm;padding-left:5mm;font-size:9.5pt;line-height:1.35}
+.carta-pasos li{margin-bottom:1.6mm}
+.carta-enlace{font-family:var(--font-mono);font-weight:600}
+.carta-pie{font-size:7.5pt;color:#555;margin:0}
+/* Etiquetas: 3 x 8 por A4 (70 x 37 mm, como las de imprenta) */
+.etiquetas{display:grid;grid-template-columns:repeat(3,70mm);grid-auto-rows:37mm;width:210mm;margin:0 auto;background:#fff;box-sizing:border-box;padding:0}
+.etiqueta{border:.2mm dashed #999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1mm;padding:2mm;box-sizing:border-box;color:#000;font-family:var(--font-body)}
+.etiqueta-grupo{font:400 7pt/1 var(--font-mono);text-transform:uppercase;letter-spacing:.1em;color:#555}
+.etiqueta-nombre{font-size:11pt;font-weight:600;text-align:center}
+.etiqueta-codigo{font:700 18pt/1 var(--font-mono);letter-spacing:.16em}
+@media print{.carta{margin:0;page-break-inside:avoid}.carta:nth-child(2n+1){page-break-after:always}.etiquetas{page-break-inside:auto}.etiqueta{page-break-inside:avoid}}

@@ -46,8 +46,10 @@ export function Toma() {
               <Link className="btn secundario" to={`/toma/${toma.id}/sesion`}>Sesión con tablets</Link>
               <Link className="btn secundario" to={`/toma/${toma.id}/escanear`}>Leer con la cámara</Link>
               <Link className="btn secundario" to={`/toma/${toma.id}/hojas`}>Hojas de marcas</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/hojas-grupo`}>Hoja de grupo</Link>
               <Link className="btn secundario" to={`/toma/${toma.id}/transcribir`}>Transcribir</Link>
               <Link className="btn secundario" to={`/toma/${toma.id}/prueba`}>Prueba con código</Link>
+              <Link className="btn secundario" to={`/toma/${toma.id}/etiquetas`}>Etiquetas de códigos</Link>
               <button type="button" className="btn secundario" onClick={() => { if (confirm('Cerrar la toma. Ya no se podrán añadir respuestas. ¿Seguir?')) void cerrarToma(toma.id) }}>Cerrar la toma</button>
             </>
           ) : <span className="stamp cerrada">Cerrada</span>}

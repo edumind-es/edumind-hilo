@@ -142,6 +142,8 @@ export interface TextosAlumno {
   codigoMal: string
   subir: (fichero: string) => string
   descargarOtraVez: string
+  copiar: string
+  verTexto: string
 }
 
 export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
@@ -163,8 +165,10 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     siguientePersona: 'Ya está entregado',
     codigo: 'Escribe tu código',
     codigoMal: 'Ese código no es de esta clase. Míralo bien.',
-    subir: f => `Se ha descargado el fichero ${f}. Súbelo a la tarea para entregar.`,
+    subir: f => `Se ha descargado el fichero ${f}. Súbelo a la tarea para entregar. Si la tarea pide texto, copia el texto y pégalo.`,
     descargarOtraVez: 'Descargar otra vez',
+    copiar: 'Copiar el texto',
+    verTexto: 'Ver el texto para copiarlo a mano',
   },
   gl: {
     titulo: 'O meu equipo',
@@ -184,8 +188,10 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     siguientePersona: 'Xa está entregado',
     codigo: 'Escribe o teu código',
     codigoMal: 'Ese código non é desta clase. Mírao ben.',
-    subir: f => `Descargouse o ficheiro ${f}. Súbeo á tarefa para entregar.`,
+    subir: f => `Descargouse o ficheiro ${f}. Súbeo á tarefa para entregar. Se a tarefa pide texto, copia o texto e pégao.`,
     descargarOtraVez: 'Descargar outra vez',
+    copiar: 'Copiar o texto',
+    verTexto: 'Ver o texto para copialo á man',
   },
   en: {
     titulo: 'My team',
@@ -205,7 +211,9 @@ export const TEXTOS_ALUMNO: Record<Idioma, TextosAlumno> = {
     siguientePersona: 'Handed in',
     codigo: 'Type your code',
     codigoMal: 'That code is not from this class. Check it again.',
-    subir: f => `The file ${f} has been downloaded. Upload it to the assignment to hand in.`,
+    subir: f => `The file ${f} has been downloaded. Upload it to the assignment to hand in. If the assignment asks for text, copy the text and paste it.`,
     descargarOtraVez: 'Download again',
+    copiar: 'Copy the text',
+    verTexto: 'Show the text to copy it by hand',
   },
 }

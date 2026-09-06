@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ETAPAS, ETIQUETA_ETAPA, IDIOMAS, analizarLista, type Etapa, type Idioma } from '@edumind-hilo/nucleo'
 import { crearGrupoDesdeLista } from '@/db/consultas'
-import { abrirMiClaseCifrado, crearGrupoDesdeMiClase, detectar } from '@/db/importar'
+import { abrirMiClaseCifrado, crearGrupoDesdeMiClase, detectarFichero } from '@/db/importar'
 import type { GrupoMiClase } from '@edumind-hilo/nucleo'
 import { useGrupos } from '@/db/hooks'
 import { fechaCorta } from '@/lib/fechas'
@@ -31,7 +31,7 @@ export function Inicio() {
   async function importarFichero(f: File) {
     setError(null)
     try {
-      let d = detectar(await f.text())
+      let d = await detectarFichero(f)
       if (d.tipo === 'miclase-cifrado') {
         const password = prompt('La copia de MiClase está cifrada. Contraseña:') ?? ''
         if (!password) return
@@ -127,11 +127,11 @@ export function Inicio() {
               <button type="submit" className="btn" disabled={nombres.length < 2}>Crear el grupo</button>
               <label className="btn secundario" style={{ cursor: 'pointer' }}>
                 Importar fichero
-                <input type="file" accept=".csv,.tsv,.txt,.json,.miclase" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) void importarFichero(f); e.target.value = '' }} />
+                <input type="file" accept=".csv,.tsv,.txt,.json,.miclase,.xlsx" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) void importarFichero(f); e.target.value = '' }} />
               </label>
               {hayGrupos && <button type="button" className="btn secundario" onClick={() => setMostrarForm(false)}>Cancelar</button>}
             </div>
-            <p className="aviso">Importar admite un CSV con la lista (columna «nombre», o la primera) y la exportación de MiClase, en claro o cifrada: de ella solo se leen grupos y alumnos, y se conservan sus códigos.</p>
+            <p className="aviso">Importar admite una hoja de cálculo (XLSX o CSV) con la lista (columna «nombre», o la primera) y la exportación de MiClase, en claro o cifrada: de ella solo se leen grupos y alumnos, y se conservan sus códigos.</p>
           </form>
           {deMiClase && (
             <div className="panel" style={{ marginTop: 18 }}>

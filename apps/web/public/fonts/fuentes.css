@@ -1,0 +1,5 @@
+/* Fuentes incrustadas, SIL Open Font License 1.1 (ver NOTICE). Solo latín. */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 800;font-display:swap;src:url('/fonts/Archivo.woff2') format('woff2')}
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/Fraunces.woff2') format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url('/fonts/JetBrainsMono.woff2') format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fonts/SpaceGrotesk.woff2') format('woff2')}

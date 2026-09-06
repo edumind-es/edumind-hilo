@@ -1,7 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
 import { Marco } from './componentes/Marco'
 import { Ajustes } from './paginas/Ajustes'
+import { Cartas } from './paginas/Cartas'
 import { Comparar } from './paginas/Comparar'
+import { Etiquetas } from './paginas/Etiquetas'
 import { Entregas } from './paginas/Entregas'
 import { Prueba } from './paginas/Prueba'
 import { PruebaAlumno } from './paginas/PruebaAlumno'
@@ -10,6 +12,7 @@ import { FichaAlumno } from './paginas/FichaAlumno'
 import { Informe } from './paginas/Informe'
 import { Grupo } from './paginas/Grupo'
 import { Hojas } from './paginas/Hojas'
+import { HojasGrupo } from './paginas/HojasGrupo'
 import { Inicio } from './paginas/Inicio'
 import { Responder } from './paginas/Responder'
 import { SesionAlumno } from './paginas/SesionAlumno'
@@ -23,6 +26,9 @@ export default function App() {
       {/* Pantallas del alumnado y hojas para imprimir: sin marco, nada del portal a la vista. */}
       <Route path="/toma/:id/responder" element={<Responder />} />
       <Route path="/toma/:id/hojas" element={<Hojas />} />
+      <Route path="/toma/:id/hojas-grupo" element={<HojasGrupo />} />
+      <Route path="/toma/:id/cartas" element={<Cartas />} />
+      <Route path="/toma/:id/etiquetas" element={<Etiquetas />} />
       <Route path="/s" element={<SesionAlumno />} />
       <Route path="/p" element={<PruebaAlumno />} />
       <Route path="/toma/:id/informe" element={<Informe />} />

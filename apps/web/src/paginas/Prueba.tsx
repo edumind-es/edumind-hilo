@@ -55,10 +55,12 @@ export function Prueba() {
         <div>
           <p className="eyebrow"><Link to={`/toma/${toma.id}`} style={{ textDecoration: 'none' }}>{toma.titulo}</Link> · prueba con código de acceso</p>
           <h1>Prueba<br /><span className="light">para el aula virtual</span></h1>
-          <p className="lede">Un enlace con la lista del grupo y tu clave pública. Cada alumno entra con su código de cinco caracteres, responde y descarga un fichero cifrado que solo este dispositivo puede abrir.</p>
+          <p className="lede">Un enlace con la lista del grupo y tu clave pública. Cada alumno entra con su código de cinco caracteres, responde y descarga un fichero de texto cifrado que solo este dispositivo puede abrir. La tarea de Moodle puede ser de fichero o de texto en línea: el alumno también puede copiar y pegar.</p>
         </div>
         <div className="acciones">
           <Link className="btn" to={`/toma/${toma.id}/entregas`}>Recoger entregas</Link>
+          <Link className="btn secundario" to={`/toma/${toma.id}/cartas`}>Cartas para el alumnado</Link>
+          <Link className="btn secundario" to={`/toma/${toma.id}/etiquetas`}>Etiquetas de códigos</Link>
         </div>
       </div>
 
@@ -76,7 +78,7 @@ export function Prueba() {
 
       <section className="sec">
         <div className="sec-head"><span className="sec-num">02</span><h2>Códigos de acceso</h2></div>
-        <p>Cada alumno necesita su código. Es el mismo de la hoja de códigos de MiClase, si la usas. Entrégalo en mano o por el canal del centro, nunca en abierto junto al enlace.</p>
+        <p>Cada alumno necesita su código. Es el mismo de la hoja de códigos de MiClase, si la usas. Entrégalo en mano: «Cartas para el alumnado» imprime una carta por alumno con su código, el enlace, un QR y las instrucciones de la tarea; «Etiquetas de códigos» imprime etiquetas recortables solo con nombre y código. Nunca en abierto junto al enlace.</p>
         <div className="tablewrap">
           <table><thead><tr><th>Alumno</th><th>Código</th><th>Entregado</th></tr></thead>
             <tbody>{alumnos.map(a => <tr key={a.id}><td>{a.nombre}</td><td className="k">{a.codigo}</td><td>{participaciones?.some(p => p.alumno_id === a.id) ? 'sí' : ''}</td></tr>)}</tbody>

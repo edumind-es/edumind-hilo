@@ -149,7 +149,27 @@ ${a.puentes.length ? `<p>Puentes: <b>${a.puentes.map(n).join(', ')}</b>. Sin ell
 <div class="i-bar"><i></i><i></i><i></i><i></i><i></i></div>`
 }
 
-export function documentoInforme(d: DatosInforme): string {
+/** Las fuentes viajan dentro del fichero: el informe se abre igual sin red y sin Hilo. */
+async function fuentesIncrustadas(): Promise<string> {
+  const familias: [string, string, string][] = [['Archivo', '/fonts/Archivo.woff2', '400 800'], ['JetBrains Mono', '/fonts/JetBrainsMono.woff2', '400 500']]
+  const reglas: string[] = []
+  for (const [nombre, ruta, pesos] of familias) {
+    try {
+      const r = await fetch(ruta)
+      if (!r.ok) continue
+      const bytes = new Uint8Array(await r.arrayBuffer())
+      let bin = ''
+      for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode(...bytes.subarray(i, i + 8192))
+      reglas.push(`@font-face{font-family:'${nombre}';font-weight:${pesos};font-display:swap;src:url(data:font/woff2;base64,${btoa(bin)}) format('woff2')}`)
+    } catch {
+      /* sin fuente incrustada: quedan las del sistema */
+    }
+  }
+  return reglas.join('\n')
+}
+
+export async function documentoInforme(d: DatosInforme): Promise<string> {
+  const fuentes = await fuentesIncrustadas()
   return `<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="Luis Vilela Acuña"><title>${esc(d.grupo.nombre)} · ${esc(d.toma.titulo)} · Hilo</title><style>${cssInforme}</style></head><body>${cuerpoInforme(d)}</body></html>`
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="author" content="Luis Vilela Acuña"><title>${esc(d.grupo.nombre)} · ${esc(d.toma.titulo)} · Hilo</title><style>${fuentes}\n${cssInforme}</style></head><body>${cuerpoInforme(d)}</body></html>`
 }
