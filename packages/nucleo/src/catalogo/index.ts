@@ -36,7 +36,7 @@ export const INSTRUMENTOS: Instrumento[] = [
   {
     id: 'hilo-basico',
     nombre: 'Hilo · situaciones por defecto',
-    autores: 'EDUmind (a partir de Moreno, 1934, y de la sociometría escolar española)',
+    autores: 'Luis Vilela Acuña (a partir de Moreno, 1934, y de la sociometría escolar española)',
     anio: '2026',
     referencia: 'Moreno, J. L. (1934). Who shall survive? A new approach to the problem of human interrelations. Nervous and Mental Disease Publishing Co. · Arruga i Valeri, A. (1974). Introducción al test sociométrico. Herder.',
     resumen: 'Nominaciones positivas por situación concreta (equipo, recreo, ayuda, viaje) más una pregunta de percepción (espejo). Redacción aséptica: verbo de futuro, situación, ningún adjetivo sobre las personas.',
@@ -123,7 +123,7 @@ export const INSTRUMENTOS: Instrumento[] = [
   {
     id: 'cooperacion-aula',
     nombre: 'Trabajo cooperativo · formación de equipos',
-    autores: 'Johnson, D. W., Johnson, R. T. y Holubec, E. J. (marco); adaptación EDUmind',
+    autores: 'Johnson, D. W., Johnson, R. T. y Holubec, E. J. (marco); adaptación de Luis Vilela Acuña',
     anio: '1999',
     referencia: 'Johnson, D. W., Johnson, R. T. y Holubec, E. J. (1999). El aprendizaje cooperativo en el aula. Paidós.',
     resumen: 'Pensado para formar equipos cooperativos heterogéneos: con quién trabajas bien, quién te explica bien, con quién te repartes tareas. Sin percepción ni negativas. Útil antes de un proyecto largo.',

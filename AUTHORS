@@ -1,21 +1,19 @@
-EDUmind - EDUmind Hilo
-===================================
+EDUmind Hilo
+============
 
-AUTORES PRINCIPALES:
+AUTOR:
 
-EDUmind Team <legal@edumind.es>
-  - Concepción original y arquitectura
-  - Desarrollo principal
-  - Diseño y UX
+Luis Vilela Acuña <contacto@edumind.es>
+  - Concepción, diseño pedagógico, arquitectura y desarrollo
 
 CONTRIBUIDORES:
 
-[Lista de contribuidores]
+Las contribuciones se reciben por pull request en
+https://github.com/edumind-es/edumind-hilo y se reconocen aquí.
 
 ---
 
 NOTA LEGAL:
-Todos los contribuidores aceptan que sus aportaciones se licencien
-bajo GNU AGPL v3.0 y que EDUmind mantenga la gestión del proyecto.
-El código es libre, pero la marca EDUmind y Los Mundos Edufis son
-propiedad de sus respectivos dueños.
+Las contribuciones se licencian bajo AGPL-3.0-or-later OR EUPL-1.2, igual que
+el resto del proyecto. El código es libre; la marca EDUmind® es propiedad de
+Luis Vilela Acuña y no se cede con el código (ver TRADEMARKS.md).
