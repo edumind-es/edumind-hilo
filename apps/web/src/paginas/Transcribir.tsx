@@ -23,7 +23,7 @@ export function Transcribir() {
   const [mensaje, setMensaje] = useState<string | null>(null)
   const entradas = useRef<(HTMLInputElement | null)[]>([])
 
-  const pasos = useMemo(() => (toma ? construirPasos({ idioma: toma.idioma, etapa: toma.etapa, situaciones: toma.situaciones, negativas: toma.negativas }) : []), [toma])
+  const pasos = useMemo(() => (toma ? construirPasos({ idioma: toma.idioma, etapa: toma.etapa, situaciones: toma.situaciones, preguntas: toma.preguntas, negativas: toma.negativas }) : []), [toma])
 
   useEffect(() => {
     setTextos(pasos.map(() => ''))

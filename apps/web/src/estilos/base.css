@@ -158,3 +158,8 @@ td.dudosa{background:#f3e6c9}
 .grafo svg{width:100%;height:auto;display:block;border:1px solid var(--hair);max-width:900px}
 .zona-soltar{display:block;border:2px dashed var(--hair);background:var(--card);padding:34px 20px;text-align:center;cursor:pointer;margin:0 0 18px;max-width:720px}
 .zona-soltar:hover{border-color:var(--ink)}
+.pregunta-propia{display:grid;grid-template-columns:160px 170px 1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair)}
+.pregunta-propia input,.pregunta-propia select{max-width:none}
+.pregunta-propia input:nth-of-type(3),.pregunta-propia input:nth-of-type(4){grid-column:1 / span 3}
+.instrumento{border-top:1px solid var(--hair);padding:22px 0 8px}
+@media (max-width:800px){.pregunta-propia{grid-template-columns:1fr 1fr}.pregunta-propia input:nth-of-type(3),.pregunta-propia input:nth-of-type(4){grid-column:1 / span 2}}

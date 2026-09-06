@@ -5,7 +5,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ETIQUETA_SITUACION, analizar, type Alumno, type Toma } from '@edumind-hilo/nucleo'
+import { esPreferencia, etiquetaSituacion, analizar, type Alumno, type Toma } from '@edumind-hilo/nucleo'
 import { actualizarAlumno, anadirNota, borrarNota } from '@/db/consultas'
 import { useAlumnos, useEventos, useGrupo, useNotas, useTomas } from '@/db/hooks'
 import { db } from '@/db/localDb'
@@ -34,7 +34,7 @@ export function FichaAlumno() {
   const filas = useMemo(() => {
     if (!alumno || !alumnos || !tomas || !respuestas || !participaciones) return []
     return [...tomas].sort((a, b) => a.inicio.localeCompare(b.inicio)).map(t => {
-      const a = analizar({ alumnos, respuestas: respuestas.filter(r => r.toma_id === t.id), situaciones: t.situaciones, negativas: t.negativas, participantes: participaciones.filter(p => p.toma_id === t.id).map(p => p.alumno_id) })
+      const a = analizar({ alumnos, respuestas: respuestas.filter(r => r.toma_id === t.id), situaciones: t.situaciones, preguntas: t.preguntas, negativas: t.negativas, participantes: participaciones.filter(p => p.toma_id === t.id).map(p => p.alumno_id) })
       return { toma: t, x: a.porAlumno[alumno.id]!, analisis: a }
     })
   }, [alumno, alumnos, tomas, respuestas, participaciones])
@@ -116,7 +116,7 @@ function Vinculos({ alumno, toma, analisis, nombre }: { alumno: Alumno; toma: To
         <div><dt>{tr("Le eligen")}</dt><dd style={{ fontSize: 16 }}>{leEligen.length ? leEligen.map(n).join(', ') : '—'}</dd></div>
         <div><dt>{tr("Recíprocos")}</dt><dd style={{ fontSize: 16 }}>{reciprocos.length ? reciprocos.map(n).join(', ') : '—'}</dd></div>
       </dl>
-      <p className="aviso">Situaciones de preferencia: {toma.situaciones.filter(s => s !== 'espejo').map(s => tr(ETIQUETA_SITUACION[s])).join(', ')}.</p>
+      <p className="aviso">Situaciones de preferencia: {toma.situaciones.filter(s => esPreferencia(s, toma.preguntas)).map(s => tr(etiquetaSituacion(s, toma.preguntas))).join(', ')}.</p>
     </section>
   )
 }

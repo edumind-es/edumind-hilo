@@ -119,6 +119,19 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
   APK (sin SDK en el servidor): esa verificación queda para una máquina con
   Android Studio.
 
+## 1.5 · Preguntas propias y catálogo
+
+- **Verificado**: el esquema exige coherencia entre situaciones y preguntas
+  propias (ids únicos, sin pisar canónicas, todas referenciadas); los textos y
+  el tipo salen de la toma; el análisis trata la percepción propia como
+  espejo; cada instrumento del catálogo produce una toma válida en todas sus
+  etapas y los que exigen negativas solo se ofrecen en secundaria.
+- **Sin verificar**: la traducción al gallego e inglés de las preguntas
+  propias y del catálogo (se muestran en castellano); la calidad pedagógica de
+  cada pregunta propia depende del docente, y la app solo aconseja.
+- **Decisión**: se excluyen del catálogo las escalas de valoración uno a uno
+  y los bloques de atribución de conductas; se documenta por qué.
+
 ## Lo que queda fuera de 1.0
 
 - Relé cifrado y sincronización entre dispositivos (F4, opcional, primer backend).

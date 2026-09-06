@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Marco } from './componentes/Marco'
 import { Ajustes } from './paginas/Ajustes'
 import { Cartas } from './paginas/Cartas'
+import { Catalogo } from './paginas/Catalogo'
 import { Comparar } from './paginas/Comparar'
 import { Etiquetas } from './paginas/Etiquetas'
 import { Entregas } from './paginas/Entregas'
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="/toma/:id/prueba" element={<Prueba />} />
         <Route path="/toma/:id/entregas" element={<Entregas />} />
         <Route path="/grupo/:id/comparar" element={<Comparar />} />
+        <Route path="/catalogo" element={<Catalogo />} />
         <Route path="/ajustes" element={<Ajustes />} />
       </Route>
     </Routes>

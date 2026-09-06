@@ -5,6 +5,9 @@
 import {
   MAX_ELECCIONES_POR_ETAPA,
   SITUACIONES_POR_ETAPA,
+  esquemaCuestionario,
+  type Cuestionario,
+  type PreguntaToma,
   analizarLista,
   esquemaGrupo,
   esquemaToma,
@@ -80,6 +83,7 @@ export interface DatosToma {
   titulo: string
   etapa?: Etapa
   situaciones?: Situacion[]
+  preguntas?: PreguntaToma[]
   max_elecciones?: number
   negativas?: boolean
 }
@@ -94,6 +98,7 @@ export async function crearToma(grupo: Grupo, datos: DatosToma): Promise<string>
     etapa,
     idioma: grupo.idioma,
     situaciones: datos.situaciones ?? SITUACIONES_POR_ETAPA[etapa],
+    preguntas: datos.preguntas ?? [],
     max_elecciones: datos.max_elecciones ?? MAX_ELECCIONES_POR_ETAPA[etapa],
     negativas: Boolean(datos.negativas) && negativasPermitidas(etapa),
     estado: 'abierta',
@@ -160,6 +165,18 @@ export async function registrarSituacion(datos: { toma: Toma; situacion: Situaci
     }
   })
   return registrados
+}
+
+/** Cuestionario reutilizable del docente. */
+export async function guardarCuestionario(datos: Omit<Cuestionario, keyof ReturnType<typeof sello> | 'id'> & { id?: string }): Promise<string> {
+  const existente = datos.id ? await db.cuestionarios.get(datos.id) : undefined
+  const c: Cuestionario = { ...(existente ?? { id: nuevoId(), ...sello() }), ...datos, id: existente?.id ?? datos.id ?? nuevoId(), updated_at: ahora() }
+  esquemaCuestionario.parse(c)
+  await db.cuestionarios.put(c)
+  return c.id
+}
+export async function borrarCuestionario(id: string) {
+  await db.cuestionarios.update(id, { deleted_at: ahora(), updated_at: ahora() })
 }
 
 export async function anadirEvento(grupoId: string, fecha: string, texto: string) {

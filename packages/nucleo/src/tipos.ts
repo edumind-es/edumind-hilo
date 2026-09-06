@@ -14,15 +14,37 @@ export type Etapa = (typeof ETAPAS)[number]
 export const IDIOMAS = ['es', 'gl', 'en'] as const
 export type Idioma = (typeof IDIOMAS)[number]
 
+/**
+ * Las cinco situaciones canónicas, con textos en tres idiomas y tres
+ * registros. Una toma puede llevar, además, preguntas propias del docente o
+ * de un instrumento del catálogo: su identificador es libre (minúsculas y
+ * cifras) y sus textos van dentro de la toma.
+ */
 export const SITUACIONES = ['equipo', 'recreo', 'ayuda', 'espejo', 'viaje'] as const
-export type Situacion = (typeof SITUACIONES)[number]
+export type SituacionCanonica = (typeof SITUACIONES)[number]
+/** Identificador de situación: una canónica o una pregunta propia. */
+export type Situacion = string
+export const ID_SITUACION_RE = /^[a-z][a-z0-9]{0,15}$/
 
 /**
  * ESPEJO no es una preferencia: es percepción («¿quién crees que te
  * elegiría?»). No cuenta como elección recibida; sirve para el ajuste
- * perceptivo.
+ * perceptivo. Una pregunta propia declara su tipo.
  */
-export const SITUACIONES_PREFERENCIA: readonly Situacion[] = ['equipo', 'recreo', 'ayuda', 'viaje']
+export const SITUACIONES_PREFERENCIA: readonly SituacionCanonica[] = ['equipo', 'recreo', 'ayuda', 'viaje']
+
+export type TipoPregunta = 'preferencia' | 'percepcion'
+
+/** Pregunta propia dentro de una toma (o de un cuestionario reutilizable). */
+export interface PreguntaToma {
+  id: string
+  etiqueta: string
+  pregunta: string
+  ayuda?: string
+  /** Formulación negativa («¿con quién preferirías no…?»); solo se usa en secundaria con negativas activadas. */
+  negativa?: string
+  tipo: TipoPregunta
+}
 
 export type Signo = 1 | -1
 
@@ -61,6 +83,8 @@ export interface Toma extends Registro {
   etapa: Etapa
   idioma: Idioma
   situaciones: Situacion[]
+  /** Preguntas propias referenciadas desde `situaciones`. Vacío si solo hay canónicas. */
+  preguntas: PreguntaToma[]
   max_elecciones: number
   /** Solo puede ser true en secundaria, y requiere activación expresa. */
   negativas: boolean
@@ -105,6 +129,22 @@ export interface ClaveJwk {
   d?: string
   ext?: boolean
   key_ops?: string[]
+}
+
+/** Cuestionario reutilizable del docente: propio o copiado del catálogo y retocado. */
+export interface Cuestionario extends Registro {
+  nombre: string
+  etapa: Etapa
+  idioma: Idioma
+  descripcion: string
+  /** Situaciones canónicas y preguntas propias, en orden. */
+  situaciones: Situacion[]
+  preguntas: PreguntaToma[]
+  max_elecciones: number
+  negativas: boolean
+  origen: 'propio' | 'catalogo'
+  /** Referencia bibliográfica si viene del catálogo. */
+  referencia: string
 }
 
 /** Par de claves del docente para las entregas cifradas (ECDH P-256, JWK). */

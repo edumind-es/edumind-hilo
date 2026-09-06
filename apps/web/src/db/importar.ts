@@ -84,7 +84,7 @@ export async function importarMatriz(grupo: Grupo, alumnos: Alumno[], filas: str
   for (const a of alumnos) porNombre.set(a.nombre.toLocaleLowerCase('es'), a)
   const sinCasar = nombres.filter(n => !porNombre.has(n.toLocaleLowerCase('es')))
   if (sinCasar.length) throw new Error(`Nombres que no están en el grupo: ${sinCasar.join(', ')}. Ajusta el fichero o el grupo.`)
-  const tomaId = await crearToma(grupo, { titulo, situaciones: ['equipo'], max_elecciones: 10, negativas: false })
+  const tomaId = await crearToma(grupo, { titulo, situaciones: ['equipo'], preguntas: [], max_elecciones: 10, negativas: false })
   const toma = (await db.tomas.get(tomaId)) as Toma
   const t = ahora()
   const respuestas: Respuesta[] = elecciones.map(e => ({ id: nuevoId(), created_at: t, updated_at: t, deleted_at: null, toma_id: toma.id, situacion: 'equipo', de_alumno: porNombre.get(e.de.toLocaleLowerCase('es'))!.id, a_alumno: porNombre.get(e.a.toLocaleLowerCase('es'))!.id, signo: 1, origen: 'fichero' }))

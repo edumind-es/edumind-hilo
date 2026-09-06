@@ -38,7 +38,7 @@ export function Prueba() {
         const claves = await obtenerOCrearClaves()
         const cortos = nombresParaAlumnado(alumnos.map(a => a.nombre))
         const paquete = await empaquetarSesion({
-          toma: toma.id, titulo: toma.titulo, idioma: toma.idioma, etapa: toma.etapa, situaciones: toma.situaciones,
+          toma: toma.id, titulo: toma.titulo, idioma: toma.idioma, etapa: toma.etapa, situaciones: toma.situaciones, preguntas: toma.preguntas,
           maxElecciones: toma.max_elecciones, negativas: toma.negativas, alumnos: alumnos.map((a, i) => [a.codigo, cortos[i] ?? a.nombre]),
         })
         setUrl(`${location.origin}/p#g=${paquete}&k=${publicaCompacta(claves.publica)}`)

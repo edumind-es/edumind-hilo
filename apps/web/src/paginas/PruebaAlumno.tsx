@@ -83,7 +83,7 @@ export function PruebaAlumno() {
     return (
       <div className="modo-alumno">
         <div className="banda" />
-        <PantallaAlumno key={estado.codigo} idioma={s.idioma} etapa={s.etapa} situaciones={s.situaciones} maxElecciones={s.maxElecciones} negativas={s.negativas} yo={yo} companeros={personas} onTerminar={el => void terminar(s, estado.clave, estado.codigo, el)} />
+        <PantallaAlumno key={estado.codigo} idioma={s.idioma} etapa={s.etapa} situaciones={s.situaciones} preguntas={s.preguntas} maxElecciones={s.maxElecciones} negativas={s.negativas} yo={yo} companeros={personas} onTerminar={el => void terminar(s, estado.clave, estado.codigo, el)} />
       </div>
     )
   }

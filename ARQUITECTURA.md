@@ -61,8 +61,14 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
   llama a `registrarDesdeCodigos` (`apps/web/src/db/recoger.ts`) con su
   `origen`. Nada más cambia. Las tres de fase 1 (QR, hoja, transcripción)
   entran por ahí.
-- **Nueva situación**: añadirla a `SITUACIONES`, escribir sus textos en los dos
-  idiomas y tres registros; la prueba del cuestionario falla hasta que estén.
+- **Nueva situación canónica**: añadirla a `SITUACIONES`, escribir sus textos
+  en los tres idiomas y tres registros; la prueba del cuestionario falla hasta
+  que estén. Para preguntas del docente no hace falta código: son
+  `PreguntaToma` dentro de la toma (`id` propio, `tipo` preferencia o
+  percepción); `esPercepcion`, `textoSituacion` y `etiquetaSituacion` las
+  resuelven, y `analizar()` recibe `preguntas`.
+- **Nuevo instrumento del catálogo**: una entrada en `nucleo/catalogo/` con
+  referencia; la prueba comprueba que produce una toma válida en sus etapas.
 - **Nuevo idioma**: un objeto más en `CUESTIONARIOS` y `TEXTOS_ALUMNO`.
 - **Nuevo índice**: función pura en `sociometria/` con su prueba.
 - **Sincronización o relé** (fase 4): workspace `apps/api` con buzón ciego

@@ -2,7 +2,7 @@
  * Informe de grupo: un HTML autocontenido en estilo Lámina. La misma cadena
  * se muestra en pantalla y se descarga, así no hay dos versiones.
  */
-import { ETIQUETA_ETAPA, ETIQUETA_SITUACION, SITUACIONES_PREFERENCIA, listaAtencion, type Alumno, type Analisis, type Grupo, type Toma } from '@edumind-hilo/nucleo'
+import { ETIQUETA_ETAPA, etiquetaSituacion, esPreferencia, listaAtencion, type Alumno, type Analisis, type Grupo, type Toma } from '@edumind-hilo/nucleo'
 import { dibujarGrafoSvg, esc } from './grafoSvg'
 
 export interface DatosInforme {
@@ -66,7 +66,7 @@ const fecha = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 
 export function cuerpoInforme(d: DatosInforme): string {
   const { grupo, toma, alumnos, analisis: a, nombres } = d
   const n = (id: string) => esc(nombres.get(id) ?? '?')
-  const preferencia = toma.situaciones.filter(s => SITUACIONES_PREFERENCIA.includes(s))
+  const preferencia = toma.situaciones.filter(s => esPreferencia(s, toma.preguntas))
   const atencion = listaAtencion(a)
   const idx = new Map(a.alumnos.map((id, i) => [id, i]))
   const celda = (i: number, j: number) => {
@@ -83,7 +83,7 @@ export function cuerpoInforme(d: DatosInforme): string {
     const x = a.porAlumno[al.id]
     if (!x) return ''
     return `<tr><td>${n(al.id)}${a.sinRespuesta.includes(al.id) ? ' <small>· sin respuesta</small>' : ''}</td>` +
-      toma.situaciones.map(s => `<td class="n">${s === 'espejo' ? '·' : x.recibidas[s] ?? 0}</td>`).join('') +
+      toma.situaciones.map(s => `<td class="n">${esPreferencia(s, toma.preguntas) ? x.recibidas[s] ?? 0 : '·'}</td>`).join('') +
       `<td class="n"><b>${x.recibidasTotal}</b></td><td class="n">${x.emitidasTotal}</td><td class="n">${x.emitidasTotal ? pct(x.reciprocidad) : '—'}</td><td class="n">${x.ajustePerceptivo === null ? '—' : pct(x.ajustePerceptivo)}</td>` +
       (toma.negativas ? `<td class="n">${x.negativasRecibidas}</td>` : '') +
       `<td>${x.posicion}</td>` + (toma.negativas ? `<td>${x.tipo ?? '—'}</td>` : '') + `</tr>`
@@ -105,7 +105,7 @@ export function cuerpoInforme(d: DatosInforme): string {
 <div class="i-top"><b>EDUMIND · HILO · INFORME DE GRUPO</b><span>${esc(grupo.nombre)} · ${esc(toma.titulo)}</span></div>
 <h1>${esc(grupo.nombre)}<br><span>${esc(toma.titulo)}</span></h1>
 <p class="i-lede">Lectura sociométrica de una toma. Describe la trama de elecciones del grupo el día de la toma. No es un diagnóstico: dice quién está aislado hoy, no por qué ni qué hacer.</p>
-<div class="i-meta"><span>${esc(ETIQUETA_ETAPA[toma.etapa])}</span><span>${fecha(toma.inicio)}</span><span>${toma.situaciones.map(s => ETIQUETA_SITUACION[s]).join(' · ')}</span><span>máx. ${toma.max_elecciones}</span>${toma.negativas ? '<span>con negativas</span>' : ''}<span>${d.respondieron} de ${alumnos.length} respondieron</span></div>
+<div class="i-meta"><span>${esc(ETIQUETA_ETAPA[toma.etapa])}</span><span>${fecha(toma.inicio)}</span><span>${toma.situaciones.map(s => etiquetaSituacion(s, toma.preguntas)).join(' · ')}</span><span>máx. ${toma.max_elecciones}</span>${toma.negativas ? '<span>con negativas</span>' : ''}<span>${d.respondieron} de ${alumnos.length} respondieron</span></div>
 
 <dl class="i-cifras">
 <div><dt>Cohesión</dt><dd>${pct(a.cohesion)}<small>${a.parejasReciprocas.length} parejas recíprocas</small></dd></div>
@@ -125,7 +125,7 @@ ${atencion.length ? `<ul class="i-rules">${atencion.map(x => `<li>${n(x.alumno_i
 </section>
 
 <section class="i-sec"><div class="i-head"><span class="i-num">03</span><h2>Índices por alumno</h2></div>
-<table><thead><tr><th>Alumno</th>${toma.situaciones.map(s => `<th class="n">${ETIQUETA_SITUACION[s]}</th>`).join('')}<th class="n">Recibidas</th><th class="n">Emitidas</th><th class="n">Reciprocidad</th><th class="n">Ajuste</th>${toma.negativas ? '<th class="n">Negativas</th>' : ''}<th>Posición</th>${toma.negativas ? '<th>Tipo</th>' : ''}</tr></thead>
+<table><thead><tr><th>Alumno</th>${toma.situaciones.map(s => `<th class="n">${etiquetaSituacion(s, toma.preguntas)}</th>`).join('')}<th class="n">Recibidas</th><th class="n">Emitidas</th><th class="n">Reciprocidad</th><th class="n">Ajuste</th>${toma.negativas ? '<th class="n">Negativas</th>' : ''}<th>Posición</th>${toma.negativas ? '<th>Tipo</th>' : ''}</tr></thead>
 <tbody>${filasIndices.join('')}</tbody></table>
 <p class="i-aviso">Reciprocidad: de los que elige, cuántos le eligen. Ajuste: de quienes cree que le eligen (Espejo), cuántos le eligen de verdad. Posición: elecciones recibidas tipificadas dentro del grupo.${toma.negativas ? ' Tipo: Coie y Dodge (1983) a partir de preferencia e impacto social; una foto, no un diagnóstico.' : ''}</p>
 </section>
@@ -141,7 +141,7 @@ ${a.puentes.length ? `<p>Puentes: <b>${a.puentes.map(n).join(', ')}</b>. Sin ell
 </section>
 
 <section class="i-sec"><div class="i-head"><span class="i-num">06</span><h2>Método</h2></div>
-<div class="i-note">Instrumento de nominaciones por situación (${toma.situaciones.map(s => ETIQUETA_SITUACION[s].toLowerCase()).join(', ')}), sin motivo ni orden, máximo ${toma.max_elecciones} por situación. Espejo mide percepción y no cuenta como elección recibida. Los datos se recogieron y se analizaron en el dispositivo del docente; ningún dato ha salido de él. Documento para el equipo docente y orientación: no se entrega al alumnado.</div>
+<div class="i-note">Instrumento de nominaciones por situación (${toma.situaciones.map(s => etiquetaSituacion(s, toma.preguntas).toLowerCase()).join(', ')}), sin motivo ni orden, máximo ${toma.max_elecciones} por situación. Espejo mide percepción y no cuenta como elección recibida. Los datos se recogieron y se analizaron en el dispositivo del docente; ningún dato ha salido de él. Documento para el equipo docente y orientación: no se entrega al alumnado.</div>
 </section>
 
 <footer><b>Una app de EDUmind® · por Luis Vilela Acuña</b> · generado el ${fecha(new Date().toISOString())} · hilos.edumind.es</footer>

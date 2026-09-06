@@ -10,7 +10,7 @@
  *  - no se muestra ningún resultado ni la palabra «sociograma».
  */
 import { useMemo, useState } from 'react'
-import { textoSituacion, textosAlumno, type Eleccion, type Etapa, type Idioma, type Situacion } from '@edumind-hilo/nucleo'
+import { textoSituacion, textosAlumno, type Eleccion, type Etapa, type Idioma, type PreguntaToma, type Situacion } from '@edumind-hilo/nucleo'
 import { barajar } from '@/lib/barajar'
 import { callar, hayVoz, leer } from '@/lib/voz'
 
@@ -23,6 +23,7 @@ export interface PropsPantallaAlumno {
   idioma: Idioma
   etapa: Etapa
   situaciones: Situacion[]
+  preguntas?: PreguntaToma[]
   maxElecciones: number
   negativas: boolean
   yo: Persona
@@ -37,10 +38,10 @@ interface Paso {
   ayuda: string
 }
 
-export function construirPasos(p: Pick<PropsPantallaAlumno, 'idioma' | 'etapa' | 'situaciones' | 'negativas'>): Paso[] {
+export function construirPasos(p: Pick<PropsPantallaAlumno, 'idioma' | 'etapa' | 'situaciones' | 'negativas' | 'preguntas'>): Paso[] {
   const pasos: Paso[] = []
   for (const situacion of p.situaciones) {
-    const t = textoSituacion(p.idioma, p.etapa, situacion)
+    const t = textoSituacion(p.idioma, p.etapa, situacion, p.preguntas ?? [])
     pasos.push({ situacion, signo: 1, pregunta: t.pregunta, ayuda: t.ayuda })
     if (p.negativas && p.etapa === 'secundaria' && t.negativa) {
       pasos.push({ situacion, signo: -1, pregunta: t.negativa, ayuda: t.ayuda })
@@ -51,7 +52,7 @@ export function construirPasos(p: Pick<PropsPantallaAlumno, 'idioma' | 'etapa' |
 
 export function PantallaAlumno(props: PropsPantallaAlumno) {
   const t = textosAlumno(props.idioma)
-  const pasos = useMemo(() => construirPasos(props), [props.idioma, props.etapa, props.situaciones, props.negativas])
+  const pasos = useMemo(() => construirPasos(props), [props.idioma, props.etapa, props.situaciones, props.negativas, props.preguntas])
   const [indice, setIndice] = useState(0)
   const [elegidos, setElegidos] = useState<Set<string>>(new Set())
   const [acumulado, setAcumulado] = useState<Eleccion[]>([])

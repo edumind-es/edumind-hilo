@@ -8,7 +8,7 @@
  * la tablet por luz. La página del alumnado lo borra del historial al cargar.
  */
 import { esCodigoValido } from './codigos'
-import { ETAPAS, IDIOMAS, SITUACIONES, type Etapa, type Idioma, type Situacion } from './tipos'
+import { ETAPAS, ID_SITUACION_RE, IDIOMAS, SITUACIONES, type Etapa, type Idioma, type PreguntaToma, type Situacion } from './tipos'
 
 export interface Sesion {
   toma: string
@@ -16,6 +16,7 @@ export interface Sesion {
   idioma: Idioma
   etapa: Etapa
   situaciones: Situacion[]
+  preguntas: PreguntaToma[]
   maxElecciones: number
   negativas: boolean
   /** [código, nombre para el alumnado] */
@@ -32,6 +33,8 @@ interface Compacta {
   m: number
   g: 0 | 1
   a: [string, string][]
+  /** preguntas propias: [id, etiqueta, pregunta, ayuda, negativa, tipo] */
+  q?: [string, string, string, string, string, 'preferencia' | 'percepcion'][]
 }
 
 const b64url = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -71,6 +74,7 @@ async function transformar(bytes: Uint8Array, stream: CompressionStream | Decomp
 
 export async function empaquetarSesion(s: Sesion): Promise<string> {
   const c: Compacta = { v: 1, t: s.toma, n: s.titulo, i: s.idioma, e: s.etapa, s: s.situaciones, m: s.maxElecciones, g: s.negativas ? 1 : 0, a: s.alumnos }
+  if (s.preguntas.length) c.q = s.preguntas.map(p => [p.id, p.etiqueta, p.pregunta, p.ayuda ?? '', p.negativa ?? '', p.tipo])
   const bytes = new TextEncoder().encode(JSON.stringify(c))
   const comprimido = await transformar(bytes, new CompressionStream('deflate-raw'))
   return b64url(comprimido)
@@ -87,7 +91,11 @@ export async function desempaquetarSesion(texto: string): Promise<Sesion> {
   const c = bruto as Partial<Compacta>
   if (c.v !== 1 || typeof c.t !== 'string' || !Array.isArray(c.a)) throw new Error('El enlace de la sesión no es válido.')
   if (!IDIOMAS.includes(c.i as Idioma) || !ETAPAS.includes(c.e as Etapa)) throw new Error('El enlace de la sesión no es válido.')
-  const situaciones = (c.s ?? []).filter((x): x is Situacion => SITUACIONES.includes(x))
+  const preguntas: PreguntaToma[] = (c.q ?? [])
+    .filter(q => Array.isArray(q) && ID_SITUACION_RE.test(String(q[0])) && typeof q[2] === 'string' && (q[5] === 'preferencia' || q[5] === 'percepcion'))
+    .map(q => ({ id: q[0], etiqueta: String(q[1] ?? q[0]), pregunta: q[2], ...(q[3] ? { ayuda: q[3] } : {}), ...(q[4] ? { negativa: q[4] } : {}), tipo: q[5] }))
+  const propias = new Set(preguntas.map(p => p.id))
+  const situaciones = (c.s ?? []).filter((x): x is Situacion => typeof x === 'string' && ((SITUACIONES as readonly string[]).includes(x) || propias.has(x)))
   if (!situaciones.length) throw new Error('La sesión no tiene situaciones.')
   const alumnos = c.a.filter((p): p is [string, string] => Array.isArray(p) && esCodigoValido(String(p[0])) && typeof p[1] === 'string' && p[1].length > 0)
   if (alumnos.length < 2) throw new Error('La sesión no tiene alumnado.')
@@ -97,6 +105,7 @@ export async function desempaquetarSesion(texto: string): Promise<Sesion> {
     idioma: c.i as Idioma,
     etapa: c.e as Etapa,
     situaciones,
+    preguntas,
     maxElecciones: Math.min(10, Math.max(1, Number(c.m) || 1)),
     negativas: c.g === 1 && c.e === 'secundaria',
     alumnos,

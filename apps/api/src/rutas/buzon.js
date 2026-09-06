@@ -17,7 +17,7 @@ const LOTE = 500
 const MAX_REGISTRO_BYTES = 64 * 1024
 const CUOTA_REGISTROS = 50_000
 const CUOTA_BYTES = 200 * 1024 * 1024
-const TABLAS = new Set(['grupos', 'alumnos', 'tomas', 'respuestas', 'participaciones', 'eventos', 'notas', 'claves'])
+const TABLAS = new Set(['grupos', 'alumnos', 'tomas', 'respuestas', 'participaciones', 'eventos', 'notas', 'claves', 'cuestionarios'])
 const FECHA_ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/
 const TOKEN = /^[A-Za-z0-9_-]{40,64}$/
 

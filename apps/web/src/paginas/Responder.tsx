@@ -52,6 +52,7 @@ export function Responder() {
           idioma={toma.idioma}
           etapa={toma.etapa}
           situaciones={toma.situaciones}
+          preguntas={toma.preguntas}
           maxElecciones={toma.max_elecciones}
           negativas={toma.negativas}
           yo={yo}

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ETIQUETA_ETAPA, ETIQUETA_SITUACION, SITUACIONES_PREFERENCIA, analizar, listaAtencion, type Alumno, type Situacion } from '@edumind-hilo/nucleo'
+import { ETIQUETA_ETAPA, etiquetaSituacion, esPreferencia, analizar, listaAtencion, type Alumno, type Situacion } from '@edumind-hilo/nucleo'
 import { Grafo } from '@/componentes/Grafo'
 import { cerrarToma } from '@/db/consultas'
 import { useAlumnos, useGrupo, useParticipaciones, useRespuestas, useToma } from '@/db/hooks'
@@ -20,7 +20,7 @@ export function Toma() {
 
   const analisis = useMemo(() => {
     if (!toma || !alumnos || !respuestas || !participaciones) return null
-    return analizar({ alumnos, respuestas, situaciones: toma.situaciones, negativas: toma.negativas, participantes: participaciones.map(p => p.alumno_id) })
+    return analizar({ alumnos, respuestas, situaciones: toma.situaciones, preguntas: toma.preguntas, negativas: toma.negativas, participantes: participaciones.map(p => p.alumno_id) })
   }, [toma, alumnos, respuestas, participaciones])
 
   if (toma === undefined) return <p className="mono">{tr("Cargando…")}</p>
@@ -31,7 +31,7 @@ export function Toma() {
   const respondieron = participaciones?.length ?? 0
   const total = alumnos.length
   const atencion = listaAtencion(analisis)
-  const preferencia = toma.situaciones.filter(s => SITUACIONES_PREFERENCIA.includes(s))
+  const preferencia = toma.situaciones.filter(s => esPreferencia(s, toma.preguntas))
 
   return (
     <>
@@ -39,7 +39,7 @@ export function Toma() {
         <div>
           <p className="eyebrow"><Link to="/" style={{ textDecoration: 'none' }}>{tr("Grupos")}</Link> · <Link to={`/grupo/${grupo.id}`} style={{ textDecoration: 'none' }}>{grupo.nombre}</Link></p>
           <h1>{toma.titulo}</h1>
-          <p className="lede">{tr(ETIQUETA_ETAPA[toma.etapa])} · {toma.situaciones.map(s => tr(ETIQUETA_SITUACION[s])).join(' · ')} · máximo {toma.max_elecciones}{toma.negativas ? ' · con negativas' : ''} · abierta {fechaHora(toma.inicio)}{toma.fin ? ` · cerrada ${fechaHora(toma.fin)}` : ''}</p>
+          <p className="lede">{tr(ETIQUETA_ETAPA[toma.etapa])} · {toma.situaciones.map(s => tr(etiquetaSituacion(s, toma.preguntas))).join(' · ')} · máximo {toma.max_elecciones}{toma.negativas ? ' · con negativas' : ''} · abierta {fechaHora(toma.inicio)}{toma.fin ? ` · cerrada ${fechaHora(toma.fin)}` : ''}</p>
         </div>
         <div className="acciones no-imprimir">
           {toma.estado === 'abierta' ? (
@@ -85,7 +85,7 @@ export function Toma() {
 
       <section className="sec">
         <div className="sec-head"><span className="sec-num">02</span><h2>{tr("Grafo")}</h2></div>
-        <Grafo analisis={analisis} nombres={nombre} situaciones={toma.situaciones} />
+        <Grafo analisis={analisis} nombres={nombre} situaciones={toma.situaciones} preguntas={toma.preguntas} />
       </section>
 
       <section className="sec">
@@ -95,7 +95,7 @@ export function Toma() {
             <thead>
               <tr>
                 <th>{tr("Alumno")}</th>
-                {toma.situaciones.map(s => <th key={s} className="num">{tr(ETIQUETA_SITUACION[s])}</th>)}
+                {toma.situaciones.map(s => <th key={s} className="num">{tr(etiquetaSituacion(s, toma.preguntas))}</th>)}
                 <th className="num">{tr("Recibidas")}</th><th className="num">{tr("Emitidas")}</th><th className="num">{tr("Reciprocidad")}</th><th className="num">{tr("Ajuste")}</th>
                 {toma.negativas && <th className="num">{tr("Negativas")}</th>}
                 <th>{tr("Posición")}</th>
@@ -109,7 +109,7 @@ export function Toma() {
                 return (
                   <tr key={a.id}>
                     <td><Link to={`/alumno/${a.id}`}>{a.nombre}</Link>{analisis.sinRespuesta.includes(a.id) && <span className="mono"> · sin respuesta</span>}</td>
-                    {toma.situaciones.map(s => <td key={s} className="num">{s === 'espejo' ? '·' : x.recibidas[s] ?? 0}</td>)}
+                    {toma.situaciones.map(s => <td key={s} className="num">{esPreferencia(s, toma.preguntas) ? x.recibidas[s] ?? 0 : '·'}</td>)}
                     <td className="num"><b>{x.recibidasTotal}</b></td>
                     <td className="num">{x.emitidasTotal}</td>
                     <td className="num">{x.emitidasTotal ? pct(x.reciprocidad) : '—'}</td>

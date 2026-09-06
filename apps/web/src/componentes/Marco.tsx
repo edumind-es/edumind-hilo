@@ -12,6 +12,7 @@ export function Marco() {
           <NavLink to="/" className="mono mono-ink" style={{ textDecoration: 'none' }}>EDUMIND · HILO</NavLink>
           <nav aria-label="Principal">
             <NavLink to="/" end className={({ isActive }) => (isActive ? 'mono mono-ink activo' : 'mono mono-ink')}>{tr("Grupos")}</NavLink>
+            <NavLink to="/catalogo" className={({ isActive }) => (isActive ? 'mono mono-ink activo' : 'mono mono-ink')}>{tr('Catálogo')}</NavLink>
             <NavLink to="/ajustes" className={({ isActive }) => (isActive ? 'mono mono-ink activo' : 'mono mono-ink')}>{tr("Ajustes")}</NavLink>
           </nav>
         </div>

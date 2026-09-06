@@ -4,16 +4,23 @@ import {
   ETAPAS,
   ETIQUETA_ETAPA,
   ETIQUETA_SITUACION,
+  INSTRUMENTOS,
   MAX_ELECCIONES_POR_ETAPA,
   SITUACIONES,
   SITUACIONES_POR_ETAPA,
+  etiquetaSituacion,
+  idPreguntaNuevo,
+  instrumento,
   negativasPermitidas,
   type Etapa,
+  type Idioma,
+  type PreguntaToma,
   type Situacion,
+  type SituacionCanonica,
 } from '@edumind-hilo/nucleo'
-import { actualizarAlumno, anadirAlumnos, anadirEvento, borrarAlumno, borrarGrupo, crearToma, tituloPorDefecto } from '@/db/consultas'
+import { actualizarAlumno, anadirAlumnos, anadirEvento, borrarAlumno, borrarGrupo, crearToma, guardarCuestionario, tituloPorDefecto } from '@/db/consultas'
 import { filasDeFichero, importarMatriz } from '@/db/importar'
-import { useAlumnos, useEventos, useGrupo, useTomas } from '@/db/hooks'
+import { useAlumnos, useCuestionarios, useEventos, useGrupo, useTomas } from '@/db/hooks'
 import { fechaCorta, hoyIso } from '@/lib/fechas'
 import { useT } from '@/i18n'
 
@@ -48,14 +55,14 @@ export function Grupo() {
                 <span className="dash">—</span>
                 <span className="crece">
                   <Link className="titulo" to={`/toma/${t.id}`}>{t.titulo}</Link><br />
-                  <span className="meta">{fechaCorta(t.inicio)} · {t.situaciones.map(s => tr(ETIQUETA_SITUACION[s])).join(' · ')} · máx. {t.max_elecciones}{t.negativas ? ' · con negativas' : ''}</span>
+                  <span className="meta">{fechaCorta(t.inicio)} · {t.situaciones.map(s => tr(etiquetaSituacion(s, t.preguntas))).join(' · ')} · máx. {t.max_elecciones}{t.negativas ? ' · con negativas' : ''}</span>
                 </span>
                 <span className={t.estado === 'abierta' ? 'stamp pendiente' : 'stamp cerrada'}>{tr(t.estado)}</span>
               </li>
             ))}
           </ul>
         )}
-        <NuevaToma grupoEtapa={grupo.etapa} onCrear={async datos => {
+        <NuevaToma grupoEtapa={grupo.etapa} grupoIdioma={grupo.idioma} onCrear={async datos => {
           const tid = await crearToma(grupo, datos)
           navegar(`/toma/${tid}`)
         }} />
@@ -129,34 +136,83 @@ export function Grupo() {
   )
 }
 
-function NuevaToma({ grupoEtapa, onCrear }: { grupoEtapa: Etapa; onCrear: (d: { titulo: string; etapa: Etapa; situaciones: Situacion[]; max_elecciones: number; negativas: boolean }) => Promise<void> }) {
+function NuevaToma({ grupoEtapa, grupoIdioma, onCrear }: { grupoEtapa: Etapa; grupoIdioma: Idioma; onCrear: (d: { titulo: string; etapa: Etapa; situaciones: Situacion[]; preguntas: PreguntaToma[]; max_elecciones: number; negativas: boolean }) => Promise<void> }) {
   const tr = useT()
+  const cuestionarios = useCuestionarios()
   const [abierto, setAbierto] = useState(false)
   const [titulo, setTitulo] = useState(tituloPorDefecto())
   const [etapa, setEtapa] = useState<Etapa>(grupoEtapa)
-  const [situaciones, setSituaciones] = useState<Situacion[]>(SITUACIONES_POR_ETAPA[grupoEtapa])
+  const [fuente, setFuente] = useState('defecto')
+  const [canonicas, setCanonicas] = useState<SituacionCanonica[]>(SITUACIONES_POR_ETAPA[grupoEtapa])
+  const [preguntas, setPreguntas] = useState<PreguntaToma[]>([])
   const [max, setMax] = useState(MAX_ELECCIONES_POR_ETAPA[grupoEtapa])
   const [negativas, setNegativas] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [aviso, setAviso] = useState<string[]>([])
+
+  const situaciones: Situacion[] = [...SITUACIONES.filter(c => canonicas.includes(c)), ...preguntas.map(p => p.id)]
 
   function cambiarEtapa(e: Etapa) {
     setEtapa(e)
-    setSituaciones(SITUACIONES_POR_ETAPA[e])
-    setMax(MAX_ELECCIONES_POR_ETAPA[e])
+    if (fuente === 'defecto') {
+      setCanonicas(SITUACIONES_POR_ETAPA[e])
+      setMax(MAX_ELECCIONES_POR_ETAPA[e])
+    }
     if (!negativasPermitidas(e)) setNegativas(false)
+  }
+
+  function cargar(datos: { situaciones: Situacion[]; preguntas: PreguntaToma[]; max_elecciones: number; negativas: boolean; advertencias?: string[] }) {
+    setCanonicas(SITUACIONES.filter(c => datos.situaciones.includes(c)))
+    setPreguntas(datos.preguntas.map(p => ({ ...p })))
+    setMax(datos.max_elecciones)
+    setNegativas(datos.negativas && negativasPermitidas(etapa))
+    setAviso(datos.advertencias ?? [])
+  }
+
+  function cambiarFuente(v: string) {
+    setFuente(v)
+    if (v === 'defecto') {
+      cargar({ situaciones: SITUACIONES_POR_ETAPA[etapa], preguntas: [], max_elecciones: MAX_ELECCIONES_POR_ETAPA[etapa], negativas: false })
+      return
+    }
+    if (v.startsWith('cat:')) {
+      const ins = instrumento(v.slice(4))
+      if (ins) cargar(ins)
+      return
+    }
+    const c = cuestionarios?.find(x => x.id === v.slice(4))
+    if (c) cargar(c)
+  }
+
+  function editar(id: string, cambios: Partial<PreguntaToma>) {
+    setPreguntas(prev => prev.map(p => (p.id === id ? { ...p, ...cambios } : p)))
+  }
+
+  async function guardarComoMio() {
+    const nombre = prompt(tr('Nombre del cuestionario'))
+    if (!nombre?.trim()) return
+    try {
+      await guardarCuestionario({ nombre: nombre.trim(), etapa, idioma: grupoIdioma, descripcion: '', situaciones, preguntas, max_elecciones: max, negativas, origen: fuente.startsWith('cat:') ? 'catalogo' : 'propio', referencia: fuente.startsWith('cat:') ? (instrumento(fuente.slice(4))?.referencia ?? '') : '' })
+      setError(null)
+      setAviso([tr('Cuestionario guardado en «Mis cuestionarios».')])
+    } catch (err) {
+      setError(err instanceof Error ? tr(err.message) : 'Error')
+    }
   }
 
   async function enviar(ev: FormEvent) {
     ev.preventDefault()
     setError(null)
     try {
-      await onCrear({ titulo, etapa, situaciones: SITUACIONES.filter(s => situaciones.includes(s)), max_elecciones: max, negativas })
+      await onCrear({ titulo, etapa, situaciones, preguntas, max_elecciones: max, negativas })
     } catch (err) {
-      setError(err instanceof Error ? tr(err.message) : 'No se pudo crear la toma.')
+      setError(err instanceof Error ? tr(err.message) : tr('No se pudo crear la toma.'))
     }
   }
 
   if (!abierto) return <p className="no-imprimir"><button type="button" className="btn" onClick={() => setAbierto(true)}>{tr("Nueva toma")}</button></p>
+
+  const instrumentosEtapa = INSTRUMENTOS.filter(i => i.etapas.includes(etapa))
 
   return (
     <form onSubmit={enviar} className="panel no-imprimir" style={{ marginTop: 10 }}>
@@ -169,13 +225,29 @@ function NuevaToma({ grupoEtapa, onCrear }: { grupoEtapa: Etapa; onCrear: (d: { 
         </label>
         <label className="campo"><span>{tr("Máximo de elecciones")}</span><input type="number" min={1} max={10} value={max} onChange={e => setMax(Number(e.target.value))} /></label>
       </div>
+      <label className="campo"><span>{tr('Punto de partida')}</span>
+        <select value={fuente} onChange={e => cambiarFuente(e.target.value)}>
+          <option value="defecto">{tr('Situaciones por defecto del registro')}</option>
+          <optgroup label={tr('Catálogo de instrumentos')}>
+            {instrumentosEtapa.map(i => <option key={i.id} value={`cat:${i.id}`}>{i.nombre} · {i.autores.split(',')[0]} ({i.anio})</option>)}
+          </optgroup>
+          {(cuestionarios?.length ?? 0) > 0 && (
+            <optgroup label={tr('Mis cuestionarios')}>
+              {cuestionarios!.map(c => <option key={c.id} value={`mio:${c.id}`}>{c.nombre} · {tr(ETIQUETA_ETAPA[c.etapa])}</option>)}
+            </optgroup>
+          )}
+        </select>
+        <span className="aviso">{tr('El catálogo y las referencias completas están en')} <Link to="/catalogo">{tr('Catálogo')}</Link>.</span>
+      </label>
+      {aviso.map((a, i) => <div key={i} className="note alert"><span className="tag">{tr('Aviso del instrumento')}</span><p>{a}</p></div>)}
+
       <div className="campo"><span>{tr("Situaciones")}</span>
         <div className="opciones">
           {SITUACIONES.map(s => {
-            const on = situaciones.includes(s)
+            const on = canonicas.includes(s)
             return (
               <label key={s} className={on ? 'opcion on' : 'opcion'}>
-                <input type="checkbox" checked={on} onChange={() => setSituaciones(on ? situaciones.filter(x => x !== s) : [...situaciones, s])} />
+                <input type="checkbox" checked={on} onChange={() => setCanonicas(on ? canonicas.filter(x => x !== s) : [...canonicas, s])} />
                 {tr(ETIQUETA_SITUACION[s])}
               </label>
             )
@@ -183,11 +255,33 @@ function NuevaToma({ grupoEtapa, onCrear }: { grupoEtapa: Etapa; onCrear: (d: { 
         </div>
         <span className="aviso">{tr("Espejo mide percepción («¿quién crees que te elegiría?») y da el ajuste perceptivo. No cuenta como elección recibida.")}</span>
       </div>
+
+      <div className="campo"><span>{tr('Preguntas propias')}</span>
+        {preguntas.map(p => (
+          <div key={p.id} className="pregunta-propia">
+            <input type="text" value={p.etiqueta} maxLength={24} onChange={e => editar(p.id, { etiqueta: e.target.value })} placeholder={tr('Etiqueta corta')} style={{ maxWidth: 160 }} aria-label={tr('Etiqueta corta')} />
+            <select value={p.tipo} onChange={e => editar(p.id, { tipo: e.target.value as PreguntaToma['tipo'] })} style={{ maxWidth: 170 }} aria-label={tr('Tipo')}>
+              <option value="preferencia">{tr('Preferencia (cuenta como elección)')}</option>
+              <option value="percepcion">{tr('Percepción (quién crees que te elige)')}</option>
+            </select>
+            <input type="text" value={p.pregunta} maxLength={240} onChange={e => editar(p.id, { pregunta: e.target.value })} placeholder={tr('La pregunta tal como la verá el alumnado')} aria-label={tr('Pregunta')} />
+            <input type="text" value={p.ayuda ?? ''} maxLength={160} onChange={e => editar(p.id, { ayuda: e.target.value || undefined })} placeholder={tr('Ayuda breve (opcional)')} aria-label={tr('Ayuda')} />
+            {negativasPermitidas(etapa) && p.tipo === 'preferencia' && <input type="text" value={p.negativa ?? ''} maxLength={240} onChange={e => editar(p.id, { negativa: e.target.value || undefined })} placeholder={tr('Formulación negativa (solo con negativas activadas)')} aria-label={tr('Negativa')} />}
+            <button type="button" className="enlace" onClick={() => setPreguntas(prev => prev.filter(x => x.id !== p.id))}>{tr('quitar')}</button>
+          </div>
+        ))}
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 8 }}>
+          <button type="button" className="btn secundario pequeno" onClick={() => setPreguntas(prev => [...prev, { id: idPreguntaNuevo(prev.map(x => x.id)), etiqueta: '', pregunta: '', tipo: 'preferencia' }])}>{tr('Añadir pregunta propia')}</button>
+          <button type="button" className="btn secundario pequeno" disabled={situaciones.length === 0} onClick={() => void guardarComoMio()}>{tr('Guardar como cuestionario mío')}</button>
+        </div>
+        <span className="aviso">{tr('Pregunta por una situación concreta, con verbo de futuro y sin adjetivos sobre las personas. Nunca pidas el motivo.')}</span>
+      </div>
+
       {negativasPermitidas(etapa) && (
         <div className="campo">
           <label className="opcion" style={{ maxWidth: 'fit-content' }}>
             <input type="checkbox" checked={negativas} onChange={e => setNegativas(e.target.checked)} />
-            Activar nominaciones negativas («¿con quién preferirías no…?»)
+            {tr("Activar nominaciones negativas («¿con quién preferirías no…?»)")}
           </label>
           {negativas && (
             <div className="note alert"><span className="tag">{tr("Decisión expresa")}</span>
@@ -198,7 +292,7 @@ function NuevaToma({ grupoEtapa, onCrear }: { grupoEtapa: Etapa; onCrear: (d: { 
       )}
       {error && <p className="error">{error}</p>}
       <div style={{ display: 'flex', gap: 10 }}>
-        <button type="submit" className="btn" disabled={situaciones.length === 0}>{tr("Abrir la toma")}</button>
+        <button type="submit" className="btn" disabled={situaciones.length === 0 || preguntas.some(p => !p.etiqueta.trim() || p.pregunta.trim().length < 4)}>{tr("Abrir la toma")}</button>
         <button type="button" className="btn secundario" onClick={() => setAbierto(false)}>{tr("Cancelar")}</button>
       </div>
     </form>

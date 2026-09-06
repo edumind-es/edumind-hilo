@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ETIQUETA_SITUACION, MAX_FILAS_HOJA, codificarIdentidadHoja, disenoHoja, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
+import { etiquetaSituacion, MAX_FILAS_HOJA, codificarIdentidadHoja, disenoHoja, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
 import { qrSvg } from '@/lib/qr'
 import { useT } from '@/i18n'
@@ -60,12 +60,12 @@ export function Hojas() {
             </div>
             <div className="instrucciones" style={{ left: mm(diseno.tituloX), top: mm(diseno.tituloY + 1), width: mm(diseno.ancho - diseno.tituloX - 16) }}>
               {toma.situaciones.map(s => (
-                <p key={s}><b>{tr(ETIQUETA_SITUACION[s])}.</b> {textoSituacion(toma.idioma, toma.etapa, s).pregunta}</p>
+                <p key={s}><b>{tr(etiquetaSituacion(s, toma.preguntas))}.</b> {textoSituacion(toma.idioma, toma.etapa, s, toma.preguntas).pregunta}</p>
               ))}
               <p>Rellena del todo el círculo de cada persona que elijas. Como mucho {toma.max_elecciones} por columna. Sin nombres, sin motivos.</p>
             </div>
             {toma.situaciones.map((s, c) => (
-              <div key={s} className="cabecera-col" style={{ left: mm(diseno.columnas[c]! - 8), top: mm(diseno.cabeceraY - 4), width: mm(16) }}>{tr(ETIQUETA_SITUACION[s])}</div>
+              <div key={s} className="cabecera-col" style={{ left: mm(diseno.columnas[c]! - 8), top: mm(diseno.cabeceraY - 4), width: mm(16) }}>{tr(etiquetaSituacion(s, toma.preguntas))}</div>
             ))}
             {filas.map((b, f) => (
               <div key={b.id}>

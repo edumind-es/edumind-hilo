@@ -28,7 +28,7 @@ describe('codificación compacta de respuestas', () => {
     expect(() => decodificarRespuestas('H2|t|AB3DE')).toThrow()
     expect(() => decodificarRespuestas('H1|t|AB3DE|equipo:AB3DE')).toThrow()
     expect(() => decodificarRespuestas('H1|t|AB3DE|equipo:+AB3DE')).toThrow(/sí mismo/)
-    expect(() => decodificarRespuestas('H1|t|AB3DE|otra:+F2GH7')).toThrow(/desconocida/)
+    expect(() => decodificarRespuestas('H1|t|AB3DE|Otra Cosa:+F2GH7')).toThrow(/desconocida/)
     expect(() => codificarRespuestas({ toma: 't', de: 'AB3D', elecciones: [] })).toThrow()
   })
 })

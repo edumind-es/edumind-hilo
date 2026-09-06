@@ -94,7 +94,7 @@ export function SesionAlumno() {
           key={estado.codigo}
           idioma={s.idioma}
           etapa={s.etapa}
-          situaciones={s.situaciones}
+          situaciones={s.situaciones} preguntas={s.preguntas}
           maxElecciones={s.maxElecciones}
           negativas={s.negativas}
           yo={yo}

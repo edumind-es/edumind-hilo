@@ -1,7 +1,7 @@
 {
   "name": "@edumind-hilo/api",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.5.0",
   "type": "module",
   "description": "Buzón ciego opcional de Hilo: relé en vivo y sincronización entre dispositivos del docente. Solo ve ciphertext.",
   "author": "Luis Vilela Acuña <contacto@edumind.es>",

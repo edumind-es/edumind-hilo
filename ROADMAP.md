@@ -54,6 +54,13 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [x] Portal del docente en gallego e inglés (v1.2). El informe descargable
       sigue en castellano.
 
+## Instrumento abierto — HECHO (v1.5)
+
+- [x] Preguntas propias por toma, cuestionarios reutilizables, catálogo con
+      referencias.
+- [ ] Traducción del catálogo al gallego e inglés.
+- [ ] Escalas de valoración uno a uno (roster-rating): otro tipo de respuesta.
+
 ## F4 · Opcional — HECHO en parte (v1.3)
 
 - [x] `apps/api`: buzón ciego para relé en vivo y sincronización entre

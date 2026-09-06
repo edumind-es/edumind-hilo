@@ -16,9 +16,14 @@ Hilo es el hilo invisible que une a un grupo.
 - **Grupos** creados pegando una lista de nombres. Cada alumno recibe un código
   de cinco caracteres, el único dato que sale del dispositivo (en QR o en papel).
 - **Cuestionario aséptico** por situaciones (equipo, recreo, ayuda, espejo,
-  viaje), en tres registros por edad y en castellano y gallego. Sin motivo, sin
-  ranking, sin resultados para el alumnado. Nominaciones negativas bloqueadas en
-  Primaria por diseño; en Secundaria solo por activación expresa.
+  viaje), en tres registros por edad y en castellano, gallego e inglés. Sin
+  motivo, sin ranking, sin resultados para el alumnado. Nominaciones negativas
+  bloqueadas en Primaria por diseño; en Secundaria solo por activación expresa.
+- **Preguntas propias y catálogo.** El docente añade sus preguntas
+  (preferencia o percepción), las guarda como cuestionario reutilizable, o parte
+  de un instrumento del catálogo con referencia científica: Moreno, Coie y
+  Dodge, percepción sociométrica, amistad recíproca, Bull-S (bloque
+  sociométrico), equipos cooperativos.
 - **Seis formas de recoger, ninguna con servidor**: en el dispositivo del
   docente pasándolo de mano en mano; con tablets, proyectando un QR que lleva
   la lista y leyendo con la cámara el QR de respuesta de cada tablet; con

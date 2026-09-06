@@ -6,7 +6,7 @@
  * sincronización por sobres (fase 4) pueda leer incrementalmente sin migrar.
  */
 import Dexie, { type EntityTable } from 'dexie'
-import type { Alumno, ClavesDocente, Evento, Grupo, NotaAlumno, Participacion, Respuesta, Toma } from '@edumind-hilo/nucleo'
+import type { Alumno, ClavesDocente, Cuestionario, Evento, Grupo, NotaAlumno, Participacion, Respuesta, Toma } from '@edumind-hilo/nucleo'
 
 export interface Ajuste {
   id: string
@@ -26,6 +26,7 @@ export class HiloDb extends Dexie {
   notas!: EntityTable<NotaAlumno, 'id'>
   claves!: EntityTable<ClavesDocente, 'id'>
   ajustes!: EntityTable<Ajuste, 'id'>
+  cuestionarios!: EntityTable<Cuestionario, 'id'>
 
   constructor(nombre = 'edumind-hilo') {
     super(nombre)
@@ -47,10 +48,14 @@ export class HiloDb extends Dexie {
     this.version(3).stores({
       ajustes: 'id',
     })
+    // v4: cuestionarios propios del docente; las tomas antiguas ganan `preguntas: []`.
+    this.version(4).stores({
+      cuestionarios: 'id, updated_at',
+    }).upgrade(tx => tx.table('tomas').toCollection().modify(t => { if (!Array.isArray(t.preguntas)) t.preguntas = [] }))
   }
 }
 
 export const db = new HiloDb()
 
-export const TABLAS = ['grupos', 'alumnos', 'tomas', 'respuestas', 'participaciones', 'eventos', 'notas', 'claves'] as const
+export const TABLAS = ['grupos', 'alumnos', 'tomas', 'respuestas', 'participaciones', 'eventos', 'notas', 'claves', 'cuestionarios'] as const
 export type Tabla = (typeof TABLAS)[number]

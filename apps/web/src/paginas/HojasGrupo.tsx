@@ -1,7 +1,7 @@
 /** Hojas de grupo para imprimir: una por situación, la matriz completa. Filas: quién elige. Columnas: a quién. */
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ETIQUETA_SITUACION, MAX_ALUMNOS_HOJA_GRUPO, SITUACIONES_PREFERENCIA, codificarIdentidadHojaGrupo, disenoHojaGrupo, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
+import { etiquetaSituacion, MAX_ALUMNOS_HOJA_GRUPO, esPreferencia, codificarIdentidadHojaGrupo, disenoHojaGrupo, nombresParaAlumnado, textoSituacion } from '@edumind-hilo/nucleo'
 import { useAlumnos, useGrupo, useToma } from '@/db/hooks'
 import { qrSvg } from '@/lib/qr'
 import { useT } from '@/i18n'
@@ -31,7 +31,7 @@ export function HojasGrupo() {
   const cortos = nombresParaAlumnado(alumnos.map(a => a.nombre))
   const d = disenoHojaGrupo(alumnos.length)
   const mm = (v: number) => `${v}mm`
-  const situaciones = toma.situaciones.filter(s => SITUACIONES_PREFERENCIA.includes(s) || s === 'espejo')
+  const situaciones = toma.situaciones
 
   return (
     <div className="hojas">
@@ -44,9 +44,9 @@ export function HojasGrupo() {
         <div className="hoja" key={s} style={{ width: mm(d.ancho), height: mm(d.alto) }}>
           {d.marcadores.map((m, i) => <div key={i} className="marcador" style={{ left: mm(m.x - d.ladoMarcador / 2), top: mm(m.y - d.ladoMarcador / 2), width: mm(d.ladoMarcador), height: mm(d.ladoMarcador) }} />)}
           <div className="qr" style={{ left: mm(d.qr.x), top: mm(d.qr.y), width: mm(d.qr.lado), height: mm(d.qr.lado) }} dangerouslySetInnerHTML={{ __html: qrs[s] ?? '' }} />
-          <div className="titulo" style={{ left: mm(d.tituloX), top: mm(d.tituloY - 6) }}><b>{tr(ETIQUETA_SITUACION[s])}</b> · {grupo.nombre} · {toma.titulo}</div>
+          <div className="titulo" style={{ left: mm(d.tituloX), top: mm(d.tituloY - 6) }}><b>{tr(etiquetaSituacion(s, toma.preguntas))}</b> · {grupo.nombre} · {toma.titulo}</div>
           <div className="instrucciones" style={{ left: mm(d.tituloX), top: mm(d.tituloY + 2), width: mm(d.ancho - d.tituloX - 16) }}>
-            <p>{textoSituacion(toma.idioma, toma.etapa, s).pregunta}</p>
+            <p>{textoSituacion(toma.idioma, toma.etapa, s, toma.preguntas).pregunta}</p>
             <p>Hoja de grupo: cada fila es quien elige; cada columna, a quién. Rellena del todo el círculo. La diagonal no se lee. Máximo {toma.max_elecciones} por fila.</p>
           </div>
           {alumnos.map((a, c) => (
@@ -62,7 +62,7 @@ export function HojasGrupo() {
               ))}
             </div>
           ))}
-          <div className="pie-hoja" style={{ left: mm(d.nombreX + 12), top: mm(d.alto - 17) }}>{grupo.nombre} · {tr(ETIQUETA_SITUACION[s])} · una app de EDUmind, por Luis Vilela Acuña</div>
+          <div className="pie-hoja" style={{ left: mm(d.nombreX + 12), top: mm(d.alto - 17) }}>{grupo.nombre} · {tr(etiquetaSituacion(s, toma.preguntas))} · una app de EDUmind, por Luis Vilela Acuña</div>
         </div>
       ))}
     </div>

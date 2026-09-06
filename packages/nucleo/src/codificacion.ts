@@ -9,7 +9,7 @@
  * un fichero que las traiga.
  */
 import { esCodigoValido } from './codigos'
-import { SITUACIONES, type Signo, type Situacion } from './tipos'
+import { ID_SITUACION_RE, type Signo, type Situacion } from './tipos'
 
 export interface RespuestaCodificada {
   toma: string
@@ -43,8 +43,8 @@ export function decodificarRespuestas(texto: string): RespuestaCodificada {
   for (const parte of resto) {
     const i = parte.indexOf(':')
     if (i < 1) throw new Error('situación mal formada')
-    const situacion = parte.slice(0, i) as Situacion
-    if (!SITUACIONES.includes(situacion)) throw new Error(`situación desconocida: ${situacion}`)
+    const situacion: Situacion = parte.slice(0, i)
+    if (!ID_SITUACION_RE.test(situacion)) throw new Error(`situación desconocida: ${situacion}`)
     const cuerpo = parte.slice(i + 1)
     if (cuerpo.length % 6 !== 0) throw new Error('lista de códigos mal formada')
     for (let j = 0; j < cuerpo.length; j += 6) {

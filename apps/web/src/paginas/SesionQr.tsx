@@ -83,7 +83,7 @@ export function SesionQr() {
           titulo: toma.titulo,
           idioma: toma.idioma,
           etapa: toma.etapa,
-          situaciones: toma.situaciones,
+          situaciones: toma.situaciones, preguntas: toma.preguntas,
           maxElecciones: toma.max_elecciones,
           negativas: toma.negativas,
           alumnos: alumnos.map((a, i) => [a.codigo, cortos[i] ?? a.nombre]),

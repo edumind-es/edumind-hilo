@@ -5,7 +5,8 @@
  * ESPEJO no cuenta como elección recibida: mide percepción y da el ajuste
  * perceptivo. Las negativas solo existen si la toma las activó.
  */
-import { SITUACIONES_PREFERENCIA, type Alumno, type Respuesta, type Situacion } from '../tipos'
+import { esPercepcion } from '../cuestionario'
+import type { Alumno, PreguntaToma, Respuesta, Situacion } from '../tipos'
 
 export type Posicion = 'muy elegido' | 'elegido' | 'poco elegido' | 'no elegido'
 /** Coie y Dodge (1983). Solo con negativas. */
@@ -53,6 +54,8 @@ export interface EntradaAnalisis {
   alumnos: Pick<Alumno, 'id'>[]
   respuestas: Pick<Respuesta, 'situacion' | 'de_alumno' | 'a_alumno' | 'signo'>[]
   situaciones: Situacion[]
+  /** Preguntas propias de la toma, para saber cuáles son de percepción. */
+  preguntas?: PreguntaToma[]
   negativas: boolean
   /** ids de quienes han respondido; si se omite, se deduce de las respuestas. */
   participantes?: string[]
@@ -76,7 +79,9 @@ export function analizar(entrada: EntradaAnalisis): Analisis {
   const alumnos = entrada.alumnos.map(a => a.id)
   const indice = new Map(alumnos.map((id, i) => [id, i]))
   const n = alumnos.length
-  const preferencia = entrada.situaciones.filter(s => SITUACIONES_PREFERENCIA.includes(s))
+  const preguntas = entrada.preguntas ?? []
+  const preferencia = entrada.situaciones.filter(s => !esPercepcion(s, preguntas))
+  const percepcion = entrada.situaciones.filter(s => esPercepcion(s, preguntas))
 
   const vacia = () => alumnos.map(() => alumnos.map(() => 0))
   const matriz = vacia()
@@ -95,7 +100,7 @@ export function analizar(entrada: EntradaAnalisis): Analisis {
     respondieron.add(r.de_alumno)
     const ms = matrizPorSituacion[r.situacion]
     if (ms) ms[i]![j] = r.signo
-    if (r.signo === 1 && SITUACIONES_PREFERENCIA.includes(r.situacion)) {
+    if (r.signo === 1 && preferencia.includes(r.situacion)) {
       matriz[i]![j] = 1
       const set = emitidos.get(r.de_alumno) ?? new Set<string>()
       set.add(r.a_alumno)
@@ -164,7 +169,7 @@ export function analizar(entrada: EntradaAnalisis): Analisis {
       recibidas[s] = alumnos.reduce((acc, __, i) => acc + ((matrizPorSituacion[s]?.[i]?.[k] ?? 0) === 1 ? 1 : 0), 0)
     }
     const distintos = emitidos.get(id)?.size ?? 0
-    const ajuste = ajustePerceptivo(k, alumnos, matriz, matrizPorSituacion.espejo)
+    const ajuste = ajustePerceptivo(k, alumnos, matriz, percepcion.map(s => matrizPorSituacion[s]).filter((m): m is number[][] => Boolean(m)))
     const zp = zPos[k] ?? 0
     const zn = zNeg ? (zNeg[k] ?? 0) : null
     porAlumno[id] = {
@@ -215,9 +220,10 @@ export function tipo(zp: number, zn: number): TipoSociometrico {
   return 'promedio'
 }
 
-function ajustePerceptivo(k: number, alumnos: string[], matriz: number[][], espejo?: number[][]): number | null {
-  if (!espejo) return null
-  const cree = alumnos.map((_, j) => j).filter(j => (espejo[k]?.[j] ?? 0) === 1)
+/** De quienes cree que le eligen (en cualquier situación de percepción), cuántos le eligen de verdad. */
+function ajustePerceptivo(k: number, alumnos: string[], matriz: number[][], percepciones: number[][][]): number | null {
+  if (!percepciones.length) return null
+  const cree = alumnos.map((_, j) => j).filter(j => percepciones.some(m => (m[k]?.[j] ?? 0) === 1))
   if (!cree.length) return null
   const aciertos = cree.filter(j => (matriz[j]?.[k] ?? 0) === 1).length
   return aciertos / cree.length

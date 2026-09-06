@@ -21,6 +21,7 @@ export async function exportarCopia(): Promise<Copia> {
     eventos: await db.eventos.toArray(),
     notas: await db.notas.toArray(),
     claves: await db.claves.toArray(),
+    cuestionarios: await db.cuestionarios.toArray(),
   }
   return esquemaCopia.parse(copia)
 }

@@ -7,7 +7,7 @@ import jsQR from 'jsqr'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
-  ETIQUETA_SITUACION,
+  etiquetaSituacion,
   aGris,
   decodificarIdentidadHoja,
   decodificarIdentidadHojaGrupo,
@@ -166,7 +166,7 @@ export function Escanear() {
     }
     try {
       const n = await registrarSituacion({ toma, situacion: hojaGrupo.identidad.situacion as Situacion, porAlumno, origen: 'hoja' })
-      anotar(tr('Hoja de grupo ({situacion}): {n} alumnos con elecciones', { situacion: tr(ETIQUETA_SITUACION[hojaGrupo.identidad.situacion as Situacion]), n }), true)
+      anotar(tr('Hoja de grupo ({situacion}): {n} alumnos con elecciones', { situacion: tr(etiquetaSituacion(hojaGrupo.identidad.situacion as Situacion, toma.preguntas)), n }), true)
     } catch (e) {
       anotar(e instanceof Error ? tr(e.message) : 'No se pudo registrar la hoja de grupo', false)
     }
@@ -269,7 +269,7 @@ function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: 
         <img src={hoja.imagen} alt={tr("Foto de la hoja leída")} />
         <div className="tablewrap">
           <table>
-            <thead><tr><th>{tr("Compañero")}</th>{toma.situaciones.map((s: Situacion) => <th key={s}>{tr(ETIQUETA_SITUACION[s])}</th>)}</tr></thead>
+            <thead><tr><th>{tr("Compañero")}</th>{toma.situaciones.map((s: Situacion) => <th key={s}>{tr(etiquetaSituacion(s, toma.preguntas))}</th>)}</tr></thead>
             <tbody>
               {hoja.identidad.filas.map((codigo, f) => (
                 <tr key={codigo}>
@@ -279,7 +279,7 @@ function ConfirmarHoja({ hoja, toma, alumnos, onCambiar, onRegistrar }: { hoja: 
                     const on = hoja.elegidas.has(`${f},${c}`)
                     return (
                       <td key={c} className={m?.estado === 'dudosa' ? 'dudosa' : ''} style={{ textAlign: 'center' }}>
-                        <input type="checkbox" checked={on} onChange={() => alternar(f, c)} aria-label={`${nombre.get(codigo) ?? codigo} · ${ETIQUETA_SITUACION[toma.situaciones[c]!]}`} title={m ? `oscuridad ${Math.round(m.oscuridad * 100)} %` : ''} />
+                        <input type="checkbox" checked={on} onChange={() => alternar(f, c)} aria-label={`${nombre.get(codigo) ?? codigo} · ${etiquetaSituacion(toma.situaciones[c]!, toma.preguntas)}`} title={m ? `oscuridad ${Math.round(m.oscuridad * 100)} %` : ''} />
                       </td>
                     )
                   })}
@@ -313,7 +313,7 @@ function ConfirmarHojaGrupo({ hoja, toma, alumnos, onCambiar, onRegistrar }: { h
   }
   return (
     <section className="sec panel" aria-live="polite">
-      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de grupo · {tr(ETIQUETA_SITUACION[hoja.identidad.situacion as Situacion])}</h2></div>
+      <div className="sec-head"><span className="sec-num">✓</span><h2>Hoja de grupo · {tr(etiquetaSituacion(hoja.identidad.situacion as Situacion, toma.preguntas))}</h2></div>
       <p className="aviso">{dudosas ? `${dudosas} marcas dudosas, resaltadas.` : 'Ninguna marca dudosa.'} Filas: quién elige. Toca una casilla para corregirla. Al registrar se sustituyen las respuestas de esta situación para las filas con marcas.</p>
       <div className="hoja-confirmacion">
         <img src={hoja.imagen} alt={tr("Foto de la hoja de grupo")} />

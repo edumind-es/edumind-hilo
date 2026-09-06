@@ -6,13 +6,13 @@
  * en escribir gana por registro; los borrados viajan como registros con
  * deleted_at. Los cursores viven en `ajustes`, por dispositivo.
  */
-import { esquemaAlumno, esquemaClaves, esquemaEvento, esquemaGrupo, esquemaNotaAlumno, esquemaParticipacion, esquemaRespuesta, esquemaToma } from '@edumind-hilo/nucleo'
+import { esquemaAlumno, esquemaClaves, esquemaCuestionario, esquemaEvento, esquemaGrupo, esquemaNotaAlumno, esquemaParticipacion, esquemaRespuesta, esquemaToma } from '@edumind-hilo/nucleo'
 import { abrirSobre, cerrarSobre, claveDeToken } from '@/lib/sobres'
 import { fusionar, type Sellado } from './copia'
 import { ahora, nuevoId } from './ids'
 import { TABLAS, db, type Tabla } from './localDb'
 
-const ESQUEMAS = { grupos: esquemaGrupo, alumnos: esquemaAlumno, tomas: esquemaToma, respuestas: esquemaRespuesta, participaciones: esquemaParticipacion, eventos: esquemaEvento, notas: esquemaNotaAlumno, claves: esquemaClaves } as const
+const ESQUEMAS = { grupos: esquemaGrupo, alumnos: esquemaAlumno, tomas: esquemaToma, respuestas: esquemaRespuesta, participaciones: esquemaParticipacion, eventos: esquemaEvento, notas: esquemaNotaAlumno, claves: esquemaClaves, cuestionarios: esquemaCuestionario } as const
 
 async function ajuste(id: string): Promise<string | null> {
   const a = await db.ajustes.get(id)

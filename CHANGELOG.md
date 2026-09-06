@@ -1,5 +1,17 @@
 # Cambios
 
+## 1.5.0 — 2026-09-06
+
+- Preguntas propias del docente en cada toma: etiqueta, texto, ayuda, tipo
+  (preferencia o percepción) y formulación negativa en secundaria. El análisis
+  las trata como a las canónicas; la percepción propia cuenta para el ajuste.
+- Cuestionarios reutilizables («Mis cuestionarios»), en la copia y en la
+  sincronización.
+- Catálogo de instrumentos con referencia científica (Moreno; Coie, Dodge y
+  Coppotelli; percepción sociométrica de Arruga y González; amistad recíproca;
+  bloque sociométrico del Bull-S; formación de equipos cooperativos), con
+  avisos cuando rompen la asepsia por defecto. Página «Catálogo».
+
 ## 1.4.0 — 2026-09-06
 
 Andamiaje de la app nativa con Capacitor: proyecto Android versionado,

@@ -6,7 +6,7 @@
  * La prueba `cuestionario.test.ts` vigila que ningún texto contenga las
  * palabras que convierten una preferencia en un juicio.
  */
-import type { Etapa, Idioma, Situacion } from '../tipos'
+import type { Etapa, Idioma, SituacionCanonica } from '../tipos'
 
 export interface TextoSituacion {
   pregunta: string
@@ -15,9 +15,9 @@ export interface TextoSituacion {
   negativa?: string
 }
 
-export type Cuestionario = Record<Etapa, Record<Situacion, TextoSituacion>>
+export type BancoCuestionario = Record<Etapa, Record<SituacionCanonica, TextoSituacion>>
 
-const es: Cuestionario = {
+const es: BancoCuestionario = {
   inicial: {
     equipo: { pregunta: 'Vamos a hacer una cosa por equipos. ¿Con quién quieres estar?', ayuda: 'Toca a quien quieras.' },
     recreo: { pregunta: 'En el patio, ¿con quién juegas?', ayuda: 'Toca a quien quieras.' },
@@ -56,7 +56,7 @@ const es: Cuestionario = {
   },
 }
 
-const gl: Cuestionario = {
+const gl: BancoCuestionario = {
   inicial: {
     equipo: { pregunta: 'Imos facer unha cousa por equipos. Con quen queres estar?', ayuda: 'Toca a quen queiras.' },
     recreo: { pregunta: 'No patio, con quen xogas?', ayuda: 'Toca a quen queiras.' },
@@ -95,7 +95,7 @@ const gl: Cuestionario = {
   },
 }
 
-const en: Cuestionario = {
+const en: BancoCuestionario = {
   inicial: {
     equipo: { pregunta: 'We are going to do something in teams. Who do you want to be with?', ayuda: 'Tap anyone you like.' },
     recreo: { pregunta: 'At playtime, who do you play with?', ayuda: 'Tap anyone you like.' },
@@ -119,7 +119,7 @@ const en: Cuestionario = {
   },
 }
 
-export const CUESTIONARIOS: Record<Idioma, Cuestionario> = { es, gl, en }
+export const CUESTIONARIOS: Record<Idioma, BancoCuestionario> = { es, gl, en }
 
 /** Textos de la interfaz del alumnado. Sin la palabra «sociograma». */
 export interface TextosAlumno {
