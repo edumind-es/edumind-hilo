@@ -141,6 +141,45 @@ export async function registrarRespuestas(datos: { toma: Toma; alumnoId: string;
 }
 
 /**
+ * Deshace la participación de un alumno en una toma: la participación y todas
+ * sus respuestas quedan marcadas, nunca borradas. El alumno vuelve a la lista
+ * de pendientes y se le puede transcribir de nuevo.
+ */
+export async function anularParticipacion(tomaId: string, alumnoId: string): Promise<void> {
+  const t = ahora()
+  await db.transaction('rw', db.participaciones, db.respuestas, async () => {
+    const p = await db.participaciones.where('[toma_id+alumno_id]').equals([tomaId, alumnoId]).first()
+    if (p && !p.deleted_at) await db.participaciones.update(p.id, { deleted_at: t, updated_at: t })
+    const previas = await db.respuestas.where('toma_id').equals(tomaId).filter(r => r.de_alumno === alumnoId && !r.deleted_at).toArray()
+    for (const r of previas) await db.respuestas.update(r.id, { deleted_at: t, updated_at: t })
+  })
+}
+
+/**
+ * Corrige lo ya transcrito de un alumno: sustituye TODAS sus respuestas en la
+ * toma por las nuevas. Al contrario que `registrarRespuestas`, no se queja de
+ * que ya haya respondido: precisamente por eso existe. La participación se
+ * conserva (o revive si estaba anulada) para no perder el origen.
+ */
+export async function reemplazarRespuestas(datos: { toma: Toma; alumnoId: string; elecciones: Eleccion[]; origen: Origen }): Promise<void> {
+  if (datos.toma.estado !== 'abierta') throw new Error('La toma está cerrada.')
+  const t = ahora()
+  const filas: Respuesta[] = datos.elecciones
+    .filter(e => e.a_alumno !== datos.alumnoId)
+    .filter(e => datos.toma.situaciones.includes(e.situacion))
+    .filter(e => e.signo === 1 || datos.toma.negativas)
+    .map(e => ({ id: nuevoId(), created_at: t, updated_at: t, deleted_at: null, toma_id: datos.toma.id, situacion: e.situacion, de_alumno: datos.alumnoId, a_alumno: e.a_alumno, signo: e.signo, origen: datos.origen }))
+  await db.transaction('rw', db.participaciones, db.respuestas, async () => {
+    const p = await db.participaciones.where('[toma_id+alumno_id]').equals([datos.toma.id, datos.alumnoId]).first()
+    if (!p) await db.participaciones.add({ id: nuevoId(), created_at: t, updated_at: t, deleted_at: null, toma_id: datos.toma.id, alumno_id: datos.alumnoId, origen: datos.origen })
+    else if (p.deleted_at) await db.participaciones.update(p.id, { deleted_at: null, updated_at: t })
+    const previas = await db.respuestas.where('toma_id').equals(datos.toma.id).filter(r => r.de_alumno === datos.alumnoId && !r.deleted_at).toArray()
+    for (const r of previas) await db.respuestas.update(r.id, { deleted_at: t, updated_at: t })
+    if (filas.length) await db.respuestas.bulkAdd(filas)
+  })
+}
+
+/**
  * Hoja de grupo: entra una situación entera para todo el grupo, y puede venir
  * otra hoja con otra situación después. Por eso no vale la regla de «una
  * participación y ya»: aquí se añade la participación si falta y se

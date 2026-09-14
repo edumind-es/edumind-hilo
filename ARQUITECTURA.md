@@ -52,7 +52,11 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
    devuelve elecciones.
 4. `registrarRespuestas` escribe participación y respuestas en una transacción
    y rechaza una segunda participación del mismo alumno en la misma toma.
-5. La vista de la toma calcula el análisis con `analizar()` sobre los registros
+5. Si una hoja se transcribió mal, «corregir» en la pantalla de transcripción
+   recarga las elecciones del alumno y `reemplazarRespuestas` sustituye las
+   suyas enteras; «anular» las deshace con `anularParticipacion` y el alumno
+   vuelve a pendientes. Ninguna de las dos borra filas: marcan `deleted_at`.
+6. La vista de la toma calcula el análisis con `analizar()` sobre los registros
    vivos. No se persiste: se recalcula, y es instantáneo.
 
 ## Cómo ampliar

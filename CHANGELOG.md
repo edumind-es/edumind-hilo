@@ -1,5 +1,17 @@
 # Cambios
 
+## 1.6.0 — 2026-09-14
+
+Corregir y anular lo ya transcrito. En la pantalla de transcripción aparece la
+lista de quienes ya están metidos: «corregir» abre sus elecciones con las
+fichas puestas para cambiarlas, y «anular» las deshace y devuelve al alumno a
+la lista de pendientes. Antes, una transcripción equivocada no tenía vuelta
+atrás.
+
+Ni una cosa ni otra borra filas: la participación y las respuestas quedan
+marcadas con `deleted_at`, como el resto del modelo, para que la copia y la
+sincronización sigan resolviendo por «último en escribir gana».
+
 ## 1.5.1 — 2026-09-06
 
 La guardia de orígenes externos admite el DOI de una referencia como texto.
