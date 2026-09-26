@@ -89,7 +89,7 @@ export function Grupo() {
         <div className="sec-head"><span className="sec-num">02</span><h2>{tr("Alumnado")}</h2></div>
         <div className="tablewrap">
           <table>
-            <thead><tr><th>{tr("Nombre")}</th><th>{tr("Código")}</th><th>{tr("NEAE")}</th><th className="no-imprimir"></th></tr></thead>
+            <thead><tr><th>{tr("Nombre")}</th><th>{tr("Código")}</th><th>{tr("NEAE")}</th><th className="no-imprimir"><span className="oculto">{tr("Acciones")}</span></th></tr></thead>
             <tbody>
               {alumnos?.map(a => (
                 <tr key={a.id}>

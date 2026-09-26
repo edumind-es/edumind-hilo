@@ -61,7 +61,7 @@ export function Toma() {
 
       <dl className="cifras">
         <div><dt>{tr("Han respondido")}</dt><dd>{respondieron}<small>de {total}</small><div className="progreso"><i style={{ width: total ? `${(respondieron / total) * 100}%` : 0 }} /></div></dd></div>
-        <div><dt>{tr("Cohesión")}</dt><dd>{pct(analisis.cohesion)}<small>{analisis.parejasReciprocas.length} parejas recíprocas</small></dd></div>
+        <div><dt>{tr("Cohesión")}</dt><dd>{pct(analisis.cohesion)}<small>{tr('{r} parejas recíprocas de {m} posibles', { r: analisis.parejasReciprocas.length, m: (total * (total - 1)) / 2 })}</small></dd></div>
         <div><dt>{tr("Subgrupos")}</dt><dd>{analisis.subgrupos.length}<small>{analisis.puentes.length} puentes</small></dd></div>
         <div><dt>{tr("Sin elecciones")}</dt><dd>{analisis.sinElecciones.length}</dd></div>
       </dl>
@@ -69,7 +69,7 @@ export function Toma() {
       {respondieron === 0 && (
         <div className="note" style={{ '--c': 'var(--m-social)' } as React.CSSProperties}>
           <span className="tag">{tr("Todavía sin respuestas")}</span>
-          <p>{tr("Cinco formas de recoger: en este dispositivo pasándolo de mano en mano; con tablets, proyectando el código de «Sesión con tablets»; con hojas de marcas impresas y leídas con la cámara; o transcribiendo del papel. El análisis se actualiza solo.")}</p>
+          <p>{tr("Seis formas de recoger: en este dispositivo pasándolo de mano en mano; con tablets, proyectando el código de «Sesión con tablets»; con hojas de marcas impresas y leídas con la cámara; transcribiendo del papel; con la prueba por el aula virtual; o importando una matriz. El análisis se actualiza solo.")}</p>
         </div>
       )}
 

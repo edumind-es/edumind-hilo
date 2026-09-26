@@ -155,7 +155,7 @@ export function Gracias({ idioma, onSeguir }: { idioma: Idioma; onSeguir?: () =>
   return (
     <div className="lienzo">
       <div className="gracias">
-        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M14 44 C 22 20, 34 20, 32 32 S 44 44, 50 20" />
           <circle cx="14" cy="44" r="4" fill="currentColor" /><circle cx="32" cy="32" r="4" fill="currentColor" /><circle cx="50" cy="20" r="4" fill="currentColor" />
         </svg>

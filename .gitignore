@@ -5,8 +5,8 @@ apps/web/releases/
 *.log
 *.tsbuildinfo
 .DS_Store
-# Nunca hay .env en Hilo (no tiene backend), pero el guardián global lo
-# bloquea igualmente por si alguien lo añade.
+# La API opcional no necesita .env (se configura por variables de entorno del
+# servicio), pero el guardián global lo bloquea igualmente por si alguien lo añade.
 .env
 .env.*
 !.env.example

@@ -9,7 +9,7 @@ import { esPercepcion } from '../cuestionario'
 import type { Alumno, PreguntaToma, Respuesta, Situacion } from '../tipos'
 
 export type Posicion = 'muy elegido' | 'elegido' | 'poco elegido' | 'no elegido'
-/** Coie y Dodge (1983). Solo con negativas. */
+/** Coie, Dodge y Coppotelli (1982). Solo con negativas. */
 export type TipoSociometrico = 'popular' | 'rechazado' | 'ignorado' | 'controvertido' | 'promedio'
 
 export interface AnalisisAlumno {
@@ -22,7 +22,7 @@ export interface AnalisisAlumno {
   /** reciprocas / distintos elegidos. 0 si no eligió a nadie. */
   reciprocidad: number
   negativasRecibidas: number
-  /** Fracción de ESPEJO acertada: de quienes cree que le eligen, cuántos le eligen. null si no respondió ESPEJO. */
+  /** Fracción de ESPEJO acertada: de quienes cree que le eligen (y han respondido), cuántos le eligen. null si no respondió ESPEJO o si ninguno de los nombrados ha respondido. */
   ajustePerceptivo: number | null
   posicion: Posicion
   tipo: TipoSociometrico | null
@@ -39,7 +39,7 @@ export interface Analisis {
   /** Igual que matriz pero por situación, incluida espejo y con signo. */
   matrizPorSituacion: Partial<Record<Situacion, number[][]>>
   parejasReciprocas: [string, string][]
-  /** parejas recíprocas / parejas posibles. */
+  /** parejas recíprocas / parejas posibles (n·(n−1)/2). Es una definición sencilla y no la clásica, que divide por las recíprocas posibles dado el máximo de elecciones. */
   cohesion: number
   /** Componentes conexas del grafo de reciprocidades, de tamaño ≥ 2. */
   subgrupos: string[][]
@@ -169,7 +169,7 @@ export function analizar(entrada: EntradaAnalisis): Analisis {
       recibidas[s] = alumnos.reduce((acc, __, i) => acc + ((matrizPorSituacion[s]?.[i]?.[k] ?? 0) === 1 ? 1 : 0), 0)
     }
     const distintos = emitidos.get(id)?.size ?? 0
-    const ajuste = ajustePerceptivo(k, alumnos, matriz, percepcion.map(s => matrizPorSituacion[s]).filter((m): m is number[][] => Boolean(m)))
+    const ajuste = ajustePerceptivo(k, alumnos, matriz, percepcion.map(s => matrizPorSituacion[s]).filter((m): m is number[][] => Boolean(m)), respondieron)
     const zp = zPos[k] ?? 0
     const zn = zNeg ? (zNeg[k] ?? 0) : null
     porAlumno[id] = {
@@ -220,10 +220,14 @@ export function tipo(zp: number, zn: number): TipoSociometrico {
   return 'promedio'
 }
 
-/** De quienes cree que le eligen (en cualquier situación de percepción), cuántos le eligen de verdad. */
-function ajustePerceptivo(k: number, alumnos: string[], matriz: number[][], percepciones: number[][][]): number | null {
+/**
+ * De quienes cree que le eligen (en cualquier situación de percepción), cuántos le eligen de verdad.
+ * Solo cuentan los nombrados que ya han respondido: quien todavía no ha participado no «no le
+ * elige», simplemente no se sabe. Mientras la toma está abierta, evita juzgar con datos a medias.
+ */
+function ajustePerceptivo(k: number, alumnos: string[], matriz: number[][], percepciones: number[][][], respondieron: Set<string>): number | null {
   if (!percepciones.length) return null
-  const cree = alumnos.map((_, j) => j).filter(j => percepciones.some(m => (m[k]?.[j] ?? 0) === 1))
+  const cree = alumnos.map((_, j) => j).filter(j => respondieron.has(alumnos[j]!) && percepciones.some(m => (m[k]?.[j] ?? 0) === 1))
   if (!cree.length) return null
   const aciertos = cree.filter(j => (matriz[j]?.[k] ?? 0) === 1).length
   return aciertos / cree.length

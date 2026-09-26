@@ -15,7 +15,7 @@ export interface DatosInforme {
 }
 
 export const cssInforme = `
-:root{--paper:#ece9e1;--paper-2:#e4e0d6;--card:#f4f2ec;--ink:#17181a;--ink-2:#3d3f42;--ink-3:#7c7a74;--hair:#c9c4b8;--m-emocional:#c05f3c;--m-social:#c19a2e;--m-fisico:#7ba24f;--m-mental:#6c8fb3;--m-interior:#4a5f68;--alert:#b03a2e}
+:root{--paper:#ece9e1;--paper-2:#e4e0d6;--card:#f4f2ec;--ink:#17181a;--ink-2:#3d3f42;--ink-3:#5f5d58;--hair:#c9c4b8;--m-emocional:#c05f3c;--m-social:#c19a2e;--m-fisico:#7ba24f;--m-mental:#6c8fb3;--m-interior:#4a5f68;--alert:#b03a2e}
 *{box-sizing:border-box;border-radius:0}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}
 .i-wrap{max-width:1080px;margin:0 auto;padding:0 32px 40px}
@@ -31,7 +31,7 @@ h1 span{font-weight:400}
 .i-meta span:last-child{border:0}
 .i-sec{margin:44px 0;break-inside:avoid}
 .i-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px}
-.i-num{font-weight:800;font-size:30px;line-height:.9;color:var(--m-mental);letter-spacing:-.03em}
+.i-num{font-weight:800;font-size:30px;line-height:.9;color:#4f7397;letter-spacing:-.03em}
 .i-head h2{margin:0;flex:1;font-size:22px;font-weight:700;letter-spacing:-.02em;padding-top:8px;border-top:2px solid var(--ink)}
 .i-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border-top:2px solid var(--ink);margin:0 0 10px}
 .i-cifras div{padding:12px 12px 12px 10px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
@@ -127,7 +127,7 @@ ${atencion.length ? `<ul class="i-rules">${atencion.map(x => `<li>${n(x.alumno_i
 <section class="i-sec"><div class="i-head"><span class="i-num">03</span><h2>Índices por alumno</h2></div>
 <table><thead><tr><th>Alumno</th>${toma.situaciones.map(s => `<th class="n">${etiquetaSituacion(s, toma.preguntas)}</th>`).join('')}<th class="n">Recibidas</th><th class="n">Emitidas</th><th class="n">Reciprocidad</th><th class="n">Ajuste</th>${toma.negativas ? '<th class="n">Negativas</th>' : ''}<th>Posición</th>${toma.negativas ? '<th>Tipo</th>' : ''}</tr></thead>
 <tbody>${filasIndices.join('')}</tbody></table>
-<p class="i-aviso">Reciprocidad: de los que elige, cuántos le eligen. Ajuste: de quienes cree que le eligen (Espejo), cuántos le eligen de verdad. Posición: elecciones recibidas tipificadas dentro del grupo.${toma.negativas ? ' Tipo: Coie y Dodge (1983) a partir de preferencia e impacto social; una foto, no un diagnóstico.' : ''}</p>
+<p class="i-aviso">Reciprocidad: de los que elige, cuántos le eligen. Ajuste: de quienes cree que le eligen (Espejo), cuántos le eligen de verdad. Posición: elecciones recibidas tipificadas dentro del grupo.${toma.negativas ? ' Tipo: Coie, Dodge y Coppotelli (1982) a partir de preferencia e impacto social; una foto, no un diagnóstico.' : ''}</p>
 </section>
 
 <section class="i-sec"><div class="i-head"><span class="i-num">04</span><h2>Matriz sociométrica</h2></div>
@@ -141,10 +141,10 @@ ${a.puentes.length ? `<p>Puentes: <b>${a.puentes.map(n).join(', ')}</b>. Sin ell
 </section>
 
 <section class="i-sec"><div class="i-head"><span class="i-num">06</span><h2>Método</h2></div>
-<div class="i-note">Instrumento de nominaciones por situación (${toma.situaciones.map(s => etiquetaSituacion(s, toma.preguntas).toLowerCase()).join(', ')}), sin motivo ni orden, máximo ${toma.max_elecciones} por situación. Espejo mide percepción y no cuenta como elección recibida. Los datos se recogieron y se analizaron en el dispositivo del docente; ningún dato ha salido de él. Documento para el equipo docente y orientación: no se entrega al alumnado.</div>
+<div class="i-note">Instrumento de nominaciones por situación (${toma.situaciones.map(s => etiquetaSituacion(s, toma.preguntas).toLowerCase()).join(', ')}), sin motivo ni orden, máximo ${toma.max_elecciones} por situación. Espejo mide percepción y no cuenta como elección recibida; el ajuste perceptivo solo se calcula sobre compañeros que han respondido. Cohesión: parejas recíprocas entre todas las parejas posibles del grupo. Los datos se recogieron y se analizaron en el dispositivo del docente; ningún dato ha salido de él. Documento para el equipo docente y orientación: no se entrega al alumnado.</div>
 </section>
 
-<footer><b>Una app de EDUmind® · por Luis Vilela Acuña</b> · generado el ${fecha(new Date().toISOString())} · hilos.edumind.es</footer>
+<footer><b>Una app de EDUmind® · por Luis Vilela Acuña</b> · software libre AGPL-3.0-or-later o EUPL-1.2 · generado el ${fecha(new Date().toISOString())} · hilos.edumind.es</footer>
 </div>
 <div class="i-bar"><i></i><i></i><i></i><i></i><i></i></div>`
 }

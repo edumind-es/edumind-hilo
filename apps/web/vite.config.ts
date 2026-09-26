@@ -21,7 +21,7 @@ export default defineConfig({
       manifest: {
         name: 'EDUmind Hilo',
         short_name: 'Hilo',
-        description: 'Sociograma de aula local-first y sin servidor. Los datos del alumnado no salen del dispositivo del docente.',
+        description: 'Sociograma de aula local-first. Los datos del alumnado no salen del dispositivo del docente.',
         lang: 'es',
         categories: ['education'],
         theme_color: '#17181a',

@@ -85,4 +85,16 @@ describe('motor sociométrico', () => {
     expect(motivos).toContainEqual({ alumno_id: 'a1', motivo: 'ninguna elección recibida' })
     expect(motivos).toContainEqual({ alumno_id: 'a3', motivo: 'no ha respondido' })
   })
+
+  it('el ajuste perceptivo no cuenta como «no le elige» a quien todavía no ha respondido', () => {
+    const alumnos = ids(4).map(id => ({ id }))
+    // a1 cree que le eligen a2 y a3; a2 le elige; a3 aún no ha respondido; a4 elige a a1.
+    const respuestas = [elige('a1', 'a2', 'espejo'), elige('a1', 'a3', 'espejo'), elige('a2', 'a1'), elige('a4', 'a1')]
+    const a = analizar({ alumnos, respuestas, situaciones: ['equipo', 'espejo'], negativas: false })
+    expect(a.porAlumno.a1!.ajustePerceptivo).toBe(1) // solo se juzga sobre a2, que sí respondió
+    expect(listaAtencion(a)).not.toContainEqual({ alumno_id: 'a1', motivo: 'cree que le eligen quienes no le eligen' })
+    // Si ninguno de los nombrados ha respondido, no hay dato: null, no 0.
+    const b = analizar({ alumnos, respuestas: [elige('a1', 'a3', 'espejo'), elige('a4', 'a1')], situaciones: ['equipo', 'espejo'], negativas: false })
+    expect(b.porAlumno.a1!.ajustePerceptivo).toBeNull()
+  })
 })

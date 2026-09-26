@@ -11,13 +11,16 @@ EDUmind(R), logos and brand assets are reserved trademarks/distinctive
 signs. See TRADEMARKS.md.
 
 Fonts bundled in apps/web/public/fonts/ (latin subsets, variable), all under
-the SIL Open Font License 1.1, which requires this notice to travel with the
-font files and does not affect the license of this application:
+the SIL Open Font License 1.1. The full license text and copyright holders
+travel with the font files in apps/web/public/fonts/OFL.txt; the OFL does not
+affect the license of this application:
 
   - Archivo         (c) The Archivo Project Authors (github.com/Omnibus-Type/Archivo)
   - JetBrains Mono  (c) 2020 The JetBrains Mono Project Authors (github.com/JetBrains/JetBrainsMono)
   - Fraunces        (c) 2020 The Fraunces Project Authors (github.com/undercasetype/Fraunces)
   - Space Grotesk   (c) 2020 The Space Grotesk Project Authors (github.com/floriankarsten/space-grotesk)
 
-This application has no server component: it is a static progressive web
-app. The AGPL network clause (art. 13) is satisfied by this repository.
+The application is a static progressive web app. Its optional server
+component (apps/api, a blind mailbox that only stores ciphertext) is part of
+this same repository, so the AGPL network clause (art. 13) is satisfied by
+publishing it here. See CREDITS.md for third-party material.
