@@ -1,5 +1,32 @@
 # Cambios
 
+## 1.6.1 — 2026-09-26
+
+Revisión con la rúbrica VCER (evaluación del 2026-09-25) para dejar la app
+holgadamente en «Recomendable». Sin cambios de funcionamiento salvo el primero:
+
+- **Lista de atención**: el ajuste perceptivo solo cuenta a los compañeros que
+  ya han respondido, así la toma abierta no dice «cree que le eligen quienes no
+  le eligen» por quien simplemente no ha participado. Prueba nueva.
+- Coie, Dodge y Coppotelli (1982) como única referencia de los tipos
+  sociométricos; la cifra de cohesión explica su denominador («r parejas
+  recíprocas de m posibles»); «seis formas de recoger»; el aviso de la copia ya
+  no muestra un `\n` literal.
+- Coherencia: Ajustes, pie, README, NOTICE, CLAUDE.md y manifiesto dicen lo
+  mismo que el código: local-first, sin servidor por defecto, con relé y
+  sincronización opcionales que solo mueven sobres cifrados.
+- PRIVACIDAD.md: qué guarda cada sitio (navegador, tablet, relé, buzón,
+  servidor web) y durante cuánto tiempo.
+- Accesibilidad: contraste AA en los tokens de la lámina (`--ink-3`, eyebrow,
+  numeración, sellos, rótulos) y en la pantalla del alumnado (botón principal,
+  «Volver a la toma»); ARIA en los QR, SVG decorativo y cabeceras de tabla
+  vacías. axe-core sobre 19 pantallas: 0 violaciones.
+- Material ajeno: `CREDITS.md`, `OFL.txt` junto a las fuentes, iconos y
+  pantallas de arranque Android propios en vez de las imágenes de muestra de
+  Capacitor.
+- README: «Hecho con IA» (qué ha comprobado el autor) y «Cómo modificarlo».
+- El pie enlaza los textos de las dos licencias y los créditos.
+
 ## 1.6.0 — 2026-09-14
 
 Corregir y anular lo ya transcrito. En la pantalla de transcripción aparece la

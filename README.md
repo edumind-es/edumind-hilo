@@ -91,9 +91,10 @@ Todo el código está en español y cada módulo explica en su cabecera qué hac
 y por qué. El detalle está en [ARQUITECTURA.md](ARQUITECTURA.md) §«Cómo
 ampliar»; en corto:
 
-- **Una situación o pregunta nueva del cuestionario**: `packages/nucleo/src/cuestionario/`
-  (`SITUACIONES` y `textos.ts`, en los tres idiomas y tres registros; la prueba
-  falla hasta que estén todos). Las preguntas propias del docente no necesitan
+- **Una situación nueva del cuestionario**: añadirla a `SITUACIONES`
+  (`packages/nucleo/src/tipos.ts`) y escribir sus textos en
+  `packages/nucleo/src/cuestionario/textos.ts`, en los tres idiomas y tres
+  registros; la prueba falla hasta que estén todos. Las preguntas propias del docente no necesitan
   código: se crean en la propia toma.
 - **Un instrumento nuevo en el catálogo**: una entrada más en
   `packages/nucleo/src/catalogo/index.ts`, con su referencia.
