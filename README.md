@@ -94,6 +94,7 @@ npm run build     # apps/web/dist
 | [ROADMAP.md](ROADMAP.md) | Qué está hecho y qué viene, por fases |
 | [DESPLIEGUE.md](DESPLIEGUE.md) | Puesta en producción como sitio estático |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo colaborar |
+| [CREDITS.md](CREDITS.md) | Material ajeno: tipografías (OFL), bibliotecas y sus licencias |
 | [docs/lamina-diseno.html](docs/lamina-diseno.html) | Lámina de aplicación FIG. 13: el diseño completo |
 | [docs/EVALUACION.md](docs/EVALUACION.md) | Qué se comprobó al cerrar cada fase y qué queda sin comprobar |
 
@@ -110,7 +111,8 @@ Se agradece especialmente la ayuda del profesorado y de orientación en:
 ## Licencia
 
 Licencia doble **AGPL-3.0-or-later** *o* **EUPL-1.2**, a elección de quien la
-reutilice. Ver [LICENSE](LICENSE) y [NOTICE](NOTICE).
+reutilice. Ver [LICENSE](LICENSE) y [NOTICE](NOTICE). El material ajeno
+(tipografías OFL y bibliotecas) está acreditado en [CREDITS.md](CREDITS.md).
 
 EDUmind® es marca registrada. El código es libre; la marca y los logotipos no
 se ceden con él — ver [TRADEMARKS.md](TRADEMARKS.md).
