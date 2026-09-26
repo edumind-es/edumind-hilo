@@ -85,6 +85,41 @@ npm run typecheck
 npm run build     # apps/web/dist
 ```
 
+## Cómo modificarlo
+
+Todo el código está en español y cada módulo explica en su cabecera qué hace
+y por qué. El detalle está en [ARQUITECTURA.md](ARQUITECTURA.md) §«Cómo
+ampliar»; en corto:
+
+- **Una situación o pregunta nueva del cuestionario**: `packages/nucleo/src/cuestionario/`
+  (`SITUACIONES` y `textos.ts`, en los tres idiomas y tres registros; la prueba
+  falla hasta que estén todos). Las preguntas propias del docente no necesitan
+  código: se crean en la propia toma.
+- **Un instrumento nuevo en el catálogo**: una entrada más en
+  `packages/nucleo/src/catalogo/index.ts`, con su referencia.
+- **Un idioma nuevo**: en el núcleo, añadirlo a `IDIOMAS` y a `CUESTIONARIOS`
+  y `TEXTOS_ALUMNO`; en el portal, un diccionario más en
+  `apps/web/src/i18n/` (patrón gettext: la clave es el castellano; lo que
+  falte sale en castellano, así nada se rompe).
+- **Un índice sociométrico nuevo**: función pura en
+  `packages/nucleo/src/sociometria/` con su prueba.
+- **Una forma nueva de recoger respuestas**: produce elecciones por código de
+  alumno y llama a `registrarDesdeCodigos` (`apps/web/src/db/recoger.ts`).
+- **Tipografías y colores**: `apps/web/public/fonts/` (con su `OFL.txt`) y los
+  tokens de `apps/web/src/estilos/base.css` (portal) y `alumno.css` (alumnado).
+  Los tokens «-tinta» cumplen contraste AA para texto; no los cambies por los
+  colores de las franjas.
+- **Compilar y publicar**: `npm ci && npm run build` deja `apps/web/dist`, que
+  se sirve desde cualquier servidor web estático con HTTPS (ver
+  [DESPLIEGUE.md](DESPLIEGUE.md)). La PWA funciona sin conexión tras la
+  primera visita.
+- **Prescindir del servidor opcional**: basta con no desplegar `apps/api`.
+  Todo lo demás funciona igual; los botones «Relé por servidor» (Sesión con
+  tablets) y la sección «Sincronizar entre mis dispositivos» (Ajustes)
+  responderán con un error al pulsarlos. Para retirarlos de la interfaz, quita
+  ese botón en `apps/web/src/paginas/SesionQr.tsx` y esa sección en
+  `apps/web/src/paginas/Ajustes.tsx`; el resto no depende de ellos.
+
 ## Documentación
 
 | Documento | Para qué |
