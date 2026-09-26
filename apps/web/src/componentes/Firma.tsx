@@ -7,12 +7,13 @@ export function Firma() {
         <div>
           <p className="mono mono-ink" style={{ margin: 0 }}>Una app de EDUmind® · por Luis Vilela Acuña</p>
           <p className="tm">
-            Software libre bajo AGPL-3.0-or-later o EUPL-1.2, a elección. EDUmind® es marca registrada; el
+            Software libre bajo <a href="https://github.com/edumind-es/edumind-hilo/blob/main/LICENSE-AGPL-3.0-or-later.txt">AGPL-3.0-or-later</a> o{' '}
+            <a href="https://github.com/edumind-es/edumind-hilo/blob/main/LICENSE-EUPL-1.2.txt">EUPL-1.2</a>, a elección. EDUmind® es marca registrada; el
             código es libre, la marca no se cede con él. Los datos del alumnado viven en este dispositivo; nada sale de él sin cifrar.
           </p>
         </div>
         <p className="mono" style={{ margin: 0 }}>
-          <a href="https://github.com/edumind-es/edumind-hilo">{tr("Código fuente")}</a> · <a href="https://edumind.es/es/legal">{tr("Legal")}</a>
+          <a href="https://github.com/edumind-es/edumind-hilo">{tr("Código fuente")}</a> · <a href="https://github.com/edumind-es/edumind-hilo/blob/main/CREDITS.md">{tr("Créditos")}</a> · <a href="https://edumind.es/es/legal">{tr("Legal")}</a>
         </p>
       </div>
       <div className="worlds-bar" aria-hidden="true"><i /><i /><i /><i /><i /></div>

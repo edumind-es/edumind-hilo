@@ -16,6 +16,7 @@ export const gl: Record<string, string> = {
   "Tomas": "Tomas",
   "Alumnado": "Alumnado",
   "Acciones": "Accións",
+  "Créditos": "Créditos",
   "Alumno": "Alumno",
   "Informe": "Informe",
   "Grafo": "Grafo",

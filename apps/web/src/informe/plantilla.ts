@@ -144,7 +144,7 @@ ${a.puentes.length ? `<p>Puentes: <b>${a.puentes.map(n).join(', ')}</b>. Sin ell
 <div class="i-note">Instrumento de nominaciones por situación (${toma.situaciones.map(s => etiquetaSituacion(s, toma.preguntas).toLowerCase()).join(', ')}), sin motivo ni orden, máximo ${toma.max_elecciones} por situación. Espejo mide percepción y no cuenta como elección recibida; el ajuste perceptivo solo se calcula sobre compañeros que han respondido. Cohesión: parejas recíprocas entre todas las parejas posibles del grupo. Los datos se recogieron y se analizaron en el dispositivo del docente; ningún dato ha salido de él. Documento para el equipo docente y orientación: no se entrega al alumnado.</div>
 </section>
 
-<footer><b>Una app de EDUmind® · por Luis Vilela Acuña</b> · generado el ${fecha(new Date().toISOString())} · hilos.edumind.es</footer>
+<footer><b>Una app de EDUmind® · por Luis Vilela Acuña</b> · software libre AGPL-3.0-or-later o EUPL-1.2 · generado el ${fecha(new Date().toISOString())} · hilos.edumind.es</footer>
 </div>
 <div class="i-bar"><i></i><i></i><i></i><i></i><i></i></div>`
 }

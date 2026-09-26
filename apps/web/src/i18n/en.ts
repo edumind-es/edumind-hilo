@@ -16,6 +16,7 @@ export const en: Record<string, string> = {
   "Tomas": "Rounds",
   "Alumnado": "Students",
   "Acciones": "Actions",
+  "Créditos": "Credits",
   "Alumno": "Student",
   "Informe": "Report",
   "Grafo": "Graph",
