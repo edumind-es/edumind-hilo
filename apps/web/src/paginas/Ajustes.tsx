@@ -71,7 +71,7 @@ export function Ajustes() {
         <div>
           <p className="eyebrow">{tr("Este dispositivo")}</p>
           <h1>{tr("Ajustes")}</h1>
-          <p className="lede">{tr("Todo lo que Hilo sabe está en este navegador. No hay cuenta, no hay servidor, no hay nube. Si pierdes el dispositivo sin copia, se pierde.")}</p>
+          <p className="lede">{tr("Todo lo que Hilo sabe está en este navegador. No hay cuenta ni nube; el servidor solo entra si activas, más abajo, la sincronización. Si pierdes el dispositivo sin copia, se pierde.")}</p>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export function Ajustes() {
       <section className="sec">
         <div className="sec-head"><span className="sec-num">04</span><h2>{tr("Privacidad")}</h2></div>
         <ul className="rules">
-          <li><span className="dash">—</span><span className="crece">{tr("Ningún dato sale de este dispositivo. La app no hace peticiones a ningún servidor salvo para descargarse a sí misma.")}</span></li>
+          <li><span className="dash">—</span><span className="crece">{tr("Por defecto ningún dato sale de este dispositivo: la app solo pide al servidor descargarse a sí misma. Si activas el relé o la sincronización, al servidor de EDUmind llegan únicamente sobres cifrados que no puede abrir.")}</span></li>
           <li><span className="dash">—</span><span className="crece">{tr("El alumnado nunca ve resultados, ni su propio nombre en la lista, ni la palabra «sociograma».")}</span></li>
           <li><span className="dash">—</span><span className="crece">{tr("Las nominaciones negativas están bloqueadas fuera de Secundaria.")}</span></li>
           <li><span className="dash">—</span><span className="crece">Detalle completo en <a href="https://github.com/edumind-es/edumind-hilo/blob/main/PRIVACIDAD.md">PRIVACIDAD.md</a>.</span></li>

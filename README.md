@@ -1,13 +1,15 @@
 # EDUmind Hilo
 
-**Sociograma de aula local-first y sin servidor.** El alumnado responde a
+**Sociograma de aula local-first, sin servidor por defecto.** El alumnado responde a
 preguntas asépticas en una sesión; el docente lee, en su propio dispositivo, la
 trama de vínculos del grupo y cómo cambia a lo largo del curso.
 
 > **Los datos del alumnado no salen del dispositivo del docente.** No es una
-> promesa: es la arquitectura. Hilo es una aplicación web estática. No tiene
-> servidor, no tiene base de datos remota, no tiene cuentas. Ver
-> [PRIVACIDAD.md](PRIVACIDAD.md).
+> promesa: es la arquitectura. Hilo es una aplicación web estática sin cuentas
+> ni base de datos remota. Las dos únicas funciones con servidor (relé para
+> tablets y sincronización entre los dispositivos del docente) son opcionales,
+> se activan con un botón y solo envían sobres cifrados que el servidor no
+> puede abrir. Ver [PRIVACIDAD.md](PRIVACIDAD.md).
 
 Hilo es el hilo invisible que une a un grupo.
 
@@ -24,7 +26,7 @@ Hilo es el hilo invisible que une a un grupo.
   de un instrumento del catálogo con referencia científica: Moreno, Coie y
   Dodge, percepción sociométrica, amistad recíproca, Bull-S (bloque
   sociométrico), equipos cooperativos.
-- **Seis formas de recoger, ninguna con servidor**: en el dispositivo del
+- **Seis formas de recoger, ninguna necesita servidor**: en el dispositivo del
   docente pasándolo de mano en mano; con tablets, proyectando un QR que lleva
   la lista y leyendo con la cámara el QR de respuesta de cada tablet; con
   hojas de marcas impresas que la cámara lee; transcribiendo del papel con un
@@ -44,7 +46,7 @@ Hilo es el hilo invisible que une a un grupo.
 - **Funciona sin conexión**: PWA instalable. No carga nada de ningún origen
   externo; el CI lo comprueba.
 
-Lo que queda (relé opcional, app nativa) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
+Lo que queda (compilar la app nativa, validar la hoja de marcas en aula) está en [ROADMAP.md](ROADMAP.md). El diseño completo, con la
 justificación pedagógica y la arquitectura, está en
 [docs/lamina-diseno.html](docs/lamina-diseno.html).
 

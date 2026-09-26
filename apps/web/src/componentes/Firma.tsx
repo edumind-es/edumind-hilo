@@ -8,7 +8,7 @@ export function Firma() {
           <p className="mono mono-ink" style={{ margin: 0 }}>Una app de EDUmind® · por Luis Vilela Acuña</p>
           <p className="tm">
             Software libre bajo AGPL-3.0-or-later o EUPL-1.2, a elección. EDUmind® es marca registrada; el
-            código es libre, la marca no se cede con él. Los datos del alumnado no salen de este dispositivo.
+            código es libre, la marca no se cede con él. Los datos del alumnado viven en este dispositivo; nada sale de él sin cifrar.
           </p>
         </div>
         <p className="mono" style={{ margin: 0 }}>
