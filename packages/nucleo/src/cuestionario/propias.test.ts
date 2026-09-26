@@ -31,7 +31,8 @@ describe('preguntas propias', () => {
       { situacion: 'pcree', de_alumno: 'a', a_alumno: 'b', signo: 1 as const },
       { situacion: 'pcree', de_alumno: 'a', a_alumno: 'c', signo: 1 as const },
     ]
-    const an = analizar({ alumnos, respuestas, situaciones: ['pmesa', 'pcree'], preguntas, negativas: false })
+    // c ha respondido sin elegir a nadie: cuenta como «no le elige» en el ajuste de a.
+    const an = analizar({ alumnos, respuestas, situaciones: ['pmesa', 'pcree'], preguntas, negativas: false, participantes: ['a', 'b', 'c'] })
     expect(an.porAlumno.a!.recibidasTotal).toBe(1)
     expect(an.porAlumno.b!.recibidasTotal).toBe(0) // la percepción no cuenta
     expect(an.porAlumno.a!.ajustePerceptivo).toBeCloseTo(0.5)

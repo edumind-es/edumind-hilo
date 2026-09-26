@@ -27,7 +27,7 @@ export function Ajustes() {
     const copia = await exportarCopia()
     const fecha = copia.exportado.slice(0, 10)
     const resumen = tr('{n} grupos, {t} tomas, {r} respuestas', { n: copia.grupos.length, t: copia.tomas.length, r: copia.respuestas.length })
-    const password = prompt(tr("Contraseña para cifrar la copia (mínimo seis caracteres).\\nDéjala vacía para exportar en claro, con nombres legibles.")) ?? ''
+    const password = prompt(tr("Contraseña para cifrar la copia (mínimo seis caracteres).\nDéjala vacía para exportar en claro, con nombres legibles.")) ?? ''
     if (!password) {
       if (!confirm(tr("Sin contraseña la copia lleva los nombres del alumnado en claro. ¿Exportar igualmente?"))) return
       descargarTexto(`hilo-copia-${fecha}.json`, JSON.stringify(copia, null, 1))
