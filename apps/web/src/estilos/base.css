@@ -1,13 +1,18 @@
 /* ===== Portal del docente · EDUmind-Lámina =====
    Papel, tinta, filete y retícula. Cero radios, cero sombras, cero
-   degradados. Fuentes del sistema: la app no carga nada de fuera. */
+   degradados. Fuentes del propio repositorio: la app no carga nada de fuera.
+   Contraste: todo texto sobre papel o tarjeta cumple WCAG AA (≥4,5:1;
+   ≥3:1 el grande). Los tokens «-tinta» son las versiones de los colores
+   de los mundos aptas para texto; los tokens de mundo, solo para franjas,
+   bordes y fondos. */
 :root{
   --paper:#ece9e1; --paper-2:#e4e0d6; --card:#f4f2ec;
-  --ink:#17181a; --ink-2:#3d3f42; --ink-3:#7c7a74;
+  --ink:#17181a; --ink-2:#3d3f42; --ink-3:#5f5d58;
   --rule:#17181a; --hair:#c9c4b8;
   --m-emocional:#c05f3c; --m-social:#c19a2e; --m-fisico:#7ba24f;
   --m-mental:#6c8fb3; --m-interior:#4a5f68;
-  --ok:#4f7a3f; --alert:#b03a2e;
+  --m-emocional-tinta:#9a4526; --m-mental-tinta:#4f7397;
+  --ok:#476f38; --alert:#b03a2e;
   --font-body:'Archivo','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
   --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   color-scheme:light;
@@ -42,14 +47,14 @@ p{max-width:68ch}
 .mono-ink{color:var(--ink);font-weight:500}
 
 main.wrap{padding-top:36px;padding-bottom:60px;min-height:60vh}
-.eyebrow{font:500 12px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--m-emocional);margin:0 0 12px}
+.eyebrow{font:500 12px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--m-emocional-tinta);margin:0 0 12px}
 .lede{font-size:18px;line-height:1.45;color:var(--ink-2);max-width:60ch;margin:14px 0 0}
 .cabecera{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:34px}
 .cabecera .acciones{display:flex;gap:10px;flex-wrap:wrap}
 
 .sec{margin:48px 0}
 .sec-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:18px}
-.sec-num{font-weight:800;font-size:34px;line-height:.9;color:var(--m-mental);letter-spacing:-.03em}
+.sec-num{font-weight:800;font-size:34px;line-height:.9;color:var(--m-mental-tinta);letter-spacing:-.03em}
 .sec-head h2{padding-top:10px;border-top:2px solid var(--rule);flex:1}
 
 /* Botones */
@@ -61,10 +66,12 @@ main.wrap{padding-top:36px;padding-bottom:60px;min-height:60vh}
 .btn.peligro{border-color:var(--alert);color:var(--alert);background:transparent}
 .btn.peligro:hover{background:var(--alert);color:#fff}
 .btn.pequeno{padding:9px 12px;font-size:11px}
+/* Texto solo para lectores de pantalla (cabeceras de tabla sin rótulo visible). */
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .enlace{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;color:var(--ink-2)}
 
 .stamp{display:inline-block;border:1px solid var(--ok);color:var(--ok);font:400 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.11em;padding:10px 12px}
-.stamp.pendiente{border-color:var(--m-social);color:#8a6c12}
+.stamp.pendiente{border-color:var(--m-social);color:#7a5f10}
 .stamp.cerrada{border-color:var(--ink-3);color:var(--ink-3)}
 
 /* Formularios: rectángulos de 1px, labels en mono */
@@ -108,7 +115,7 @@ td.k{font:500 12px/1.5 var(--font-mono);letter-spacing:.06em;white-space:nowrap}
 
 /* Notas y paneles */
 .note{background:var(--card);border-left:3px solid var(--c,var(--ink));padding:16px 20px;margin:20px 0;max-width:68ch}
-.note .tag{display:inline-block;border:1px solid var(--c,var(--ink));color:var(--c,var(--ink));font:400 10px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;padding:5px 8px;margin-bottom:8px}
+.note .tag{display:inline-block;border:1px solid var(--c,var(--ink));color:var(--ink);font:400 10px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.12em;padding:5px 8px;margin-bottom:8px}
 .note p{margin:0;color:var(--ink-2)}
 .note.alert{--c:var(--alert)}
 .panel{border:1px solid var(--hair);background:var(--card);padding:16px 18px}

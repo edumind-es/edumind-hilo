@@ -120,7 +120,7 @@ export function SesionQr() {
       {error && <p className="error">{error}</p>}
       {toma.estado !== 'abierta' && <p className="error">{tr("La toma está cerrada: las tablets no podrán entregar.")}</p>}
 
-      <div className="qr-grande" aria-label={tr("Código QR de la sesión")}>
+      <div className="qr-grande" role="img" aria-label={tr("Código QR de la sesión")}>
         {svg ? <div dangerouslySetInnerHTML={{ __html: svg }} /> : <p className="mono">{tr("Generando…")}</p>}
       </div>
 

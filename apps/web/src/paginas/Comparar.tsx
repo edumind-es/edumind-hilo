@@ -54,7 +54,7 @@ export function Comparar() {
             <>
               <div className="tablewrap">
                 <table>
-                  <thead><tr><th></th><th className="num">{a.titulo}</th><th className="num">{b.titulo}</th><th className="num">{tr("Cambio")}</th></tr></thead>
+                  <thead><tr><th><span className="oculto">{tr("Alumno")}</span></th><th className="num">{a.titulo}</th><th className="num">{b.titulo}</th><th className="num">{tr("Cambio")}</th></tr></thead>
                   <tbody>
                     <tr><td>{tr("Cohesión")}</td><td className="num">{pct(analisis.A.cohesion)}</td><td className="num">{pct(analisis.B.cohesion)}</td><td className="num"><b>{Math.round((analisis.B.cohesion - analisis.A.cohesion) * 100)} pt</b></td></tr>
                     <tr><td>{tr("Parejas recíprocas")}</td><td className="num">{analisis.A.parejasReciprocas.length}</td><td className="num">{analisis.B.parejasReciprocas.length}</td><td className="num"><b>{delta(analisis.A.parejasReciprocas.length, analisis.B.parejasReciprocas.length)}</b></td></tr>

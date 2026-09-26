@@ -15,7 +15,7 @@ export interface DatosInforme {
 }
 
 export const cssInforme = `
-:root{--paper:#ece9e1;--paper-2:#e4e0d6;--card:#f4f2ec;--ink:#17181a;--ink-2:#3d3f42;--ink-3:#7c7a74;--hair:#c9c4b8;--m-emocional:#c05f3c;--m-social:#c19a2e;--m-fisico:#7ba24f;--m-mental:#6c8fb3;--m-interior:#4a5f68;--alert:#b03a2e}
+:root{--paper:#ece9e1;--paper-2:#e4e0d6;--card:#f4f2ec;--ink:#17181a;--ink-2:#3d3f42;--ink-3:#5f5d58;--hair:#c9c4b8;--m-emocional:#c05f3c;--m-social:#c19a2e;--m-fisico:#7ba24f;--m-mental:#6c8fb3;--m-interior:#4a5f68;--alert:#b03a2e}
 *{box-sizing:border-box;border-radius:0}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif}
 .i-wrap{max-width:1080px;margin:0 auto;padding:0 32px 40px}
@@ -31,7 +31,7 @@ h1 span{font-weight:400}
 .i-meta span:last-child{border:0}
 .i-sec{margin:44px 0;break-inside:avoid}
 .i-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px}
-.i-num{font-weight:800;font-size:30px;line-height:.9;color:var(--m-mental);letter-spacing:-.03em}
+.i-num{font-weight:800;font-size:30px;line-height:.9;color:#4f7397;letter-spacing:-.03em}
 .i-head h2{margin:0;flex:1;font-size:22px;font-weight:700;letter-spacing:-.02em;padding-top:8px;border-top:2px solid var(--ink)}
 .i-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border-top:2px solid var(--ink);margin:0 0 10px}
 .i-cifras div{padding:12px 12px 12px 10px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}

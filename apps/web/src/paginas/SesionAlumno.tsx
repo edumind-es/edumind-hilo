@@ -113,7 +113,7 @@ export function SesionAlumno() {
         <div className="gracias" style={{ minHeight: 'auto', paddingTop: 10 }}>
           <h1>{t.graciasTitulo}</h1>
           <p>{estado.entregado === true ? t.entregadoServidor : t.entregar}</p>
-          <div className="qr-vuelta" aria-label="Código de respuesta" dangerouslySetInnerHTML={{ __html: estado.svg }} />
+          <div className="qr-vuelta" role="img" aria-label="Código de respuesta" dangerouslySetInnerHTML={{ __html: estado.svg }} />
           <button type="button" className="boton suave" onClick={() => setEstado({ fase: 'quien', sesion: estado.sesion })}>{t.siguientePersona}</button>
         </div>
       </div>
