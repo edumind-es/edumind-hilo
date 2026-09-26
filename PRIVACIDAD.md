@@ -15,12 +15,13 @@ parte está cubierto por pruebas automáticas.
 **Los datos del alumnado no salen del dispositivo del docente.**
 
 Hilo es una aplicación web estática: un conjunto de ficheros que el navegador
-descarga una vez y ejecuta en local. Por defecto ningún servidor recibe datos:
-no hay base de datos remota ni cuentas de usuario. Todo el sociograma vive en
-el almacenamiento del propio navegador (IndexedDB) del dispositivo del docente.
-La única excepción son las dos funciones opcionales del apartado 2.3 (relé para
-tablets y sincronización entre dispositivos del docente), que el docente activa
-con un botón y que solo mueven sobres cifrados que el servidor no puede abrir.
+descarga una vez y ejecuta en local. Ningún servidor recibe datos: no hay base
+de datos remota, ni cuentas de usuario, ni API. Todo el sociograma vive en el
+almacenamiento del propio navegador (IndexedDB) del dispositivo del docente.
+Hasta la versión 1.6 existió un buzón ciego opcional (relé para tablets y
+sincronización entre dispositivos); desde la 1.7 se ha retirado por completo y
+la app compilada no contiene ninguna ruta de servidor (hay una prueba que lo
+comprueba).
 
 Contrapartida: **si el docente pierde el dispositivo y no tiene copia de
 seguridad, los datos se pierden.** Es el precio de que nadie más los tenga. Por
@@ -48,27 +49,15 @@ Ninguno. No hay cuentas ni identificadores.
 
 ### 2.3 Datos que llegan a un servidor
 
-**Ninguno, salvo que el docente active una de las dos funciones opcionales
-del buzón ciego**, y entonces solo ciphertext:
+**Ninguno.** La aplicación no tiene API: el servidor que la aloja
+(hilos.edumind.es o cualquier otro) solo sirve ficheros estáticos y registra,
+como cualquier servidor web, la petición de descarga de la aplicación. Las
+respuestas del alumnado nunca viajan por red en ninguna modalidad; entre
+tablet y docente van por luz (QR) y entre dispositivos del docente, en una
+copia de seguridad cifrada que él mismo lleva.
 
-- **Relé en vivo** (sesión con tablets): cada tablet deposita su respuesta
-  cifrada con una clave de 256 bits que viaja en el QR proyectado y que el
-  servidor nunca recibe. El servidor guarda el código de sesión, el sobre y la
-  fecha; la sesión caduca a las dos horas y se borra al cerrarla.
-- **Sincronización entre dispositivos del docente**: cada registro viaja como
-  sobre cifrado con una clave derivada (HKDF) de un token secreto que solo
-  tienen los dispositivos del docente. El servidor identifica el buzón por el
-  hash del token y guarda tabla, identificador, fecha de modificación y
-  ciphertext. No hay cuentas ni identidad. El docente puede purgar el buzón
-  cuando quiera.
-
-El código del servidor está en `apps/api` y sus pruebas comprueban que rechaza
-cualquier cosa que no tenga forma de ciphertext.
-
-Sin activar nada de esto, el servidor que aloja la aplicación (hilos.edumind.es o cualquier
-otro) solo sirve ficheros estáticos y registra, como cualquier servidor web, la
-petición de descarga de la aplicación. Las respuestas del alumnado nunca viajan
-por red en ninguna modalidad.
+`pruebas/sin-servidor.mjs` falla si la app compilada contiene alguna ruta
+`/api/`, y `pruebas/sin-origenes-externos.mjs` si carga algo de otro origen.
 
 ### 2.4 Qué viaja entre dispositivos en el aula, y por dónde
 
@@ -96,11 +85,9 @@ comprueba en cada cambio. No hay analítica de ningún tipo, ni propia ni ajena.
 
 | Dónde | Qué | Hasta cuándo |
 |---|---|---|
-| Navegador del docente (IndexedDB, base `edumind-hilo`) | Grupos, alumnado (nombre, código, NEAE), tomas, respuestas, participaciones, eventos, notas, cuestionarios propios, claves del docente, ajustes (idioma, token del buzón si lo hay). En claro, porque solo lo lee ese navegador. | Hasta que el docente borra el grupo, pulsa «Borrar todos los datos» en Ajustes o el navegador vacía su almacenamiento. Sin caducidad automática: el docente decide. |
+| Navegador del docente (IndexedDB, base `edumind-hilo`) | Grupos, alumnado (nombre, código, NEAE), tomas, respuestas, participaciones, eventos, notas, cuestionarios propios, claves del docente, ajustes (idioma). En claro, porque solo lo lee ese navegador. | Hasta que el docente borra el grupo, pulsa «Borrar todos los datos» en Ajustes o el navegador vacía su almacenamiento. Sin caducidad automática: el docente decide. |
 | Tablet o dispositivo del alumnado (sesión con tablets, prueba) | Nada en disco. La lista y la respuesta viven en la memoria de la pestaña. | Se pierden al cerrar la pestaña. |
-| Servidor, relé (opcional) | Código de sesión, sobres cifrados (máximo 300 por sesión, 8 KB cada uno) y fecha. | Dos horas desde que se abre la sesión, o antes si el docente la cierra; una limpieza cada minuto borra lo caducado. |
-| Servidor, buzón de sincronización (opcional) | Hash del token, y por registro: tabla, identificador, fecha de modificación, identificador de dispositivo y ciphertext (máximo 64 KB por registro, con cuotas por buzón). | Hasta que el docente pulsa «Borrar el buzón del servidor». No caduca solo. |
-| Servidor web que sirve la app | El registro de acceso habitual de un servidor web (fecha, ruta pedida, agente de usuario) de la descarga de la app y de las llamadas opcionales a `/api/`. Nunca contenido: las respuestas del alumnado no viajan en claro por red en ninguna modalidad. | Según la política de registros del servidor que la aloje. |
+| Servidor web que sirve la app | El registro de acceso habitual de un servidor web (fecha, ruta pedida, agente de usuario) de la descarga de la app. Nunca contenido: las respuestas del alumnado no viajan en claro por red en ninguna modalidad. | Según la política de registros del servidor que la aloje. |
 
 ## 3. Qué ve el alumnado
 
@@ -149,4 +136,4 @@ copia sale en claro, con un aviso previo; es su responsabilidad dónde la guarda
 - `apps/web/src/alumno/PantallaAlumno.tsx` y su prueba: lo que ve el alumnado.
 - `pruebas/sin-origenes-externos.mjs`: ningún origen externo en la app compilada.
 - `apps/web/src/db/localDb.ts`: la única base de datos con datos legibles.
-- `apps/api/src/rutas/rele.js` y `buzon.js`: lo que guarda el servidor opcional, sus cuotas y su caducidad.
+- `pruebas/sin-servidor.mjs`: ninguna ruta de servidor en la app compilada.

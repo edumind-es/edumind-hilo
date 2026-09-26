@@ -98,7 +98,10 @@ en `main`, despliegue con comprobación contra la URL pública y vuelta atrás.
   al mostrarse. Sin revisión por hablante nativo de gallego: conviene una
   lectura.
 
-## 1.3 · Buzón ciego (fase 4)
+## 1.3 · Buzón ciego (fase 4) — retirado en 1.7.0
+
+> Histórico. `apps/api` se eliminó en la 1.7.0; lo que sigue describe lo que
+> se verificó mientras existió.
 
 - **Verificado**: la API rechaza sobres que no tienen forma de ciphertext,
   exige token, aísla buzones, aplica último-en-escribir-gana y sirve

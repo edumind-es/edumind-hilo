@@ -33,3 +33,5 @@ jobs:
       # dependencia mete un fetch a un tercero, se ve aquí.
       - name: Comprobar que la app compilada no llama a ningún origen externo
         run: node pruebas/sin-origenes-externos.mjs apps/web/dist
+      - name: Comprobar que la app compilada no llama a ningún servidor (/api/)
+        run: node pruebas/sin-servidor.mjs apps/web/dist

@@ -20,7 +20,7 @@ affect the license of this application:
   - Fraunces        (c) 2020 The Fraunces Project Authors (github.com/undercasetype/Fraunces)
   - Space Grotesk   (c) 2020 The Space Grotesk Project Authors (github.com/floriankarsten/space-grotesk)
 
-The application is a static progressive web app. Its optional server
-component (apps/api, a blind mailbox that only stores ciphertext) is part of
-this same repository, so the AGPL network clause (art. 13) is satisfied by
-publishing it here. See CREDITS.md for third-party material.
+The application is a static progressive web app with no server component:
+nothing runs on a server beyond serving these files, so there is no
+network-interaction code beyond this repository. See CREDITS.md for
+third-party material.

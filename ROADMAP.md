@@ -61,12 +61,11 @@ Las cuatro primeras fases no tienen backend. Cada fase se despliega con
 - [ ] Traducción del catálogo al gallego e inglés.
 - [ ] Escalas de valoración uno a uno (roster-rating): otro tipo de respuesta.
 
-## F4 · Opcional — HECHO en parte (v1.3)
+## F4 · Opcional — RETIRADA en 1.7.0
 
-- [x] `apps/api`: buzón ciego para relé en vivo y sincronización entre
-      dispositivos del docente. Sin cuentas: token secreto, hash en el servidor,
-      clave derivada por HKDF en el cliente.
-- [ ] Sincronización automática en segundo plano (hoy es un botón).
+- [x] ~~`apps/api`: buzón ciego para relé en vivo y sincronización~~ (v1.3).
+      Retirado en 1.7.0: Hilo no tiene servidor. El QR de vuelta por cámara
+      hace de relé y la copia de seguridad cifrada, de sincronización.
 - [x] Capacitor: andamiaje Android (v1.4). Falta compilar y firmar el APK
       con el SDK, y el proyecto iOS (necesita un Mac).
 - [ ] Canal directo en la misma red (WebRTC).

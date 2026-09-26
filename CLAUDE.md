@@ -1,14 +1,14 @@
 # edumind_hilo — Contexto del proyecto
 
 ## Qué es
-EDUmind Hilo: sociograma de aula local-first, sin servidor por defecto. PWA estática.
-Monorepo npm: `packages/nucleo` (puro), `apps/web` (React + Vite + Dexie) y
-`apps/api` (buzón ciego OPCIONAL: relé y sincronización, solo ciphertext).
+EDUmind Hilo: sociograma de aula local-first, sin servidor. PWA estática pura.
+Monorepo npm: `packages/nucleo` (puro) y `apps/web` (React + Vite + Dexie).
+No hay backend: se retiró en 1.7.0 y no vuelve.
 
 ## Reglas del proyecto (no negociables)
-- **Todo funciona sin servidor.** `apps/api` es opcional y solo ve ciphertext; no
-  añadir nada que obligue a usarlo, ni fetch a terceros, ni analíticas. El CI
-  falla si la app compilada referencia otro origen (`pruebas/sin-origenes-externos.mjs`).
+- **No hay servidor.** Ni API, ni fetch a terceros, ni analíticas. El CI falla
+  si la app compilada referencia otro origen (`pruebas/sin-origenes-externos.mjs`)
+  o contiene una ruta `/api/` (`pruebas/sin-servidor.mjs`).
 - **Nada de ninguna institución en la firma.** `pruebas/cadenas-prohibidas.mjs`
   bloquea el nombre del centro y de la administración educativa (ver la lista
   en el propio script; no repetirla en ningún otro fichero). Firma: «Una app de
