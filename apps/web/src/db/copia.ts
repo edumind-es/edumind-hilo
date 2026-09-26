@@ -1,8 +1,7 @@
 /**
  * Copia de seguridad: un JSON con todas las tablas. Se importa fusionando,
- * registro a registro, y gana el `updated_at` más reciente. Es la misma
- * regla que usará la sincronización, así que una copia y un sync no se
- * pisan.
+ * registro a registro, y gana el `updated_at` más reciente. Es la única vía
+ * para pasar datos entre dispositivos del docente: no hay servidor.
  */
 import { esquemaCopia, type Copia } from '@edumind-hilo/nucleo'
 import { ahora } from './ids'

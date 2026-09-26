@@ -2,8 +2,8 @@
  * Toda la base de datos de Hilo vive aquí, en IndexedDB del dispositivo del
  * docente. No hay ninguna otra copia salvo las que el docente exporte.
  *
- * Los índices `updated_at` existen desde el primer día para que la
- * sincronización por sobres (fase 4) pueda leer incrementalmente sin migrar.
+ * Los índices `updated_at` existen desde el primer día: la fusión de copias
+ * de seguridad se apoya en ellos (último en escribir gana).
  */
 import Dexie, { type EntityTable } from 'dexie'
 import type { Alumno, ClavesDocente, Cuestionario, Evento, Grupo, NotaAlumno, Participacion, Respuesta, Toma } from '@edumind-hilo/nucleo'

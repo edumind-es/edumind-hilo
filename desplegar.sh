@@ -73,28 +73,13 @@ mkdir -p "$RELEASES"
 gris "Compilando en releases/$version"
 ( cd "$WEB" && npx vite build --outDir "$destino" --emptyOutDir )
 node "$RAIZ/pruebas/sin-origenes-externos.mjs" "$destino"
+node "$RAIZ/pruebas/sin-servidor.mjs" "$destino"
 echo "$commit" > "$destino/.commit"
 
 if [ -d "$VIVA" ] && [ ! -L "$VIVA" ]; then
   rescate="$RELEASES/00000000-000000-anterior"
   gris "Guardando la versión actual como $(basename "$rescate")"
   mv "$VIVA" "$rescate"
-fi
-
-# ── API opcional: solo se reinicia si ha cambiado y está instalada ────────
-anterior_commit=""
-[ -L "$VIVA" ] && [ -f "$(readlink -f "$VIVA")/.commit" ] && anterior_commit="$(cat "$(readlink -f "$VIVA")/.commit")"
-if systemctl is-enabled --quiet edumind-hilo-api 2>/dev/null; then
-  if [ -n "$anterior_commit" ] && git diff --quiet "$anterior_commit" HEAD -- apps/api/ 2>/dev/null; then
-    gris "La API no ha cambiado: no se reinicia."
-  else
-    gris "Reiniciando edumind-hilo-api…"
-    sudo systemctl restart edumind-hilo-api
-    for i in 1 2 3 4 5 6 7 8 9 10; do
-      curl -fsS --max-time 5 http://127.0.0.1:3280/api/health >/dev/null 2>&1 && break
-      sleep 1
-    done
-  fi
 fi
 
 paquete="$(basename "$(ls -1 "$destino"/assets/index-*.js | head -1)")"

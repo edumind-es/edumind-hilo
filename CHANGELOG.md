@@ -1,5 +1,32 @@
 # Cambios
 
+## 1.7.0 — 2026-09-26
+
+**Hilo ya no tiene servidor.** Se retira entero el buzón ciego opcional que
+existía desde la 1.3: la carpeta `apps/api` (Fastify + SQLite), su unidad de
+systemd, el `location /api/` del vhost, la sincronización entre dispositivos
+(`db/sync.ts`) y los sobres cifrados (`lib/sobres.ts`). Motivo: las dos cosas
+que hacía ya las cubren piezas sin servidor. El QR de vuelta leído por cámara
+sustituye al relé en vivo; la copia de seguridad cifrada, a la sincronización.
+Así la promesa de privacidad no depende de que nadie configure nada: la app
+compilada no contiene ninguna ruta de servidor y `pruebas/sin-servidor.mjs`
+(también en el CI y en `desplegar.sh`) falla si vuelve a aparecer una.
+
+- Sesión con tablets: desaparece el botón «Relé por servidor» y la nota «Relé
+  activo»; la tablet solo muestra el QR de respuesta.
+- Ajustes: desaparece la sección «Sincronizar entre mis dispositivos»; el
+  texto de privacidad dice que no hay ninguna otra petición de red.
+- Se conservan las seis formas de recoger, la copia cifrada, el análisis, el
+  informe, la PWA sin conexión, la app nativa y la tabla de claves.
+- Documentación al día: PRIVACIDAD (§1, §2.3, §2.5, §7), README,
+  ARQUITECTURA, ROADMAP, CLAUDE.md, NOTICE, OPEN_SOURCE_RELEASE, DESPLIEGUE.
+- Claves huérfanas retiradas de `i18n/gl.ts` y `en.ts` y del texto del
+  alumnado (`entregadoServidor`).
+- `CREDITS.md` se copia al dist al compilar: `/CREDITS.md` en el sitio es el
+  fichero real, no el `index.html` del fallback.
+- En un servidor que ya tuviera la API: `systemctl disable --now
+  edumind-hilo-api`, quitar `location /api/` del vhost y borrar `data/`.
+
 ## 1.6.1 — 2026-09-26
 
 Revisión con la rúbrica VCER (evaluación del 2026-09-25) para dejar la app

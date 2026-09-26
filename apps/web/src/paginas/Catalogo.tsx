@@ -49,7 +49,7 @@ export function Catalogo() {
             ))}
           </ul>
         )}
-        <p className="aviso">{tr('Los cuestionarios viajan en la copia de seguridad y en la sincronización. Se usan desde')} <Link to="/">{tr('Grupos')}</Link> → {tr('Nueva toma')} → {tr('Punto de partida')}.</p>
+        <p className="aviso">{tr('Los cuestionarios viajan en la copia de seguridad. Se usan desde')} <Link to="/">{tr('Grupos')}</Link> → {tr('Nueva toma')} → {tr('Punto de partida')}.</p>
       </section>
     </>
   )

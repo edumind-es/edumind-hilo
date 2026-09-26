@@ -2,8 +2,9 @@
 
 ## Principios
 
-1. **Sin servidor en el aula.** Hilo es una PWA estática. Cualquier función que
-   necesite red es opcional y llega después (fase 4), como workspace aparte.
+1. **Sin servidor.** Hilo es una PWA estática y no tiene API. Lo que viaja
+   entre dispositivos va por luz (QR) o en una copia de seguridad cifrada.
+   La compilación se comprueba: ninguna ruta `/api/`, ningún origen externo.
 2. **El núcleo no conoce el navegador.** `packages/nucleo` es TypeScript puro:
    tipos, esquemas Zod, cuestionario, códigos, motor sociométrico y codificación
    compacta. Se prueba en Node en milisegundos. Todo lo que se pueda calcular
@@ -11,8 +12,8 @@
 3. **Una sola fuente de verdad sobre la validez de los datos:** los esquemas
    Zod. Lo que entra por importación, fichero o QR pasa por ellos.
 4. **Registros con `updated_at` y `deleted_at` desde el primer día.** Los
-   borrados son registros marcados, nunca ausencias. Así la fusión de copias y
-   la futura sincronización usan la misma regla: último en escribir gana.
+   borrados son registros marcados, nunca ausencias. Así la fusión de copias
+   usa una sola regla: último en escribir gana.
 5. **Dos pieles, un sistema.** Portal del docente en EDUmind-Lámina (papel,
    tinta, filete; sin radios ni sombras). Pantalla del alumnado en
    EDUmind-Alumno (color vivo, radio, tipografía cálida), acotada a
@@ -37,8 +38,8 @@ apps/web/src/
   paginas/             Inicio, Grupo, Toma, Responder, Ajustes
   componentes/         Marco (Lámina) y Firma
   estilos/             base.css (Lámina) y alumno.css (Alumno)
-  lib/                 barajar, voz, fechas, descargar
-pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes externos)
+  lib/                 barajar, voz, fechas, descargar, cifrado de la copia
+pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes externos, sin servidor)
 ```
 
 ## Flujo de una toma (fase 0)
@@ -75,8 +76,6 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
   referencia; la prueba comprueba que produce una toma válida en sus etapas.
 - **Nuevo idioma**: un objeto más en `CUESTIONARIOS` y `TEXTOS_ALUMNO`.
 - **Nuevo índice**: función pura en `sociometria/` con su prueba.
-- **Sincronización o relé** (fase 4): workspace `apps/api` con buzón ciego
-  (patrón de MiClase). Las tablas ya llevan lo que ese mecanismo necesita.
 
 ## Fase 1: lo que hay detrás de cada modalidad
 
@@ -111,31 +110,20 @@ pruebas/               Guardias del repositorio (cadenas prohibidas, orígenes e
   matrices) y lectura de la exportación de MiClase (solo grupos y alumnos);
   `db/importar.ts` decide qué es cada fichero.
 
-## Fase 4 (opcional): el buzón ciego
+## Fase 4: retirada (1.7.0)
 
-`apps/api` (Fastify 5 + better-sqlite3, puerto 3280 solo local, nginx en
-`/api/`). Dos usos, mismo principio: el servidor guarda sobres que no puede
-abrir.
-
-- **Relé** (`rutas/rele.js`): `POST /api/rele/sesiones` da un código; las
-  tablets hacen `POST /api/rele/:codigo/sobres` con el ciphertext (clave en el
-  QR, `lib/sobres.ts`); el docente lee por `GET …/sobres?desde=seq` cada 3 s
-  desde `SesionQr`. Caducidad 2 h, 300 sobres, limpieza cada minuto.
-- **Buzón** (`rutas/buzon.js`): `Authorization: Bearer <token>`; el servidor
-  guarda `sha256(token)` como id. `PUT /api/buzon/registros` (LWW por
-  `updated_at`, cuotas) y `GET …?desde=seq`. El cliente (`db/sync.ts`) cifra
-  cada registro con la clave HKDF del token y fusiona con `fusionar()`, la
-  misma regla que la copia de seguridad. Cursores en `ajustes`.
-- **Invariante**: la página de la tablet solo llama a la red si el QR trae
-  `r=` y `k=`; sin relé no hay ninguna petición, y la prueba lo vigila.
-- **Operación**: `deploy/edumind-hilo-api.service`, alta con
-  `.edumind_ops/hilos_api_install.py`; `desplegar.sh` reinicia la API solo si
-  `apps/api` cambió.
+Entre la 1.3 y la 1.6 existió `apps/api`, un buzón ciego opcional (Fastify +
+SQLite, solo ciphertext) con dos usos: relé en vivo para que las tablets
+entregaran solas y sincronización entre dispositivos del docente. Se retiró
+entero en la 1.7.0: el QR de vuelta leído por cámara sustituye al relé y la
+copia de seguridad cifrada sustituye a la sincronización. Con ello Hilo es una
+PWA estática pura, sin proceso que mantener ni base de datos en el servidor.
+`pruebas/sin-servidor.mjs` impide que vuelva a entrar una ruta `/api/`.
 
 ## Invariantes que no se rompen
 
 - La pantalla del alumnado no muestra resultados ni la palabra «sociograma».
 - El propio alumno no aparece en su lista.
 - Ninguna toma con negativas fuera de secundaria.
-- Ningún origen externo en la app compilada.
+- Ningún origen externo ni ninguna ruta de servidor en la app compilada.
 - Ninguna institución en la firma (`pruebas/cadenas-prohibidas.mjs`).

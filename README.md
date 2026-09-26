@@ -1,15 +1,14 @@
 # EDUmind Hilo
 
-**Sociograma de aula local-first, sin servidor por defecto.** El alumnado responde a
+**Sociograma de aula local-first, sin servidor.** El alumnado responde a
 preguntas asépticas en una sesión; el docente lee, en su propio dispositivo, la
 trama de vínculos del grupo y cómo cambia a lo largo del curso.
 
 > **Los datos del alumnado no salen del dispositivo del docente.** No es una
 > promesa: es la arquitectura. Hilo es una aplicación web estática sin cuentas
-> ni base de datos remota. Las dos únicas funciones con servidor (relé para
-> tablets y sincronización entre los dispositivos del docente) son opcionales,
-> se activan con un botón y solo envían sobres cifrados que el servidor no
-> puede abrir. Ver [PRIVACIDAD.md](PRIVACIDAD.md).
+> ni base de datos remota, ni API: el servidor solo entrega los ficheros de la
+> app y la prueba `pruebas/sin-servidor.mjs` falla si la compilación contiene
+> alguna ruta de servidor. Ver [PRIVACIDAD.md](PRIVACIDAD.md).
 
 Hilo es el hilo invisible que une a un grupo.
 
@@ -59,12 +58,9 @@ apps/web/          PWA React + Vite. Portal del docente (EDUmind-Lámina) y
                    pantalla del alumnado (EDUmind-Alumno). IndexedDB vía Dexie.
 ```
 
-```
-apps/api/          Opcional. Buzón ciego (Fastify + SQLite): relé en vivo y
-                   sincronización entre dispositivos del docente. Solo ciphertext.
-```
-
-Todo funciona sin `apps/api`; es una comodidad que el docente activa. Ver
+No hay tercera línea: no existe backend. Hasta la 1.6 hubo un buzón ciego
+opcional (`apps/api`); se retiró en la 1.7 porque el QR de vuelta por cámara y
+la copia de seguridad cifrada cubren lo mismo sin ningún servidor. Ver
 [ARQUITECTURA.md](ARQUITECTURA.md).
 
 ## Arrancar en local
@@ -114,12 +110,9 @@ ampliar»; en corto:
   se sirve desde cualquier servidor web estático con HTTPS (ver
   [DESPLIEGUE.md](DESPLIEGUE.md)). La PWA funciona sin conexión tras la
   primera visita.
-- **Prescindir del servidor opcional**: basta con no desplegar `apps/api`.
-  Todo lo demás funciona igual; los botones «Relé por servidor» (Sesión con
-  tablets) y la sección «Sincronizar entre mis dispositivos» (Ajustes)
-  responderán con un error al pulsarlos. Para retirarlos de la interfaz, quita
-  ese botón en `apps/web/src/paginas/SesionQr.tsx` y esa sección en
-  `apps/web/src/paginas/Ajustes.tsx`; el resto no depende de ellos.
+- **Añadir algo con servidor**: no lo hagas en este repositorio. La prueba
+  `pruebas/sin-servidor.mjs` corta cualquier ruta `/api/` en la compilación, a
+  propósito: la garantía de privacidad de Hilo es que no hay servidor.
 
 ## Documentación
 

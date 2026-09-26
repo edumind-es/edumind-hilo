@@ -41,13 +41,6 @@ No se usan pictogramas ARASAAC, ni fotografías, ni música ni sonidos.
 | Workbox (vía vite-plugin-pwa) | Service worker y caché sin conexión | MIT |
 | Capacitor (`@capacitor/core`, `@capacitor/android`) | Envoltorio nativo Android | MIT |
 
-## Servidor opcional (`apps/api`)
-
-| Biblioteca | Para qué | Licencia |
-|---|---|---|
-| Fastify | Servidor HTTP | MIT |
-| better-sqlite3 | Base de datos del buzón ciego | MIT |
-
 ## Herramientas de desarrollo (no viajan con la app)
 
 Vite (MIT), TypeScript (Apache-2.0), Vitest (MIT), Testing Library (MIT),

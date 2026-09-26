@@ -15,7 +15,7 @@ nginx nunca ve un directorio a medias. Conserva las cinco últimas versiones.
 
 ## nginx
 
-El vhost definitivo y sus cabeceras están en `deploy/`. En el servidor de
+El vhost definitivo y sus cabeceras están en `deploy/`. No proxya nada: no hay API. En el servidor de
 EDUmind el alta la hace, con sudo, `/var/www/.edumind_ops/hilos_site_install.py`:
 instala un vhost temporal con certificado prestado, emite el de
 hilos.edumind.es con certbot, instala el definitivo y recarga nginx. Revierte

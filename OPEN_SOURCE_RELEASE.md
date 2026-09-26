@@ -1,9 +1,8 @@
 # Modelo de publicación
 
 A diferencia de otras apps de EDUmind, **este repositorio es el árbol de trabajo
-completo**: el único backend (`apps/api`, opcional) no tiene secretos ni
-cuentas, la configuración de despliegue no contiene nada sensible y no hay
-datos de aula en ningún fichero. No hay nada que sanear.
+completo**: no hay backend, la configuración de despliegue no contiene nada
+sensible y no hay datos de aula en ningún fichero. No hay nada que sanear.
 
 Lo único que no se versiona son las compilaciones (`apps/web/dist`,
 `apps/web/releases/`) y `node_modules`.
