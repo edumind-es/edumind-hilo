@@ -98,6 +98,32 @@ npm run build     # apps/web/dist
 | [docs/lamina-diseno.html](docs/lamina-diseno.html) | Lámina de aplicación FIG. 13: el diseño completo |
 | [docs/EVALUACION.md](docs/EVALUACION.md) | Qué se comprobó al cerrar cada fase y qué queda sin comprobar |
 
+## Hecho con IA
+
+Este recurso se ha desarrollado con *vibe coding* con asistencia de IA (Claude
+Code y ChatGPT). Lo que ha comprobado el autor:
+
+- **Pruebas automáticas**: 85 (55 del núcleo, 24 de la web, 6 de la API), que
+  corren en local (`npm test`) y en el CI de GitHub Actions en cada cambio,
+  junto con los tipos estrictos y la compilación.
+- **Dos guardias del repositorio**: ninguna cadena prohibida en la firma
+  (`pruebas/cadenas-prohibidas.mjs`) y ningún origen externo en la app
+  compilada (`pruebas/sin-origenes-externos.mjs`).
+- **Textos que ve el alumnado**: revisados por el autor y protegidos por una
+  prueba (sin motivo, sin ranking, sin la palabra «sociograma»).
+- **Referencias del catálogo**: contrastadas una a una contra fichas
+  editoriales y bibliográficas ([docs/EVALUACION.md](docs/EVALUACION.md) §1.5.1).
+- **Licencias del material ajeno**: revisadas y acreditadas en
+  [CREDITS.md](CREDITS.md).
+- **Ejecución en navegador**, fase a fase, y uso real de la fase 0 por el
+  autor, con lo que quedó sin comprobar escrito en
+  [docs/EVALUACION.md](docs/EVALUACION.md) (la traducción al gallego no la ha
+  revisado un hablante nativo; la hoja de marcas, solo con hojas sintéticas).
+- **Accesibilidad**: axe-core (WCAG 2.x A/AA) sobre 19 pantallas de la app
+  compilada, 0 violaciones, y recorrido completo con teclado (2026-09-26).
+
+Política de uso de IA de EDUmind: https://edumind.es/es/legal/ia
+
 ## Colaborar
 
 Se agradece especialmente la ayuda del profesorado y de orientación en:

@@ -135,6 +135,7 @@ export function Ajustes() {
           <li><span className="dash">—</span><span className="crece">{tr("El alumnado nunca ve resultados, ni su propio nombre en la lista, ni la palabra «sociograma».")}</span></li>
           <li><span className="dash">—</span><span className="crece">{tr("Las nominaciones negativas están bloqueadas fuera de Secundaria.")}</span></li>
           <li><span className="dash">—</span><span className="crece">Detalle completo en <a href="https://github.com/edumind-es/edumind-hilo/blob/main/PRIVACIDAD.md">PRIVACIDAD.md</a>.</span></li>
+          <li><span className="dash">—</span><span className="crece">{tr("Hilo se ha desarrollado con asistencia de IA (vibe coding). Lo que el autor ha comprobado está en")} <a href="https://github.com/edumind-es/edumind-hilo#hecho-con-ia">README · Hecho con IA</a>.</span></li>
         </ul>
       </section>
 

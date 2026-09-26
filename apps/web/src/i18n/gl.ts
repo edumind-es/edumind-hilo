@@ -106,6 +106,7 @@ export const gl: Record<string, string> = {
   "Borrar todos los datos": "Borrar todos os datos",
   "Todo borrado.": "Todo borrado.",
   "Detalle completo en": "Detalle completo en",
+  "Hilo se ha desarrollado con asistencia de IA (vibe coding). Lo que el autor ha comprobado está en": "Hilo desenvolveuse con asistencia de IA (vibe coding). O que o autor comprobou está en",
   "Idioma del portal": "Idioma do portal",
   "Todo lo que Hilo sabe está en este navegador. No hay cuenta ni nube; el servidor solo entra si activas, más abajo, la sincronización. Si pierdes el dispositivo sin copia, se pierde.": "Todo o que Hilo sabe está neste navegador. Non hai conta nin nube; o servidor só entra se activas, máis abaixo, a sincronización. Se perdes o dispositivo sen copia, pérdese.",
   "Un fichero JSON con todos los grupos, tomas y respuestas. Al importarlo en otro dispositivo se fusiona: gana el registro modificado más tarde, así que se puede importar la misma copia dos veces sin duplicar nada.": "Un ficheiro JSON con todos os grupos, tomas e respostas. Ao importalo noutro dispositivo fusiónase: gaña o rexistro modificado máis tarde, así que se pode importar a mesma copia dúas veces sen duplicar nada.",

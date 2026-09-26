@@ -106,6 +106,7 @@ export const en: Record<string, string> = {
   "Borrar todos los datos": "Delete all data",
   "Todo borrado.": "Everything deleted.",
   "Detalle completo en": "Full details in",
+  "Hilo se ha desarrollado con asistencia de IA (vibe coding). Lo que el autor ha comprobado está en": "Hilo was developed with AI assistance (vibe coding). What the author has verified is in",
   "Idioma del portal": "Portal language",
   "Todo lo que Hilo sabe está en este navegador. No hay cuenta ni nube; el servidor solo entra si activas, más abajo, la sincronización. Si pierdes el dispositivo sin copia, se pierde.": "Everything Hilo knows is in this browser. No account, no cloud; the server only comes in if you turn on sync below. If you lose the device without a backup, it is lost.",
   "Un fichero JSON con todos los grupos, tomas y respuestas. Al importarlo en otro dispositivo se fusiona: gana el registro modificado más tarde, así que se puede importar la misma copia dos veces sin duplicar nada.": "A JSON file with all groups, rounds and answers. Importing it on another device merges: the most recently modified record wins, so the same backup can be imported twice without duplicates.",
