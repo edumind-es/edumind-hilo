@@ -8,17 +8,19 @@ No es asesoramiento jurídico: es la descripción técnica de cómo funciona el
 programa. Todo lo que se afirma aquí es comprobable en el código fuente y buena
 parte está cubierto por pruebas automáticas.
 
-Última revisión: 5 de septiembre de 2026 · versión 1.0.
+Última revisión: 26 de septiembre de 2026 · versión 1.6.1.
 
 ## 1. El principio de diseño
 
 **Los datos del alumnado no salen del dispositivo del docente.**
 
 Hilo es una aplicación web estática: un conjunto de ficheros que el navegador
-descarga una vez y ejecuta en local. No existe ningún servidor de Hilo que
-reciba datos, ninguna base de datos remota, ninguna cuenta de usuario. Todo el
-sociograma vive en el almacenamiento del propio navegador (IndexedDB) del
-dispositivo del docente.
+descarga una vez y ejecuta en local. Por defecto ningún servidor recibe datos:
+no hay base de datos remota ni cuentas de usuario. Todo el sociograma vive en
+el almacenamiento del propio navegador (IndexedDB) del dispositivo del docente.
+La única excepción son las dos funciones opcionales del apartado 2.3 (relé para
+tablets y sincronización entre dispositivos del docente), que el docente activa
+con un botón y que solo mueven sobres cifrados que el servidor no puede abrir.
 
 Contrapartida: **si el docente pierde el dispositivo y no tiene copia de
 seguridad, los datos se pierden.** Es el precio de que nadie más los tenga. Por
@@ -88,7 +90,17 @@ lista ni la respuesta.
 
 La aplicación compilada no carga recursos de ningún origen externo (fuentes,
 analíticas, CDN). Una prueba del CI (`pruebas/sin-origenes-externos.mjs`) lo
-comprueba en cada cambio.
+comprueba en cada cambio. No hay analítica de ningún tipo, ni propia ni ajena.
+
+### 2.5 Qué guarda cada sitio y durante cuánto tiempo
+
+| Dónde | Qué | Hasta cuándo |
+|---|---|---|
+| Navegador del docente (IndexedDB, base `edumind-hilo`) | Grupos, alumnado (nombre, código, NEAE), tomas, respuestas, participaciones, eventos, notas, cuestionarios propios, claves del docente, ajustes (idioma, token del buzón si lo hay). En claro, porque solo lo lee ese navegador. | Hasta que el docente borra el grupo, pulsa «Borrar todos los datos» en Ajustes o el navegador vacía su almacenamiento. Sin caducidad automática: el docente decide. |
+| Tablet o dispositivo del alumnado (sesión con tablets, prueba) | Nada en disco. La lista y la respuesta viven en la memoria de la pestaña. | Se pierden al cerrar la pestaña. |
+| Servidor, relé (opcional) | Código de sesión, sobres cifrados (máximo 300 por sesión, 8 KB cada uno) y fecha. | Dos horas desde que se abre la sesión, o antes si el docente la cierra; una limpieza cada minuto borra lo caducado. |
+| Servidor, buzón de sincronización (opcional) | Hash del token, y por registro: tabla, identificador, fecha de modificación, identificador de dispositivo y ciphertext (máximo 64 KB por registro, con cuotas por buzón). | Hasta que el docente pulsa «Borrar el buzón del servidor». No caduca solo. |
+| Servidor web que sirve la app | El registro de acceso habitual de un servidor web (fecha, ruta pedida, agente de usuario) de la descarga de la app y de las llamadas opcionales a `/api/`. Nunca contenido: las respuestas del alumnado no viajan en claro por red en ninguna modalidad. | Según la política de registros del servidor que la aloje. |
 
 ## 3. Qué ve el alumnado
 
@@ -136,4 +148,5 @@ copia sale en claro, con un aviso previo; es su responsabilidad dónde la guarda
 - `packages/nucleo/src/esquemas.ts`: la regla de negativas.
 - `apps/web/src/alumno/PantallaAlumno.tsx` y su prueba: lo que ve el alumnado.
 - `pruebas/sin-origenes-externos.mjs`: ningún origen externo en la app compilada.
-- `apps/web/src/db/localDb.ts`: la única base de datos que existe.
+- `apps/web/src/db/localDb.ts`: la única base de datos con datos legibles.
+- `apps/api/src/rutas/rele.js` y `buzon.js`: lo que guarda el servidor opcional, sus cuotas y su caducidad.
