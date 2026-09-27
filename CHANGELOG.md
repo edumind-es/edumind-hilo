@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.7.1 — 2026-09-27
+
+- El pie muestra la versión (`v1.7.1`), leída del `package.json` al compilar.
+
 ## 1.7.0 — 2026-09-26
 
 **Hilo ya no tiene servidor.** Se retira entero el buzón ciego opcional que
