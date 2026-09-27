@@ -13,7 +13,7 @@ export function Firma() {
           </p>
         </div>
         <p className="mono" style={{ margin: 0 }}>
-          <a href="https://github.com/edumind-es/edumind-hilo">{tr("Código fuente")}</a> · <a href="https://github.com/edumind-es/edumind-hilo/blob/main/CREDITS.md">{tr("Créditos")}</a> · <a href="https://edumind.es/es/legal">{tr("Legal")}</a>
+          <a href="https://github.com/edumind-es/edumind-hilo">{tr("Código fuente")}</a> · v{__VERSION__} · <a href="https://github.com/edumind-es/edumind-hilo/blob/main/CREDITS.md">{tr("Créditos")}</a> · <a href="https://edumind.es/es/legal">{tr("Legal")}</a>
         </p>
       </div>
       <div className="worlds-bar" aria-hidden="true"><i /><i /><i /><i /><i /></div>
